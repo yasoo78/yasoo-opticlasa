@@ -90,15 +90,21 @@ export function Header({shop, menu, cart, overHero = false, reveal = true}: Head
         <div className="flex items-center gap-1">
           <Link
             to="/collections"
-            className={`mr-3 hidden font-display text-[12px] font-extrabold uppercase tracking-[0.12em] transition-opacity hover:opacity-70 lg:inline-block ${solid ? 'text-ink' : 'text-white'}`}
+            className={`mr-1.5 hidden rounded-full border px-3.5 py-1.5 font-display text-[11px] font-extrabold uppercase leading-none tracking-[0.14em] transition-colors lg:inline-block ${
+              solid
+                ? 'border-red text-red hover:bg-red hover:text-white'
+                : 'border-white/60 text-white hover:bg-white hover:text-red'
+            }`}
           >
-            <span className="text-red">Out</span>let
+            Outlet
           </Link>
           <Link
             to="/collections"
-            className="mr-4 hidden bg-gradient-to-r from-[#b8893d] via-[#e7c97f] to-[#b8893d] bg-clip-text font-display text-[12px] font-extrabold uppercase tracking-[0.18em] text-transparent transition-opacity hover:opacity-75 lg:inline-block"
+            className="mr-4 hidden rounded-full border border-[#c9a24a]/70 px-3.5 py-1.5 font-display text-[11px] font-extrabold uppercase leading-none tracking-[0.16em] transition-colors hover:bg-[#e7c97f]/15 lg:inline-block"
           >
-            Premium
+            <span className="bg-gradient-to-r from-[#b8893d] via-[#e7c97f] to-[#b8893d] bg-clip-text text-transparent">
+              Premium
+            </span>
           </Link>
           <IconLink to="/search" label="Search" solid={solid}>
             <MagnifyingGlassIcon className="size-[18px]" />
