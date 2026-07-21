@@ -22,7 +22,7 @@ export async function loader({context, request}: Route.LoaderArgs) {
 /* ─────────────────────── assets ─────────────────────── */
 type HeroSlide = {img: string; eyebrow: string; title: string; to: string; video?: string; hold?: number};
 const HERO_SLIDES: HeroSlide[] = [
-  {img: 'https://cdncloudcart.com/74980/files/image/slide1.jpg?1784638403', eyebrow: 'Нова колекция', title: 'Eyewear by\nDavid Beckham', to: '/search?q=David%20Beckham'},
+  {img: 'https://cdncloudcart.com/74980/files/image/slide2.jpg?1784638750', eyebrow: 'Нова колекция', title: 'Eyewear by\nDavid Beckham', to: '/search?q=David%20Beckham'},
   {img: 'https://cdncloudcart.com/72223/files/image/etro-zephyr.jpg?1781002900', video: 'https://cdncloudcart.com/74980/files/video/32-adv-ss26-video-16-9.mp4?1784637245', hold: 12000, eyebrow: 'Нова колекция', title: 'CHOPARD\nEYEWEAR', to: '/collections/slanchevi-ochila?vendor=chopard'},
   {img: 'https://cdncloudcart.com/72223/files/image/herrera-her-0374s.jpg?1781002906', eyebrow: 'Нова колекция', title: 'Carolina\nHerrera', to: '/search?q=Carolina%20Herrera'},
 ];
