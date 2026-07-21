@@ -1,56 +1,40 @@
 import {Link} from 'react-router';
 import type {Product} from '@cloudcart/nitrogen';
 import {Image, Money} from '@cloudcart/nitrogen-react';
-import {StarRating} from './StarRating';
 import {WishlistButton} from './WishlistButton';
+import {splitBrandName} from '~/lib/product';
 
 export function ProductCard({product, loading}: {product: Product; loading?: 'eager' | 'lazy'}) {
   const p = product as any;
-  const labels: Array<{name: string; color?: string; textColor?: string}> = p.labels ?? [];
-  const reviewSummary = p.reviewSummary;
+  const {brand, name} = splitBrandName(product);
+  const onSale = p.variants?.nodes?.[0]?.compareAtPrice &&
+    parseFloat(p.variants.nodes[0].compareAtPrice.amount) > parseFloat(p.variants.nodes[0].price.amount);
 
   return (
-    <Link to={`/products/${product.handle}`} className="group block text-inherit transition-transform duration-150 hover:no-underline hover:-translate-y-0.5" prefetch="intent">
-      <div className="relative overflow-hidden rounded-[10px]">
-        {product.featuredImage?.url ? (
-          <Image
-            data={product.featuredImage}
-            alt={product.title}
-            loading={loading}
-            className="aspect-square object-cover w-full rounded-[10px] bg-gray-100"
-          />
+    <Link to={`/products/${product.handle}`} prefetch="intent" className="group flex flex-col text-inherit">
+      <div className="relative aspect-square overflow-hidden bg-white">
+        {p.featuredImage?.url ? (
+          <Image data={p.featuredImage} alt={product.title} loading={loading} className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.04]" />
         ) : (
-          <img src="/noimage.svg" alt={product.title} loading={loading} className="aspect-square object-cover w-full rounded-[10px] bg-gray-100" />
+          <img src="/noimage.svg" alt={product.title} loading={loading} className="h-full w-full object-contain p-6" />
         )}
-        {product.availableForSale === false && (
-          <span className="absolute top-2 right-2 py-1 px-2.5 rounded text-[0.65rem] font-bold uppercase tracking-wider leading-none bg-gray-600 text-white">Sold Out</span>
+        {p.availableForSale === false && (
+          <span className="absolute left-4 top-4 rounded-full bg-ink px-3 py-1 font-sans text-[10px] font-medium text-white">Изчерпан</span>
         )}
-        <div className="absolute bottom-2 right-2 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+        {onSale && p.availableForSale !== false && (
+          <span className="absolute left-4 top-4 rounded-full bg-red px-3 py-1 font-sans text-[10px] font-medium text-white">Промо</span>
+        )}
+        <div className="absolute bottom-4 right-4 opacity-0 transition-opacity group-hover:opacity-100">
           <WishlistButton productId={product.id} size="md" />
         </div>
-        {labels.length > 0 && (
-          <div className="absolute top-2 left-2 flex flex-wrap gap-1">
-            {labels.map((label) => (
-              <span
-                key={label.name}
-                className="py-1 px-2.5 rounded text-[0.65rem] font-bold uppercase tracking-wider leading-none bg-gray-600 text-white"
-                style={label.color ? {backgroundColor: label.color, color: label.textColor || '#fff'} : undefined}
-              >
-                {label.name}
-              </span>
-            ))}
-          </div>
-        )}
       </div>
-      <h4 className="text-sm font-semibold mt-3 leading-tight">{product.title}</h4>
-      {reviewSummary && reviewSummary.totalCount > 0 && (
-        <div className="mt-1">
-          <StarRating rating={reviewSummary.averageRating} count={reviewSummary.totalCount} size="sm" />
+      <div className="pt-3">
+        <div className="font-display text-[16px] font-semibold uppercase leading-tight tracking-[0.01em] text-ink">{brand || name}</div>
+        {brand && name && <div className="mt-1 font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-mid">{name}</div>}
+        <div className="mt-1.5 font-sans text-[13px] text-ink">
+          <Money data={product.priceRange.minVariantPrice} />
         </div>
-      )}
-      <span className="text-[0.85rem] text-gray-500 mt-1 block">
-        <Money data={product.priceRange.minVariantPrice} />
-      </span>
+      </div>
     </Link>
   );
 }

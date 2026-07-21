@@ -9,7 +9,7 @@ import {Pagination} from '~/components/Pagination';
 import {MagnifyingGlassIcon, XMarkIcon} from '@heroicons/react/24/outline';
 import {buildFiltersFromParams, buildSortFromParams} from '~/lib/filters';
 
-export const meta: Route.MetaFunction = () => getSeoMeta({title: 'Search | Nitrogen'});
+export const meta: Route.MetaFunction = () => getSeoMeta({title: 'Търсене | Opticlasa'});
 
 export async function loader({request, context}: Route.LoaderArgs) {
   const ctx = await getContext(context, request);
@@ -92,9 +92,9 @@ export default function SearchPage() {
               type="text"
               value={inputValue}
               onChange={(e) => handleInputChange(e.target.value)}
-              placeholder="Search products, brands, categories..."
+              placeholder="Търси очила, марки, категории..."
               autoComplete="off"
-              className="form-input w-full py-3.5 pl-12 pr-10 border-[1.5px] border-gray-200 rounded-xl text-base transition-[border-color,box-shadow] duration-150 focus:border-brand focus:ring-2 focus:ring-brand/20"
+              className="form-input w-full py-3.5 pl-12 pr-10 border-[1.5px] border-line text-base transition-[border-color] duration-150 focus:border-ink focus:ring-0"
             />
             {inputValue && (
               <button
@@ -113,12 +113,12 @@ export default function SearchPage() {
             <div className="flex items-center justify-center gap-2 mt-3 text-sm text-gray-500">
               {isSearching ? (
                 <span className="flex items-center gap-2">
-                  <span className="size-4 border-2 border-gray-300 border-t-brand rounded-full animate-spin" />
-                  Searching...
+                  <span className="size-4 border-2 border-gray-300 border-t-red rounded-full animate-spin" />
+                  Търси...
                 </span>
               ) : products ? (
                 <span>
-                  <strong className="text-dark">{totalCount.toLocaleString()}</strong> {totalCount === 1 ? 'result' : 'results'} for <strong className="text-dark">"{query}"</strong>
+                  <strong className="text-ink">{totalCount.toLocaleString()}</strong> {totalCount === 1 ? 'резултат' : 'резултата'} за <strong className="text-ink">"{query}"</strong>
                 </span>
               ) : null}
             </div>
@@ -128,19 +128,19 @@ export default function SearchPage() {
 
       {/* Empty state */}
       {!inputValue && !query && (
-        <div className="text-center py-16 text-gray-400">
+        <div className="text-center py-16 text-mid">
           <MagnifyingGlassIcon className="size-16 mx-auto mb-4 text-gray-200" />
-          <p className="text-lg font-medium text-gray-500">Start typing to search</p>
-          <p className="text-sm mt-1">Search across all products, brands, and categories</p>
+          <p className="font-display text-lg font-bold text-ink">Започни да търсиш</p>
+          <p className="text-sm mt-1">Търси из всички очила, марки и категории</p>
         </div>
       )}
 
       {/* No results */}
       {query && products && products.nodes.length === 0 && !isSearching && (
-        <div className="text-center py-16 text-gray-400">
+        <div className="text-center py-16 text-mid">
           <MagnifyingGlassIcon className="size-16 mx-auto mb-4 text-gray-200" />
-          <p className="text-lg font-medium text-gray-500">No results found</p>
-          <p className="text-sm mt-1">Try adjusting your search or filters</p>
+          <p className="font-display text-lg font-bold text-ink">Няма резултати</p>
+          <p className="text-sm mt-1">Опитай различна дума или промени филтрите</p>
         </div>
       )}
 
@@ -155,13 +155,13 @@ export default function SearchPage() {
             <Pagination connection={products}>
               {({nodes, NextLink, isLoading}) => (
                 <div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+                  <div className="grid grid-cols-2 gap-0.5 sm:grid-cols-3 lg:grid-cols-4">
                     {nodes.map((product) => (
                       <ProductCard key={product.id} product={product} />
                     ))}
                   </div>
-                  <NextLink className="flex items-center justify-center w-full py-3 px-6 my-6 text-sm font-medium text-gray-600 bg-gray-50 border border-gray-200 rounded-lg no-underline transition-[background,color,border-color] duration-150 hover:bg-gray-100 hover:border-gray-400 hover:text-dark hover:no-underline">
-                    {isLoading ? 'Loading...' : 'Load more \u2193'}
+                  <NextLink className="mx-auto my-10 flex w-fit items-center justify-center gap-2 border border-line px-9 py-3.5 font-display text-[11px] font-bold uppercase tracking-[0.1em] text-ink no-underline transition-colors hover:bg-ink hover:text-white hover:no-underline">
+                    {isLoading ? 'Зарежда...' : 'Зареди още ↓'}
                   </NextLink>
                 </div>
               )}

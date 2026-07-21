@@ -7,7 +7,7 @@ import {ProductFilters} from '~/components/ProductFilters';
 import {Pagination} from '~/components/Pagination';
 import {buildFiltersFromParams, buildSortFromParams} from '~/lib/filters';
 
-export const meta: Route.MetaFunction = () => getSeoMeta({title: 'All Products | Nitrogen'});
+export const meta: Route.MetaFunction = () => getSeoMeta({title: 'Всички очила | Opticlasa'});
 
 export async function loader({context, request}: Route.LoaderArgs) {
   const ctx = await getContext(context, request);
@@ -31,8 +31,9 @@ export default function ProductsIndex() {
 
   return (
     <div className="w-full">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight mb-5">All Products</h1>
+      <div className="mb-7 border-b border-line pb-5">
+        <span className="font-display text-[9px] font-bold uppercase tracking-[0.2em] text-red">Opticlasa</span>
+        <h1 className="mt-1 font-display text-[clamp(26px,3.2vw,40px)] font-black tracking-[-0.02em] text-ink">Всички очила</h1>
       </div>
 
       <div className="grid gap-8 md:grid-cols-[220px_1fr] md:gap-10">
@@ -44,13 +45,13 @@ export default function ProductsIndex() {
           <Pagination connection={products}>
             {({nodes, NextLink, isLoading}) => (
               <div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+                <div className="grid grid-cols-2 gap-0.5 sm:grid-cols-3 lg:grid-cols-4">
                   {nodes.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
                 </div>
-                <NextLink className="flex items-center justify-center w-full py-3 px-6 my-6 text-sm font-medium text-gray-600 bg-gray-50 border border-gray-200 rounded-lg no-underline transition-[background,color,border-color] duration-150 hover:bg-gray-100 hover:border-gray-400 hover:text-dark hover:no-underline">
-                  {isLoading ? 'Loading...' : 'Load more \u2193'}
+                <NextLink className="mx-auto my-10 flex w-fit items-center justify-center gap-2 border border-line px-9 py-3.5 font-display text-[11px] font-bold uppercase tracking-[0.1em] text-ink no-underline transition-colors hover:bg-ink hover:text-white hover:no-underline">
+                  {isLoading ? 'Зарежда...' : 'Зареди още ↓'}
                 </NextLink>
               </div>
             )}

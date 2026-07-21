@@ -5,7 +5,7 @@ import type {CartData} from '@cloudcart/nitrogen';
 import {CartMain} from '~/components/CartMain';
 import {CartSummary} from '~/components/CartSummary';
 
-export const meta: Route.MetaFunction = () => [{title: 'Nitrogen | Cart'}];
+export const meta: Route.MetaFunction = () => [{title: 'Количка | Opticlasa'}];
 
 export async function loader({context, request}: Route.LoaderArgs) {
   const ctx = await getContext(context, request);
@@ -71,7 +71,7 @@ export default function CartPage() {
 
   return (
     <div className="max-w-3xl">
-      <h1 className="text-2xl font-bold tracking-tight mb-5">Cart</h1>
+      <h1 className="mb-6 border-b border-line pb-5 font-display text-[clamp(26px,3.2vw,40px)] font-black tracking-[-0.02em] text-ink">Количка</h1>
       {cartErrors.length > 0 && <CartErrors errors={cartErrors} />}
       <CartMain cart={cart} layout="page" />
       {cart && cart.totalQuantity > 0 && (

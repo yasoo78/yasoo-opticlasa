@@ -63,24 +63,24 @@ export function ProductFilters({filters = [], totalCount}: ProductFiltersProps) 
     <div className="flex flex-col gap-5">
       {/* Sort */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-semibold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">Sort by</label>
+        <label className="font-display text-[10px] font-bold uppercase tracking-[0.12em] text-mid flex items-center gap-1.5">Подреди</label>
         <select
-          className="form-select w-full py-2 px-3 border-gray-200 rounded-md text-[0.85rem] text-dark cursor-pointer focus:border-brand focus:ring-0"
+          className="form-select w-full py-2 px-3 border-line text-[0.85rem] text-ink cursor-pointer focus:border-ink focus:ring-0"
           value={currentSort}
           onChange={(e) => updateParam('sort', e.target.value)}
         >
-          <option value="">Featured</option>
-          <option value="price-asc">Price: Low to High</option>
-          <option value="price-desc">Price: High to Low</option>
-          <option value="title-asc">Alphabetically: A-Z</option>
-          <option value="title-desc">Alphabetically: Z-A</option>
-          <option value="created-desc">Newest</option>
-          <option value="best-selling">Best Selling</option>
+          <option value="">Препоръчани</option>
+          <option value="price-asc">Цена: ниска → висока</option>
+          <option value="price-desc">Цена: висока → ниска</option>
+          <option value="title-asc">Азбучно: А-Я</option>
+          <option value="title-desc">Азбучно: Я-А</option>
+          <option value="created-desc">Най-нови</option>
+          <option value="best-selling">Най-продавани</option>
         </select>
       </div>
 
       {totalCount != null && (
-        <div className="text-xs text-gray-500 pb-1 border-b border-gray-100">{totalCount} products</div>
+        <div className="text-xs text-mid pb-1 border-b border-line">{totalCount} продукта</div>
       )}
 
       {/* Dynamic filters from API */}
@@ -97,13 +97,27 @@ export function ProductFilters({filters = [], totalCount}: ProductFiltersProps) 
       ))}
 
       {hasActiveFilters && (
-        <button className="bg-transparent border-none text-brand text-xs font-medium cursor-pointer underline text-left p-0 font-sans" onClick={clearAll}>
-          Clear all filters
+        <button className="bg-transparent border-none text-red text-xs font-medium cursor-pointer underline text-left p-0 font-sans" onClick={clearAll}>
+          Изчисти филтрите
         </button>
       )}
     </div>
   );
 }
+
+const LABEL_MAP: Record<string, string> = {
+  brands: 'Марки', brand: 'Марка', color: 'Цвят', colour: 'Цвят', price: 'Цена',
+  size: 'Размер', shape: 'Форма', material: 'Материал', gender: 'Пол', frame: 'Рамка',
+  lens: 'Стъкла', availability: 'Наличност', collection: 'Колекция',
+};
+
+/** Replace unresolved i18n keys (e.g. "SF.WIDGET.PRODUCT.LISTING.FILTER.PRICE") and English labels with Bulgarian. */
+function cleanLabel(label: string | undefined, fallback: string): string {
+  if (!label || /widget|listing|filter\.|[a-z]+\.[a-z]+\./i.test(label) || /^[A-Z._]+$/.test(label)) return fallback;
+  return LABEL_MAP[label.toLowerCase().trim()] ?? label;
+}
+
+const GROUP_LABEL_CLS = 'font-display text-[10px] font-bold uppercase tracking-[0.12em] text-mid flex items-center gap-1.5';
 
 function FilterGroup({
   filter,
@@ -153,13 +167,13 @@ function FilterListGroup({filter, searchParams, onToggle}: {filter: Filter; sear
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-semibold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">{filter.label}</label>
+      <label className={GROUP_LABEL_CLS}>{cleanLabel(filter.label, 'Филтър')}</label>
       <div className="flex flex-col gap-1">
         {visibleValues.map((v) => (
           <label key={v.id} className="flex items-center gap-1.5 text-[0.85rem] cursor-pointer py-0.5 [&_input]:shrink-0">
             <input
               type="checkbox"
-              className="form-checkbox rounded border-gray-300 text-brand focus:ring-brand"
+              className="form-checkbox rounded border-gray-300 text-ink focus:ring-ink"
               checked={isFilterActive(searchParams, v.input)}
               onChange={() => onToggle(v.input)}
             />
@@ -175,7 +189,7 @@ function FilterListGroup({filter, searchParams, onToggle}: {filter: Filter; sear
           className="flex items-center gap-1 text-xs text-gray-500 hover:text-dark transition-colors duration-150 p-0 bg-transparent border-none cursor-pointer font-sans"
         >
           <ChevronDownIcon className={`size-4 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
-          {expanded ? 'Show less' : `Show all ${filter.values.length}`}
+          {expanded ? 'Скрий' : `Виж всички ${filter.values.length}`}
         </button>
       )}
     </div>
@@ -185,7 +199,7 @@ function FilterListGroup({filter, searchParams, onToggle}: {filter: Filter; sear
 function FilterSwatchColorGroup({filter, searchParams, onToggle}: {filter: Filter; searchParams: URLSearchParams; onToggle: (input: string) => void}) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-semibold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">{filter.label}</label>
+      <label className={GROUP_LABEL_CLS}>{cleanLabel(filter.label, 'Филтър')}</label>
       <div className="flex flex-wrap gap-1.5">
         {filter.values.map((v) => (
           <button
@@ -204,7 +218,7 @@ function FilterSwatchColorGroup({filter, searchParams, onToggle}: {filter: Filte
 function FilterSwatchImageGroup({filter, searchParams, onToggle}: {filter: Filter; searchParams: URLSearchParams; onToggle: (input: string) => void}) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-semibold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">{filter.label}</label>
+      <label className={GROUP_LABEL_CLS}>{cleanLabel(filter.label, 'Филтър')}</label>
       <div className="flex flex-wrap gap-1.5">
         {filter.values.map((v) => (
           <button
@@ -233,15 +247,15 @@ function FilterPriceRangeGroup({filter, onUpdateParam, currentMinPrice, currentM
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-semibold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
-        {filter.label}
+      <label className={GROUP_LABEL_CLS}>
+        {cleanLabel(filter.label, 'Цена')}
         {currency && <span className="font-normal normal-case"> ({currency})</span>}
       </label>
       <div className="flex items-center gap-2">
         <input
           key={`min-${currentMinPrice}`}
           type="number"
-          className="form-input w-full py-2 px-2 border-gray-200 rounded-md text-[0.85rem] focus:border-brand focus:ring-0"
+          className="form-input w-full py-2 px-2 border-gray-200 rounded-md text-[0.85rem] focus:border-ink focus:ring-0"
           placeholder={String(min)}
           defaultValue={currentMinPrice}
           onBlur={(e) => onUpdateParam('minPrice', e.target.value)}
@@ -253,7 +267,7 @@ function FilterPriceRangeGroup({filter, onUpdateParam, currentMinPrice, currentM
         <input
           key={`max-${currentMaxPrice}`}
           type="number"
-          className="form-input w-full py-2 px-2 border-gray-200 rounded-md text-[0.85rem] focus:border-brand focus:ring-0"
+          className="form-input w-full py-2 px-2 border-gray-200 rounded-md text-[0.85rem] focus:border-ink focus:ring-0"
           placeholder={String(max)}
           defaultValue={currentMaxPrice}
           onBlur={(e) => onUpdateParam('maxPrice', e.target.value)}
@@ -273,12 +287,12 @@ function FilterRangeGroup({filter, onUpdateParam}: {filter: Filter; onUpdatePara
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-semibold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">{filter.label}</label>
+      <label className={GROUP_LABEL_CLS}>{cleanLabel(filter.label, 'Филтър')}</label>
       <div className="flex items-center gap-2">
         <span className="text-xs text-gray-500 shrink-0 min-w-8 text-center">{min}</span>
         <input
           type="range"
-          className="form-range flex-1 accent-brand"
+          className="form-range flex-1 accent-ink"
           min={min}
           max={max}
           step={step}
@@ -307,7 +321,7 @@ function FilterBooleanGroup({filter, searchParams, onToggle}: {filter: Filter; s
       <label className="flex items-center gap-1.5 text-[0.85rem] cursor-pointer py-0.5">
         <input
           type="checkbox"
-          className="form-checkbox rounded border-gray-300 text-brand focus:ring-brand shrink-0"
+          className="form-checkbox rounded border-gray-300 text-red focus:ring-ink shrink-0"
           checked={isFilterActive(searchParams, trueValue.input)}
           onChange={() => onToggle(trueValue.input)}
         />
