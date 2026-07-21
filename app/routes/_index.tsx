@@ -20,9 +20,10 @@ export async function loader({context, request}: Route.LoaderArgs) {
 }
 
 /* ─────────────────────── assets ─────────────────────── */
-const HERO_SLIDES = [
+type HeroSlide = {img: string; eyebrow: string; title: string; to: string; video?: string; hold?: number};
+const HERO_SLIDES: HeroSlide[] = [
   {img: 'https://cdncloudcart.com/72223/files/image/beckham-db-1229s.jpg?1781002899', eyebrow: 'Нова колекция', title: 'Eyewear by\nDavid Beckham', to: '/search?q=David%20Beckham'},
-  {img: 'https://cdncloudcart.com/72223/files/image/etro-zephyr.jpg?1781002900', eyebrow: 'Нова колекция', title: 'ETRO\nZephyr', to: '/search?q=Etro'},
+  {img: 'https://cdncloudcart.com/72223/files/image/etro-zephyr.jpg?1781002900', video: 'https://cdncloudcart.com/74980/files/video/32-adv-ss26-video-16-9.mp4?1784637245', hold: 12000, eyebrow: 'Нова колекция', title: 'ETRO\nZephyr', to: '/search?q=Etro'},
   {img: 'https://cdncloudcart.com/72223/files/image/herrera-her-0374s.jpg?1781002906', eyebrow: 'Нова колекция', title: 'Carolina\nHerrera', to: '/search?q=Carolina%20Herrera'},
 ];
 
@@ -87,14 +88,28 @@ export default function Homepage() {
 function Hero() {
   const [i, setI] = useState(0);
   useEffect(() => {
-    const id = setInterval(() => setI((p) => (p + 1) % HERO_SLIDES.length), 6000);
-    return () => clearInterval(id);
-  }, []);
+    const hold = HERO_SLIDES[i].hold ?? 6000;
+    const id = setTimeout(() => setI((p) => (p + 1) % HERO_SLIDES.length), hold);
+    return () => clearTimeout(id);
+  }, [i]);
   return (
     <section className="relative h-[86vh] min-h-[580px] overflow-hidden bg-hero">
       {HERO_SLIDES.map((s, idx) => (
         <div key={idx} className={`absolute inset-0 transition-opacity duration-[1100ms] ease-out ${idx === i ? 'opacity-100' : 'pointer-events-none opacity-0'}`}>
-          <div className="absolute inset-0 bg-cover bg-center" style={{backgroundImage: `url('${s.img}')`}} />
+          {s.video ? (
+            <video
+              className="absolute inset-0 h-full w-full object-cover"
+              src={s.video}
+              poster={s.img}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-cover bg-center" style={{backgroundImage: `url('${s.img}')`}} />
+          )}
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
           <div className="absolute bottom-[12vh] left-[6vw] max-w-[640px]">
