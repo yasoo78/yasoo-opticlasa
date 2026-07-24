@@ -147,7 +147,7 @@ function Hero() {
 /* ─────────────── CATEGORY BANNERS — sunglasses / optical ─────────────── */
 function CategoryBanners() {
   return (
-    <div className="mt-0.5 grid gap-0.5 md:grid-cols-2">
+    <div className="grid gap-0.5 md:grid-cols-2">
       {CAT_BANNERS.map((b) => (
         <Link key={b.label} to={b.to} prefetch="intent" className="group relative block h-[58vh] min-h-[400px] overflow-hidden bg-panel">
           <div className="absolute inset-0 bg-cover bg-center transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]" style={{backgroundImage: `url('${b.img}')`}} />
@@ -234,7 +234,7 @@ function BrandsMarquee() {
   if (BRAND_LOGOS.length === 0) return null;
   const row = [...BRAND_LOGOS, ...BRAND_LOGOS];
   return (
-    <section className="bg-off py-12">
+    <section className="-mb-0.5 bg-off py-12">
       <div className="mb-8 text-center font-sans text-[11px] font-semibold uppercase tracking-[0.22em] text-mid">Марки, на които вярвате</div>
       <div className="group/marquee relative overflow-hidden">
         {/* edge fades */}
