@@ -27,9 +27,16 @@ export function Header({shop, menu, cart, overHero = false}: HeaderProps) {
   const {open} = useAside();
   // Sticky header: stays pinned to the top and shrinks once the page is scrolled.
   const [scrolled, setScrolled] = useState(false);
+  // Header top edge follows the promo bar's bottom edge (36px → 0) so it stays
+  // glued to it while the promo bar scrolls away — no gap, no jump.
+  const [topGap, setTopGap] = useState(36);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 36);
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 36);
+      setTopGap(Math.max(0, 36 - y));
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, {passive: true});
     return () => window.removeEventListener('scroll', onScroll);
@@ -42,14 +49,13 @@ export function Header({shop, menu, cart, overHero = false}: HeaderProps) {
     <header
       data-site-header
       className={[
-        'fixed left-0 right-0 z-[200] transition-[top,background-color,border-color] duration-300',
-        scrolled ? 'top-0' : 'top-9',
+        'fixed left-0 right-0 z-[200] transition-[background-color,border-color] duration-300',
         solid ? 'bg-paper border-b border-[#e8e5e0]' : 'border-b border-transparent',
       ].join(' ')}
-      style={{transitionTimingFunction: 'var(--ease-snap)'}}
+      style={{top: `${topGap}px`, transitionTimingFunction: 'var(--ease-snap)'}}
     >
       <nav
-        className={`relative flex items-center justify-between px-7 transition-[height] duration-300 ${scrolled ? 'h-[60px]' : 'h-[92px]'}`}
+        className={`relative flex items-center justify-between px-7 transition-[height] duration-300 ${scrolled ? 'h-[60px]' : 'h-[82px]'}`}
         style={{transitionTimingFunction: 'var(--ease-snap)'}}
       >
         {/* Left — primary nav */}
