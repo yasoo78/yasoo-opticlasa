@@ -66,14 +66,18 @@ export function Header({shop, menu, cart, overHero = false}: HeaderProps) {
               to={item.url}
               prefetch="intent"
               className={[
-                'relative flex h-full items-center whitespace-nowrap px-4 font-sans text-[14px] font-medium tracking-[0.01em] transition-colors',
-                'after:absolute after:bottom-2 after:left-4 after:right-4 after:h-0.5 after:origin-left after:scale-x-0 after:transition-transform after:duration-200 hover:after:scale-x-100',
-                solid
-                  ? 'text-[#333333] hover:text-ink after:bg-ink'
-                  : 'text-white/80 hover:text-white after:bg-white',
+                'group relative flex h-full items-center whitespace-nowrap px-4 font-sans text-[14px] font-medium tracking-[0.01em] transition-colors',
+                solid ? 'text-[#333333] hover:text-ink' : 'text-white/80 hover:text-white',
               ].join(' ')}
             >
-              {item.title}
+              <span
+                className={[
+                  'relative after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-0.5 after:origin-left after:scale-x-0 after:transition-transform after:duration-200 group-hover:after:scale-x-100',
+                  solid ? 'after:bg-ink' : 'after:bg-white',
+                ].join(' ')}
+              >
+                {item.title}
+              </span>
             </NavLink>
           ))}
         </div>

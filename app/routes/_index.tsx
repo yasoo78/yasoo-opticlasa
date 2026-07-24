@@ -34,7 +34,7 @@ const CAT_BANNERS: CatBanner[] = [
 ];
 
 const FEATURE = {
-  img: 'https://js4nc.cloudcart.net/cdn/img/products/559/carolina-lemke-cl1790-16-6a27fdc3ee6fd.jpeg?width=1100&height=1100&v=1781005764',
+  img: 'https://cdncloudcart.com/74980/files/image/pr-img-01b.jpg?1784888193',
   to: '/products/carolina-lemke-cl1790-16',
   brand: 'Carolina Lemke',
   name: 'CL1790 16',
@@ -67,6 +67,7 @@ const ARROW = (
   <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
 );
 const PILL_WHITE = 'inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-sans text-[13px] font-medium text-ink transition-colors hover:bg-ink hover:text-white';
+const PILL_DARK = 'inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 font-sans text-[13px] font-medium text-white transition-colors hover:bg-black';
 
 const onSale = (p: any) => {
   const v = p.variants?.nodes?.[0];
@@ -76,23 +77,15 @@ const onSale = (p: any) => {
 export default function Homepage() {
   const {products, collections} = useLoaderData<typeof loader>();
 
-  const newest = products.slice(0, 5);
-  const best = products.slice(5, 10).length >= 3 ? products.slice(5, 10) : products.slice(0, 5);
-  const disc = products.filter(onSale).slice(0, 5);
-  const discounted = disc.length >= 3 ? disc : products.slice(10, 15);
-
-  const tabs = [
-    {key: 'new', label: 'Нови', to: '/products', products: newest},
-    {key: 'best', label: 'Най-продавани', to: '/products', products: best},
-    {key: 'sale', label: 'Промоции', to: '/products', products: discounted},
-  ].filter((t) => t.products.length > 0);
+  const newest = products.slice(0, 15);
 
   return (
     <>
       <Hero />
       <BrandsMarquee />
       <CategoryBanners />
-      {tabs.length > 0 && <ProductShowcase tabs={tabs} />}
+      {newest.length > 0 && <ProductShowcase title="Нови продукти" to="/products" products={newest} />}
+      <CartierBanner img="https://cdncloudcart.com/74980/files/image/bg-001.jpg?1784885312" heightClass="h-[900px]" overlay={false} dark raise={30} titleSize="text-[clamp(30px,4vw,70px)]" parallax />
       {products.length >= 4 && <Bestsellers products={products.slice(5, 9)} />}
       <CartierBanner />
       <StoreAndContacts />
@@ -182,10 +175,7 @@ function CategoryBanners() {
 }
 
 /* ─────────────── PRODUCT SHOWCASE — tabbed 5-card rail ─────────────── */
-type Tab = {key: string; label: string; to: string; products: Product[]};
-function ProductShowcase({tabs}: {tabs: Tab[]}) {
-  const [active, setActive] = useState(tabs[0].key);
-  const tab = tabs.find((t) => t.key === active) ?? tabs[0];
+function ProductShowcase({title, to, products}: {title: string; to: string; products: Product[]}) {
   const rail = useRef<HTMLDivElement>(null);
   const step = (d: 1 | -1) => {
     const el = rail.current;
@@ -193,18 +183,11 @@ function ProductShowcase({tabs}: {tabs: Tab[]}) {
   };
   return (
     <section className="bg-paper py-20">
-      {/* tab header */}
+      {/* header */}
       <div className="mb-10 flex flex-wrap items-end justify-between gap-x-8 gap-y-5 px-10">
-        <div className="flex items-end gap-8">
-          {tabs.map((t) => (
-            <button key={t.key} type="button" onClick={() => setActive(t.key)} className={`relative pb-2.5 font-display text-[clamp(20px,2.6vw,30px)] font-extrabold uppercase tracking-[-0.015em] transition-colors ${active === t.key ? 'text-ink' : 'text-[#c4c4c4] hover:text-mid'}`}>
-              {t.label}
-              <span className={`absolute inset-x-0 bottom-0 h-[3px] origin-left bg-red transition-transform duration-300 ${active === t.key ? 'scale-x-100' : 'scale-x-0'}`} />
-            </button>
-          ))}
-        </div>
+        <h2 className="font-display text-[clamp(20px,2.6vw,30px)] font-extrabold uppercase tracking-[-0.015em] text-ink">{title}</h2>
         <div className="flex items-center gap-5">
-          <Link to={tab.to} className="hidden items-center gap-1.5 border-b border-ink/30 pb-0.5 font-sans text-[13px] font-medium text-ink transition-colors hover:border-ink sm:inline-flex">
+          <Link to={to} className="hidden items-center gap-1.5 border-b border-ink/30 pb-0.5 font-sans text-[13px] font-medium text-ink transition-colors hover:border-ink sm:inline-flex">
             Виж всички {ARROW}
           </Link>
           <div className="hidden items-center gap-2 sm:flex">
@@ -215,7 +198,7 @@ function ProductShowcase({tabs}: {tabs: Tab[]}) {
       </div>
       {/* card rail */}
       <div ref={rail} className="scrollbar-none flex gap-4 overflow-x-auto scroll-smooth px-10">
-        {tab.products.map((p) => (
+        {products.map((p) => (
           <div key={p.id} className="w-[76%] shrink-0 sm:w-[44%] md:w-[30%] lg:w-[calc((100%-4*1rem)/5)]">
             <ShowcaseCard product={p} />
           </div>
@@ -230,16 +213,16 @@ function ShowcaseCard({product}: {product: Product}) {
   const {brand, name} = splitBrandName(product);
   const img = cdnSize(p.featuredImage?.url, 600);
   return (
-    <Link to={`/products/${product.handle}`} prefetch="intent" className="group flex flex-col text-inherit">
-      <div className="relative aspect-square overflow-hidden bg-white">
+    <Link to={`/products/${product.handle}`} prefetch="intent" className="group flex flex-col bg-[#f5f5f5] text-inherit">
+      <div className="relative aspect-square overflow-hidden bg-[#f5f5f5]">
         {img ? (
-          <img src={img} alt={product.title} loading="lazy" onError={onImgErrorToBase} className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.04]" />
+          <img src={img} alt={product.title} loading="lazy" onError={onImgErrorToBase} className="h-full w-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-[1.04]" />
         ) : (
           <img src="/noimage.svg" alt={product.title} className="h-full w-full object-contain p-6" />
         )}
         {onSale(p) && <span className="absolute left-3 top-3 rounded-full bg-red px-3 py-1 text-[10px] font-medium uppercase tracking-wide text-white">Промо</span>}
       </div>
-      <div className="mt-[11px]">
+      <div className="px-4 pb-4 pt-[11px]">
         <div className="font-display text-[15px] font-semibold uppercase leading-[1.2] tracking-[0.01em] text-ink">{brand || name}</div>
         {brand && name && <div className="mt-1 text-[11px] font-medium uppercase tracking-[0.16em] text-mid">{name}</div>}
         <div className="mt-1.5 text-[14px] font-medium text-ink">{formatMoney(product.priceRange?.minVariantPrice)}</div>
@@ -259,7 +242,7 @@ function BrandsMarquee() {
         {/* edge fades */}
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-off to-transparent" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-off to-transparent" />
-        <div className="animate-marquee flex w-max items-center gap-10 whitespace-nowrap" style={{animationDuration: '55s'}}>
+        <div className="animate-marquee flex w-max items-center gap-[50px] whitespace-nowrap" style={{animationDuration: '55s'}}>
           {row.map((b, i) => (
             <Link
               key={`${b.handle}-${i}`}
@@ -318,8 +301,8 @@ function Bestsellers({products}: {products: Product[]}) {
         {b && <div className="lg:col-start-3 lg:row-start-1"><MosaicCard product={b} /></div>}
         {/* BIG feature — Carolina Lemke, same A&T card style (product on white) */}
         <Link to={FEATURE.to} prefetch="intent" className="group flex h-full flex-col bg-paper text-inherit lg:col-start-1 lg:row-start-2 lg:col-span-2 lg:row-span-2">
-          <div className="min-h-0 flex-1">
-            <img src={FEATURE.img} alt={`${FEATURE.brand} ${FEATURE.name}`} loading="lazy" className="h-full w-full object-contain p-8 transition-transform duration-500 group-hover:scale-[1.05]" />
+          <div className="min-h-0 flex-1 overflow-hidden">
+            <img src={FEATURE.img} alt={`${FEATURE.brand} ${FEATURE.name}`} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]" />
           </div>
           <div className="px-5 pb-5">
             <div className="font-display text-[20px] font-medium tracking-[-0.01em] text-ink">{FEATURE.name}</div>
@@ -334,16 +317,46 @@ function Bestsellers({products}: {products: Product[]}) {
 }
 
 /* ─────────────── CARTIER — premium editorial banner ─────────────── */
-function CartierBanner() {
+function CartierBanner({img = CARTIER, heightClass = 'h-[64vh] min-h-[440px]', overlay = true, dark = false, raise = 0, titleSize = 'text-[clamp(30px,4vw,56px)]', parallax = false}: {img?: string; heightClass?: string; overlay?: boolean; dark?: boolean; raise?: number; titleSize?: string; parallax?: boolean}) {
+  const bgRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!parallax) return;
+    const bg = bgRef.current;
+    const el = bg?.parentElement;
+    if (!bg || !el) return;
+    const onScroll = () => {
+      const rect = el.getBoundingClientRect();
+      const offset = rect.top + rect.height / 2 - window.innerHeight / 2;
+      const posY = Math.max(0, Math.min(100, 50 + offset * 0.05));
+      bg.style.backgroundPosition = `50% ${posY}%`;
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [parallax]);
   return (
-    <Link to="/search?q=Cartier" className="group relative mt-0.5 block h-[64vh] min-h-[440px] overflow-hidden bg-panel">
-      <div className="absolute inset-0 bg-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]" style={{backgroundImage: `url('${CARTIER}')`, backgroundPosition: '50% 10%'}} />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/15 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 flex flex-col items-start gap-4 p-10">
+    <Link to="/search?q=Cartier" className={`group relative mt-0.5 block overflow-hidden bg-panel ${heightClass}`}>
+      <div
+        ref={bgRef}
+        className={parallax
+          ? 'pointer-events-none absolute inset-0 bg-cover will-change-[background-position]'
+          : 'absolute inset-0 bg-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]'}
+        style={{backgroundImage: `url('${img}')`, backgroundPosition: '50% 10%'}}
+      />
+      {overlay && (
+        <>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/15 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
+        </>
+      )}
+      <div className="absolute inset-x-0 flex flex-col items-start gap-4 p-10" style={{bottom: `${raise}px`}}>
         <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.2em] text-red">Premium · Cartier</span>
-        <h2 className="font-display text-[clamp(30px,4vw,56px)] font-extrabold uppercase leading-[1.0] tracking-[-0.02em] text-white">Cartier<br />Collection</h2>
-        <span className={`${PILL_WHITE} pointer-events-none`}>Виж колекцията {ARROW}</span>
+        <h2 className={`font-display ${titleSize} font-extrabold uppercase leading-[1.0] tracking-[-0.02em] ${dark ? 'text-ink' : 'text-white'}`}>Cartier<br />Collection</h2>
+        <span className={`${dark ? PILL_DARK : PILL_WHITE} pointer-events-none`}>Виж колекцията {ARROW}</span>
       </div>
     </Link>
   );
