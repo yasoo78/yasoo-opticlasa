@@ -27,9 +27,10 @@ const HERO_SLIDES: HeroSlide[] = [
   {img: 'https://cdncloudcart.com/74980/files/image/slide3.jpg?1784873484', eyebrow: 'Нова колекция', title: 'Carolina\nHerrera', to: '/search?q=Carolina%20Herrera'},
 ];
 
-const CAT_BANNERS = [
+type CatBanner = {img: string; label: string; to: string; video?: string};
+const CAT_BANNERS: CatBanner[] = [
   {img: 'https://cdncloudcart.com/74980/files/image/cat1.jpg?1784880367', label: 'Слънчеви очила', to: '/collections/slanchevi-ochila'},
-  {img: 'https://cdncloudcart.com/72223/files/image/diopt.jpg?1781058286', label: 'Диоптрични рамки', to: '/collections/optical-glasses'},
+  {img: 'https://cdncloudcart.com/72223/files/image/diopt.jpg?1781058286', video: 'https://cdncloudcart.com/74980/files/video/0-lobby-decor-1280x720.mp4?1784880571', label: 'Диоптрични рамки', to: '/collections/optical-glasses'},
 ];
 
 const FEATURE = {
@@ -151,7 +152,20 @@ function CategoryBanners() {
     <div className="grid gap-0.5 md:grid-cols-2">
       {CAT_BANNERS.map((b) => (
         <Link key={b.label} to={b.to} prefetch="intent" className="group relative block h-[68vh] min-h-[460px] overflow-hidden bg-panel">
-          <div className="absolute inset-0 bg-cover bg-center transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]" style={{backgroundImage: `url('${b.img}')`}} />
+          {b.video ? (
+            <video
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]"
+              src={b.video}
+              poster={b.img}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-cover bg-center transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]" style={{backgroundImage: `url('${b.img}')`}} />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 flex flex-col items-start gap-4 p-9">
             <span className="font-display text-[clamp(22px,2.6vw,32px)] font-bold uppercase tracking-[-0.01em] text-white">{b.label}</span>
