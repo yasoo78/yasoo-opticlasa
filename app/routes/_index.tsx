@@ -246,13 +246,13 @@ function BrandsMarquee() {
               key={`${b.handle}-${i}`}
               to={`/search?q=${encodeURIComponent(b.name)}`}
               aria-label={b.name}
-              className="flex h-12 w-[190px] shrink-0 items-center justify-center opacity-70 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
+              className="flex h-[110px] w-[190px] shrink-0 items-center justify-center opacity-70 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
             >
               <img
-                src={`${VENDORS_BASE}/${b.img}?width=300&height=300`}
+                src={`${VENDORS_BASE}/${b.img}?width=380`}
                 alt={b.name}
                 loading="lazy"
-                className="max-h-full max-w-full object-contain"
+                className="w-full object-contain"
               />
             </Link>
           ))}
