@@ -29,7 +29,7 @@ const HERO_SLIDES: HeroSlide[] = [
 
 type CatBanner = {img: string; label: string; to: string; video?: string};
 const CAT_BANNERS: CatBanner[] = [
-  {img: 'https://cdncloudcart.com/74980/files/image/cat1.jpg?1784880367', label: 'Слънчеви очила', to: '/collections/slanchevi-ochila'},
+  {img: 'https://cdncloudcart.com/74980/files/image/cat1b.jpg?1784882218', label: 'Слънчеви очила', to: '/collections/slanchevi-ochila'},
   {img: 'https://cdncloudcart.com/72223/files/image/diopt.jpg?1781058286', video: 'https://cdncloudcart.com/74980/files/video/0-lobby-decor-1280x720.mp4?1784880571', label: 'Диоптрични рамки', to: '/collections/optical-glasses'},
 ];
 
