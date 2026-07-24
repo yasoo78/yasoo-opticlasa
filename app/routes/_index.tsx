@@ -43,7 +43,22 @@ const CARTIER = 'https://cdncloudcart.com/72223/files/image/cartier.jpg?17810558
 const SHOPS = 'https://cdncloudcart.com/72223/files/image/shops.jpg?1781055742';
 const CONTACTS = 'https://cdncloudcart.com/72223/files/image/contacts-1.jpg?1781056147';
 
-const BRANDS = ['Ray-Ban', 'Cartier', 'Gucci', 'Prada', 'Tom Ford', 'Dior', 'Versace', 'Saint Laurent', 'Carolina Herrera', 'David Beckham', 'Etro', 'Persol', 'Carrera', 'Tiffany & Co', 'Police', 'Carolina Lemke'];
+// Brand logos — ONLY vendors that have an uploaded logo in the store.
+// Sourced from the store's vendor data; add new entries here as more logos go up.
+const VENDORS_BASE = 'https://yasoo-opticlasa.cloudcart.net/cdn/img/vendors';
+const BRAND_LOGOS = [
+  {name: 'Ray-Ban', handle: 'ray-ban-1', img: '123/123.png'},
+  {name: 'Cartier', handle: 'cartier', img: '41/41.png'},
+  {name: 'Prada', handle: 'prada', img: '80/80.png'},
+  {name: 'Tom Ford', handle: 'tom-ford', img: '88/88.png'},
+  {name: 'Saint Laurent', handle: 'saint-laurent', img: '87/87.png'},
+  {name: 'Chopard', handle: 'chopard', img: '42/42.webp'},
+  {name: 'Carolina Herrera', handle: 'carolina-herrera', img: '36/36.png'},
+  {name: 'David Beckham', handle: 'david-beckham', img: '45/45.png'},
+  {name: 'Etro', handle: 'etro', img: '53/53.png'},
+  {name: 'Carrera', handle: 'carrera', img: '39/39.png'},
+  {name: 'Police', handle: 'police', img: '114/114.png'},
+];
 
 /* ── shared bits ── */
 const ARROW = (
@@ -73,9 +88,9 @@ export default function Homepage() {
   return (
     <>
       <Hero />
+      <BrandsMarquee />
       <CategoryBanners />
       {tabs.length > 0 && <ProductShowcase tabs={tabs} />}
-      <BrandsMarquee />
       {products.length >= 4 && <Bestsellers products={products.slice(5, 9)} />}
       <CartierBanner />
       <StoreAndContacts />
@@ -216,7 +231,8 @@ function ShowcaseCard({product}: {product: Product}) {
 
 /* ─────────────── BRANDS — slow infinite marquee of logotypes ─────────────── */
 function BrandsMarquee() {
-  const row = [...BRANDS, ...BRANDS];
+  if (BRAND_LOGOS.length === 0) return null;
+  const row = [...BRAND_LOGOS, ...BRAND_LOGOS];
   return (
     <section className="border-y border-line bg-off py-12">
       <div className="mb-8 text-center font-sans text-[11px] font-semibold uppercase tracking-[0.22em] text-mid">Марки, на които вярвате</div>
@@ -224,10 +240,20 @@ function BrandsMarquee() {
         {/* edge fades */}
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-off to-transparent" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-off to-transparent" />
-        <div className="animate-marquee flex w-max items-center gap-14 whitespace-nowrap" style={{animationDuration: '55s'}}>
+        <div className="animate-marquee flex w-max items-center gap-16 whitespace-nowrap" style={{animationDuration: '55s'}}>
           {row.map((b, i) => (
-            <Link key={`${b}-${i}`} to={`/search?q=${encodeURIComponent(b)}`} className="font-display text-[clamp(20px,2.4vw,30px)] font-extrabold uppercase tracking-[0.04em] text-[#c9c9c9] transition-colors hover:text-ink">
-              {b}
+            <Link
+              key={`${b.handle}-${i}`}
+              to={`/search?q=${encodeURIComponent(b.name)}`}
+              aria-label={b.name}
+              className="flex h-12 shrink-0 items-center opacity-70 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
+            >
+              <img
+                src={`${VENDORS_BASE}/${b.img}?width=300&height=300`}
+                alt={b.name}
+                loading="lazy"
+                className="max-h-full w-auto object-contain"
+              />
             </Link>
           ))}
         </div>
