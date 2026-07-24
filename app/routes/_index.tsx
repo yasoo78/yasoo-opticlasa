@@ -28,7 +28,7 @@ const HERO_SLIDES: HeroSlide[] = [
 ];
 
 const CAT_BANNERS = [
-  {img: 'https://cdncloudcart.com/72223/files/image/sun.jpg?1781058284', label: 'Слънчеви очила', to: '/collections/slanchevi-ochila'},
+  {img: 'https://cdncloudcart.com/74980/files/image/cat1.jpg?1784880367', label: 'Слънчеви очила', to: '/collections/slanchevi-ochila'},
   {img: 'https://cdncloudcart.com/72223/files/image/diopt.jpg?1781058286', label: 'Диоптрични рамки', to: '/collections/optical-glasses'},
 ];
 
@@ -150,7 +150,7 @@ function CategoryBanners() {
   return (
     <div className="grid gap-0.5 md:grid-cols-2">
       {CAT_BANNERS.map((b) => (
-        <Link key={b.label} to={b.to} prefetch="intent" className="group relative block h-[58vh] min-h-[400px] overflow-hidden bg-panel">
+        <Link key={b.label} to={b.to} prefetch="intent" className="group relative block h-[68vh] min-h-[460px] overflow-hidden bg-panel">
           <div className="absolute inset-0 bg-cover bg-center transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]" style={{backgroundImage: `url('${b.img}')`}} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 flex flex-col items-start gap-4 p-9">
