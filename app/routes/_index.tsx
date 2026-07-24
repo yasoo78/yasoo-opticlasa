@@ -87,8 +87,8 @@ export default function Homepage() {
       {newest.length > 0 && <ProductShowcase title="Нови продукти" to="/products" products={newest} />}
       <CartierBanner img="https://cdncloudcart.com/74980/files/image/bg-001.jpg?1784885312" heightClass="h-[900px]" overlay={false} dark raise={30} titleSize="text-[clamp(30px,4vw,70px)]" parallax />
       {products.length >= 4 && <Bestsellers products={products.slice(5, 9)} />}
-      <CartierBanner />
-      <StoreAndContacts />
+      <CartierBanner img="https://cdncloudcart.com/74980/files/image/bg-002.jpg?1784896563" heightClass="h-[900px]" overlay={false} dark raise={30} titleSize="text-[clamp(30px,4vw,70px)]" parallax eyebrow="Нова колекция" title={'Диоптрични\nрамки'} to="/collections/optical-glasses" />
+      <StickyFeatures />
       <Newsletter />
     </>
   );
@@ -316,8 +316,54 @@ function Bestsellers({products}: {products: Product[]}) {
   );
 }
 
+/* ─────────────── STICKY FEATURES — sticky left, scrolling right list ─────────────── */
+const FEATURES = [
+  {title: 'Безплатна доставка', text: 'Всяка поръчка се изпраща напълно безплатно до адрес в цялата страна с куриер Speedy. Доставката е до 2 работни дни след потвърждение.'},
+  {title: 'Пробвай преди да купиш', text: 'При доставка куриерът изчаква да пробвате модела. Ако не ви хареса, връщате го веднага — безплатно и без притеснения.'},
+  {title: 'Гарантирана автентичност', text: 'Всички продукти в Opticlasa са 100% оригинални. Верига с над 20 години доказано качество и надеждност на българския пазар.'},
+  {title: '2 години гаранция', text: 'Две години гаранция срещу фабрични дефекти. Включва и безплатна поддръжка — наносници, накрайници, винтове и ултразвуково почистване.'},
+];
+const FEATURE_ICONS = [
+  // free delivery — truck
+  <svg key="0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.2} strokeLinecap="round" strokeLinejoin="round" className="h-11 w-11"><path d="M3 6.5h11v9.5H3z" /><path d="M14 10h3.6l3.4 3.4V16H14z" /><circle cx="7" cy="18.5" r="1.7" /><circle cx="17.5" cy="18.5" r="1.7" /></svg>,
+  // try before buy — glasses
+  <svg key="1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.2} strokeLinecap="round" strokeLinejoin="round" className="h-11 w-11"><circle cx="6.5" cy="13" r="3.5" /><circle cx="17.5" cy="13" r="3.5" /><path d="M10 13h4M3.2 11.5 5 8.5h3M20.8 11.5 19 8.5h-3" /></svg>,
+  // authenticity — shield check
+  <svg key="2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.2} strokeLinecap="round" strokeLinejoin="round" className="h-11 w-11"><path d="M12 3l7 3v5c0 4.5-3 7.6-7 9-4-1.4-7-4.5-7-9V6z" /><path d="m9 12 2 2 4-4" /></svg>,
+  // warranty — medal
+  <svg key="3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.2} strokeLinecap="round" strokeLinejoin="round" className="h-11 w-11"><circle cx="12" cy="9" r="5.5" /><path d="m8.5 13.5-1.6 7.2 5.1-2.9 5.1 2.9-1.6-7.2" /></svg>,
+];
+function StickyFeatures() {
+  return (
+    <section className="bg-white md:bg-[linear-gradient(to_right,#f5f5f5_50%,#ffffff_50%)]">
+      <div className="mx-auto grid max-w-[1400px] items-start gap-x-16 gap-y-6 px-6 py-24 md:grid-cols-2 md:px-10">
+        {/* Left — sticky */}
+        <div className="md:sticky md:top-[110px] md:self-start md:pr-10">
+          <span className="mb-6 inline-block rounded-full bg-white px-4 py-1.5 font-sans text-[11px] font-semibold uppercase tracking-[0.2em] text-mid">Намери магазин</span>
+          <div className="mb-8 flex items-center gap-4">
+            <span className="font-display text-[clamp(84px,10vw,132px)] font-black leading-[0.8] text-red">34</span>
+            <h2 className="font-display text-[clamp(26px,3.3vw,44px)] font-extrabold uppercase leading-[0.92] tracking-[-0.01em] text-ink">Магазина<br />в България</h2>
+          </div>
+          <p className="mb-8 max-w-[460px] font-sans text-[15px] leading-relaxed text-mid">С над 20 години на пазара, Opticlasa е до вас в цялата страна. Отбийте се в най-близкия магазин за професионална консултация и грижа за вашето зрение.</p>
+          <Link to="/pages/contact" className="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 font-sans text-[13px] font-medium text-white transition-colors hover:bg-red">Намери най-близкия {ARROW}</Link>
+        </div>
+        {/* Right — scrolling list */}
+        <div className="flex flex-col">
+          {FEATURES.map((f, i) => (
+            <div key={f.title} className="flex flex-col items-center gap-3 py-14 text-center">
+              <div className="text-ink">{FEATURE_ICONS[i]}</div>
+              <h3 className="font-display text-[19px] font-semibold tracking-[-0.01em] text-ink">{f.title}</h3>
+              <p className="max-w-[320px] font-sans text-[14px] leading-relaxed text-mid">{f.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─────────────── CARTIER — premium editorial banner ─────────────── */
-function CartierBanner({img = CARTIER, heightClass = 'h-[64vh] min-h-[440px]', overlay = true, dark = false, raise = 0, titleSize = 'text-[clamp(30px,4vw,56px)]', parallax = false}: {img?: string; heightClass?: string; overlay?: boolean; dark?: boolean; raise?: number; titleSize?: string; parallax?: boolean}) {
+function CartierBanner({img = CARTIER, heightClass = 'h-[64vh] min-h-[440px]', overlay = true, dark = false, raise = 0, titleSize = 'text-[clamp(30px,4vw,56px)]', parallax = false, eyebrow = 'Premium · Cartier', title = 'Cartier\nCollection', to = '/search?q=Cartier'}: {img?: string; heightClass?: string; overlay?: boolean; dark?: boolean; raise?: number; titleSize?: string; parallax?: boolean; eyebrow?: string; title?: string; to?: string}) {
   const bgRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!parallax) return;
@@ -327,7 +373,7 @@ function CartierBanner({img = CARTIER, heightClass = 'h-[64vh] min-h-[440px]', o
     const onScroll = () => {
       const rect = el.getBoundingClientRect();
       const offset = rect.top + rect.height / 2 - window.innerHeight / 2;
-      const posY = Math.max(0, Math.min(100, 50 + offset * 0.05));
+      const posY = Math.max(0, Math.min(100, 50 + offset * 0.11));
       bg.style.backgroundPosition = `50% ${posY}%`;
     };
     onScroll();
@@ -339,7 +385,7 @@ function CartierBanner({img = CARTIER, heightClass = 'h-[64vh] min-h-[440px]', o
     };
   }, [parallax]);
   return (
-    <Link to="/search?q=Cartier" className={`group relative mt-0.5 block overflow-hidden bg-panel ${heightClass}`}>
+    <Link to={to} className={`group relative mt-0.5 block overflow-hidden bg-panel ${heightClass}`}>
       <div
         ref={bgRef}
         className={parallax
@@ -354,8 +400,8 @@ function CartierBanner({img = CARTIER, heightClass = 'h-[64vh] min-h-[440px]', o
         </>
       )}
       <div className="absolute inset-x-0 flex flex-col items-start gap-4 p-10" style={{bottom: `${raise}px`}}>
-        <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.2em] text-red">Premium · Cartier</span>
-        <h2 className={`font-display ${titleSize} font-extrabold uppercase leading-[1.0] tracking-[-0.02em] ${dark ? 'text-ink' : 'text-white'}`}>Cartier<br />Collection</h2>
+        <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.2em] text-red">{eyebrow}</span>
+        <h2 className={`whitespace-pre-line font-display ${titleSize} font-extrabold uppercase leading-[1.0] tracking-[-0.02em] ${dark ? 'text-ink' : 'text-white'}`}>{title}</h2>
         <span className={`${dark ? PILL_DARK : PILL_WHITE} pointer-events-none`}>Виж колекцията {ARROW}</span>
       </div>
     </Link>
