@@ -168,7 +168,11 @@ function CategoryBanners() {
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 flex flex-col items-start gap-4 p-9">
-            <span className="font-display text-[clamp(22px,2.6vw,32px)] font-bold uppercase tracking-[-0.01em] text-white">{b.label}</span>
+            <span className="font-display text-[60px] font-black uppercase leading-none tracking-[-0.01em] text-white">
+              {b.label.split(' ')[0]}
+              <br />
+              {b.label.split(' ').slice(1).join(' ')}
+            </span>
             <span className={`${PILL_WHITE} pointer-events-none`}>Разгледай {ARROW}</span>
           </div>
         </Link>
