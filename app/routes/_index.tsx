@@ -241,16 +241,16 @@ function BrandsMarquee() {
         {/* edge fades */}
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-off to-transparent" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-off to-transparent" />
-        <div className="animate-marquee flex w-max items-center gap-16 whitespace-nowrap" style={{animationDuration: '55s'}}>
+        <div className="animate-marquee flex w-max items-center gap-10 whitespace-nowrap" style={{animationDuration: '55s'}}>
           {row.map((b, i) => (
             <Link
               key={`${b.handle}-${i}`}
               to={`/search?q=${encodeURIComponent(b.name)}`}
               aria-label={b.name}
-              className="flex h-[110px] w-[190px] shrink-0 items-center justify-center opacity-70 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
+              className="flex h-[87px] w-[150px] shrink-0 items-center justify-center opacity-70 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
             >
               <img
-                src={`${VENDORS_BASE}/${b.img}?width=380`}
+                src={`${VENDORS_BASE}/${b.img}?width=380&v=2`}
                 alt={b.name}
                 loading="lazy"
                 className="w-full object-contain"
