@@ -26,10 +26,10 @@ export function PageLayout({shop, headerMenu, footerMenu, cart, children}: PageL
       <Header shop={shop} menu={headerMenu} cart={cart} overHero={false} reveal={!isProduct} />
       {isHome ? (
         // Editorial canvas — full-bleed, sections self-stack with a 2px gap; offset to clear the solid header.
-        <main className="flex w-full flex-1 flex-col gap-0.5 pt-[68px]">{children}</main>
+        <main className="flex w-full flex-1 flex-col gap-0.5 pt-[92px]">{children}</main>
       ) : isProduct ? (
         // PDP — full-bleed editorial; offset to clear the fixed header.
-        <main className="w-full flex-1 pt-[68px]">{children}</main>
+        <main className="w-full flex-1 pt-[92px]">{children}</main>
       ) : isCollection ? (
         // Category/PLP — full width (no max-w cap, no extra padding); gutter from ProductListing.
         <main className="w-full flex-1 pt-[92px]">{children}</main>

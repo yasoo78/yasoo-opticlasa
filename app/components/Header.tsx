@@ -1,5 +1,5 @@
 import {NavLink, Link, Await} from 'react-router';
-import {Suspense, useEffect, useRef, useState} from 'react';
+import {Suspense, useEffect, useState} from 'react';
 import type {Shop, Menu, CartData} from '@cloudcart/nitrogen';
 import {useAside} from './Aside';
 import {MagnifyingGlassIcon, ShoppingBagIcon, HeartIcon} from '@heroicons/react/24/outline';
@@ -22,29 +22,18 @@ const FALLBACK_MENU = [
   {title: 'Нови', url: '/collections'},
 ];
 
-export function Header({shop, menu, cart, overHero = false, reveal = true}: HeaderProps) {
+export function Header({shop, menu, cart, overHero = false}: HeaderProps) {
   const items = (menu?.items?.length ? menu.items : FALLBACK_MENU).slice(0, 4);
   const {open} = useAside();
+  // Sticky header: stays pinned to the top and shrinks once the page is scrolled.
   const [scrolled, setScrolled] = useState(false);
-  // Headroom reveal: hide the bar on scroll-down, slide it back on any scroll-up.
-  const [hidden, setHidden] = useState(false);
-  const lastY = useRef(0);
 
   useEffect(() => {
-    lastY.current = window.scrollY;
-    const onScroll = () => {
-      const y = window.scrollY;
-      setScrolled(y > 36);
-      const dy = y - lastY.current;
-      if (!reveal || y < 80) setHidden(false);
-      else if (dy > 4) setHidden(true);      // scrolling down → hide
-      else if (dy < -4) setHidden(false);    // scrolling up → reveal
-      lastY.current = y;
-    };
+    const onScroll = () => setScrolled(window.scrollY > 36);
     onScroll();
     window.addEventListener('scroll', onScroll, {passive: true});
     return () => window.removeEventListener('scroll', onScroll);
-  }, [reveal]);
+  }, []);
 
   // Solid (white) when scrolled, or on any non-hero page.
   const solid = scrolled || !overHero;
@@ -53,14 +42,16 @@ export function Header({shop, menu, cart, overHero = false, reveal = true}: Head
     <header
       data-site-header
       className={[
-        'fixed left-0 right-0 z-[200] transition-[top,transform,background-color,border-color] duration-300 will-change-transform',
+        'fixed left-0 right-0 z-[200] transition-[top,background-color,border-color] duration-300',
         scrolled ? 'top-0' : 'top-9',
-        hidden ? '-translate-y-[140%]' : 'translate-y-0',
         solid ? 'bg-paper border-b border-[#e8e5e0]' : 'border-b border-transparent',
       ].join(' ')}
       style={{transitionTimingFunction: 'var(--ease-snap)'}}
     >
-      <nav className="relative flex h-[68px] items-center justify-between px-7">
+      <nav
+        className={`relative flex items-center justify-between px-7 transition-[height] duration-300 ${scrolled ? 'h-[60px]' : 'h-[92px]'}`}
+        style={{transitionTimingFunction: 'var(--ease-snap)'}}
+      >
         {/* Left — primary nav */}
         <div className="hidden items-center md:flex">
           {items.map((item) => (
@@ -69,10 +60,10 @@ export function Header({shop, menu, cart, overHero = false, reveal = true}: Head
               to={item.url}
               prefetch="intent"
               className={[
-                'relative flex h-[68px] items-center whitespace-nowrap px-4 font-sans text-[13px] font-medium tracking-[0.01em] transition-colors',
+                'relative flex h-full items-center whitespace-nowrap px-4 font-sans text-[14px] font-medium tracking-[0.01em] transition-colors',
                 'after:absolute after:bottom-2 after:left-4 after:right-4 after:h-0.5 after:origin-left after:scale-x-0 after:transition-transform after:duration-200 hover:after:scale-x-100',
                 solid
-                  ? 'text-mid hover:text-ink after:bg-ink'
+                  ? 'text-[#333333] hover:text-ink after:bg-ink'
                   : 'text-white/80 hover:text-white after:bg-white',
               ].join(' ')}
             >
@@ -83,14 +74,19 @@ export function Header({shop, menu, cart, overHero = false, reveal = true}: Head
 
         {/* Center — logo (absolutely centered on the page) */}
         <Link to="/" aria-label={shop.name || 'Opticlasa'} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          <img src={LOGO} alt={shop.name || 'Opticlasa'} className="h-[38px] w-auto" />
+          <img
+            src={LOGO}
+            alt={shop.name || 'Opticlasa'}
+            className={`w-auto transition-[height] duration-300 ${scrolled ? 'h-[32px]' : 'h-[50px]'}`}
+            style={{transitionTimingFunction: 'var(--ease-snap)'}}
+          />
         </Link>
 
         {/* Right — special links + CTA + icons */}
         <div className="flex items-center gap-1">
           <Link
             to="/collections"
-            className={`mr-1.5 hidden rounded-full border px-3.5 py-1.5 font-display text-[11px] font-extrabold uppercase leading-none tracking-[0.14em] transition-colors lg:inline-block ${
+            className={`mr-1.5 hidden rounded-full border px-4 py-2 font-display text-[12px] font-extrabold uppercase leading-none tracking-[0.14em] transition-colors lg:inline-block ${
               solid
                 ? 'border-red text-red hover:bg-red hover:text-white'
                 : 'border-white/60 text-white hover:bg-white hover:text-red'
@@ -100,17 +96,17 @@ export function Header({shop, menu, cart, overHero = false, reveal = true}: Head
           </Link>
           <Link
             to="/collections"
-            className="mr-4 hidden rounded-full border border-[#c9a24a]/70 px-3.5 py-1.5 font-display text-[11px] font-extrabold uppercase leading-none tracking-[0.16em] transition-colors hover:bg-[#e7c97f]/15 lg:inline-block"
+            className="mr-4 hidden rounded-full border border-[#c9a24a]/70 px-4 py-2 font-display text-[12px] font-extrabold uppercase leading-none tracking-[0.16em] transition-colors hover:bg-[#e7c97f]/15 lg:inline-block"
           >
             <span className="bg-gradient-to-r from-[#b8893d] via-[#e7c97f] to-[#b8893d] bg-clip-text text-transparent">
               Premium
             </span>
           </Link>
           <IconLink to="/search" label="Search" solid={solid}>
-            <MagnifyingGlassIcon className="size-[18px]" />
+            <MagnifyingGlassIcon className="size-[20px]" />
           </IconLink>
           <IconLink to="/account/wishlist" label="Wishlist" solid={solid}>
-            <HeartIcon className="size-[18px]" />
+            <HeartIcon className="size-[20px]" />
           </IconLink>
           <button
             type="button"
@@ -120,7 +116,7 @@ export function Header({shop, menu, cart, overHero = false, reveal = true}: Head
               solid ? 'text-mid hover:text-ink' : 'text-white/70 hover:text-white'
             }`}
           >
-            <ShoppingBagIcon className="size-[18px]" />
+            <ShoppingBagIcon className="size-[20px]" />
             <Suspense>
               <Await resolve={cart}>
                 {(resolvedCart) =>
