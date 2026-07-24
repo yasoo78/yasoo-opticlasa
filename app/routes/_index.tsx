@@ -24,7 +24,7 @@ type HeroSlide = {img: string; eyebrow: string; title: string; to: string; video
 const HERO_SLIDES: HeroSlide[] = [
   {img: 'https://cdncloudcart.com/74980/files/image/slide2.jpg?1784638750', eyebrow: 'Нова колекция', title: 'Eyewear by\nDavid Beckham', to: '/search?q=David%20Beckham'},
   {img: 'https://cdncloudcart.com/72223/files/image/etro-zephyr.jpg?1781002900', video: 'https://cdncloudcart.com/74980/files/video/32-adv-ss26-video-16-9.mp4?1784637245', hold: 12000, eyebrow: 'Нова колекция', title: 'CHOPARD\nEYEWEAR', to: '/collections/slanchevi-ochila?vendor=chopard'},
-  {img: 'https://cdncloudcart.com/72223/files/image/herrera-her-0374s.jpg?1781002906', eyebrow: 'Нова колекция', title: 'Carolina\nHerrera', to: '/search?q=Carolina%20Herrera'},
+  {img: 'https://cdncloudcart.com/74980/files/image/slide3.jpg?1784873484', eyebrow: 'Нова колекция', title: 'Carolina\nHerrera', to: '/search?q=Carolina%20Herrera'},
 ];
 
 const CAT_BANNERS = [
@@ -234,25 +234,25 @@ function BrandsMarquee() {
   if (BRAND_LOGOS.length === 0) return null;
   const row = [...BRAND_LOGOS, ...BRAND_LOGOS];
   return (
-    <section className="border-y border-line bg-off py-12">
+    <section className="bg-off pt-12 pb-0">
       <div className="mb-8 text-center font-sans text-[11px] font-semibold uppercase tracking-[0.22em] text-mid">Марки, на които вярвате</div>
       <div className="group/marquee relative overflow-hidden">
         {/* edge fades */}
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-off to-transparent" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-off to-transparent" />
-        <div className="animate-marquee flex w-max items-center gap-16 whitespace-nowrap" style={{animationDuration: '55s'}}>
+        <div className="animate-marquee flex w-max items-center gap-6 whitespace-nowrap" style={{animationDuration: '55s'}}>
           {row.map((b, i) => (
             <Link
               key={`${b.handle}-${i}`}
               to={`/search?q=${encodeURIComponent(b.name)}`}
               aria-label={b.name}
-              className="flex h-12 shrink-0 items-center opacity-70 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
+              className="flex h-16 w-[190px] shrink-0 items-center justify-center opacity-70 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
             >
               <img
                 src={`${VENDORS_BASE}/${b.img}?width=300&height=300`}
                 alt={b.name}
                 loading="lazy"
-                className="max-h-full w-auto object-contain"
+                className="max-h-full max-w-full object-contain"
               />
             </Link>
           ))}
