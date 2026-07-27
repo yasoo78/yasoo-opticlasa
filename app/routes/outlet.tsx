@@ -29,8 +29,8 @@ const HERO_SLIDES: HeroSlide[] = [
 
 type CatBanner = {img: string; label: string; to: string; video?: string};
 const CAT_BANNERS: CatBanner[] = [
-  {img: 'https://cdncloudcart.com/74980/files/image/cat1b.jpg?1784882218', label: 'Слънчеви очила', to: '/collections/slanchevi-ochila'},
-  {img: 'https://cdncloudcart.com/72223/files/image/diopt.jpg?1781058286', video: 'https://cdncloudcart.com/74980/files/video/0-lobby-decor-1280x720.mp4?1784880571', label: 'Диоптрични рамки', to: '/collections/optical-glasses'},
+  {img: 'https://cdncloudcart.com/74980/files/image/cat4.jpg?1785149469', label: 'Слънчеви очила', to: '/collections/slanchevi-ochila'},
+  {img: 'https://cdncloudcart.com/74980/files/image/cat5.jpg?1785149480', label: 'Диоптрични рамки', to: '/collections/optical-glasses'},
 ];
 
 const FEATURE = {
@@ -81,11 +81,10 @@ export default function OutletPage() {
 
   return (
     <>
-      <CartierBanner img="https://cdncloudcart.com/74980/files/image/bg-001.jpg?1784885312" heightClass="h-[400px]" overlay={false} dark raise={30} titleSize="text-[clamp(30px,4vw,70px)]" parallax eyebrow="Актуални предложения" title="OUTLET" button={false} />
-      {newest.length > 0 && <ProductShowcase title="OUTLET - Топ предложения" to="/products" products={newest} />}
+      <CartierBanner img="https://cdncloudcart.com/74980/files/image/bg-004b.jpg?1785147043" heightClass="h-[400px]" overlay={false} dark raise={30} titleSize="text-[clamp(30px,4vw,70px)]" parallax eyebrow="Актуални предложения" title="OUTLET" button={false} />
+      {newest.length > 0 && <ProductShowcase title="Топ оферти" to="/products" products={newest} />}
       <CategoryBanners />
-      {newest.length > 0 && <ProductShowcase title="Намалени продукти" to="/products" products={newest} grid />}
-      <StickyFeatures />
+      {products.length > 0 && <ProductShowcase title="Намалени продукти" to="/collections/slanchevi-ochila" products={products.slice(0, 20)} grid moreButton="Виж всички намалени продукти" />}
       <Newsletter />
     </>
   );
@@ -175,14 +174,14 @@ function CategoryBanners() {
 }
 
 /* ─────────────── PRODUCT SHOWCASE — tabbed 5-card rail ─────────────── */
-function ProductShowcase({title, to, products, grid = false}: {title: string; to: string; products: Product[]; grid?: boolean}) {
+function ProductShowcase({title, to, products, grid = false, moreButton = ''}: {title: string; to: string; products: Product[]; grid?: boolean; moreButton?: string}) {
   const rail = useRef<HTMLDivElement>(null);
   const step = (d: 1 | -1) => {
     const el = rail.current;
     if (el) el.scrollBy({left: d * el.clientWidth * 0.8, behavior: 'smooth'});
   };
   return (
-    <section className="bg-paper py-20">
+    <section className={`bg-paper pt-20 ${moreButton ? 'pb-8' : 'pb-20'}`}>
       {/* header */}
       <div className="mb-10 flex flex-wrap items-end justify-between gap-x-8 gap-y-5 px-10">
         <h2 className="font-display text-[clamp(20px,2.6vw,30px)] font-extrabold uppercase tracking-[-0.015em] text-ink">{title}</h2>
@@ -213,6 +212,11 @@ function ProductShowcase({title, to, products, grid = false}: {title: string; to
               <ShowcaseCard product={p} />
             </div>
           ))}
+        </div>
+      )}
+      {moreButton && (
+        <div className="mt-14 flex justify-center px-10">
+          <Link to={to} className="inline-flex items-center gap-2 rounded-full bg-red px-8 py-3.5 font-sans text-[14px] font-medium text-white transition-colors hover:bg-red-dark">{moreButton} {ARROW}</Link>
         </div>
       )}
     </section>
@@ -359,7 +363,7 @@ function StickyFeatures() {
 }
 
 /* ─────────────── CARTIER — premium editorial banner ─────────────── */
-function CartierBanner({img = CARTIER, heightClass = 'h-[64vh] min-h-[440px]', overlay = true, dark = false, raise = 0, titleSize = 'text-[clamp(30px,4vw,56px)]', parallax = false, eyebrow = 'Premium · Cartier', title = 'Cartier\nCollection', to = '/search?q=Cartier', button = true}: {img?: string; heightClass?: string; overlay?: boolean; dark?: boolean; raise?: number; titleSize?: string; parallax?: boolean; eyebrow?: string; title?: string; to?: string; button?: boolean}) {
+function CartierBanner({img = CARTIER, heightClass = 'h-[64vh] min-h-[440px]', overlay = true, dark = false, raise = 0, titleSize = 'text-[clamp(30px,4vw,56px)]', parallax = false, eyebrow = 'Premium · Cartier', title = 'Cartier\nCollection', to = '/search?q=Cartier', button = true, position = '50% 10%'}: {img?: string; heightClass?: string; overlay?: boolean; dark?: boolean; raise?: number; titleSize?: string; parallax?: boolean; eyebrow?: string; title?: string; to?: string; button?: boolean; position?: string}) {
   const bgRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!parallax) return;
@@ -387,7 +391,7 @@ function CartierBanner({img = CARTIER, heightClass = 'h-[64vh] min-h-[440px]', o
         className={parallax
           ? 'pointer-events-none absolute inset-0 bg-cover will-change-[background-position]'
           : 'absolute inset-0 bg-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]'}
-        style={{backgroundImage: `url('${img}')`, backgroundPosition: '50% 10%'}}
+        style={{backgroundImage: `url('${img}')`, backgroundPosition: position}}
       />
       {overlay && (
         <>
