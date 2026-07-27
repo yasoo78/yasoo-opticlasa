@@ -1,36 +1,39 @@
 import {Link, useLoaderData} from 'react-router';
 import {useEffect, useRef, useState} from 'react';
-import type {Route} from './+types/_index';
+import type {Route} from './+types/premium';
 import {getContext} from '~/lib/context';
 import {getSeoMeta} from '@cloudcart/nitrogen';
 import type {Collection, Product} from '@cloudcart/nitrogen';
 import {splitBrandName, formatMoney, getColor} from '~/lib/product';
 import {cdnSize, onImgErrorToBase} from '~/lib/img';
+import {SELECTIONS} from '~/lib/selections';
 
 export const meta: Route.MetaFunction = () =>
-  getSeoMeta({title: 'Opticlasa — Очила от водещи марки', description: 'Слънчеви очила и диоптрични рамки от Cartier, Gucci, Tom Ford, Ray-Ban и още 50+ марки.'});
+  getSeoMeta({title: 'Premium — Opticlasa', description: 'Premium колекция очила от водещите световни марки.'});
 
 export async function loader({context, request}: Route.LoaderArgs) {
   const ctx = await getContext(context, request);
-  const [products, collections] = await Promise.all([
+  const byHandles = (hs: string[]) =>
+    Promise.all(hs.map((h) => ctx.storefront.getProduct(h).catch(() => null))).then((a) => a.filter(Boolean) as Product[]);
+  const [products, collections, womenProducts, menProducts] = await Promise.all([
     ctx.storefront.getProducts(30).catch(() => [] as Product[]),
     ctx.storefront.getCollections(8).catch(() => [] as Collection[]),
+    byHandles(SELECTIONS['premium-kolekciya-jeni'].products.slice(0, 5)),
+    byHandles(SELECTIONS['premium-kolekciya-maje'].products.slice(0, 5)),
   ]);
-  return {products, collections};
+  return {products, collections, womenProducts, menProducts};
 }
 
 /* ─────────────────────── assets ─────────────────────── */
-type HeroSlide = {img: string; eyebrow: string; title: string; to: string; video?: string; hold?: number};
+type HeroSlide = {img: string; mobileImg?: string; eyebrow: string; title: string; to: string; video?: string; hold?: number};
 const HERO_SLIDES: HeroSlide[] = [
-  {img: 'https://cdncloudcart.com/74980/files/image/slide2.jpg?1784638750', eyebrow: 'Нова колекция', title: 'Eyewear by\nDavid Beckham', to: '/search?q=David%20Beckham'},
-  {img: 'https://cdncloudcart.com/72223/files/image/etro-zephyr.jpg?1781002900', video: 'https://cdncloudcart.com/74980/files/video/32-adv-ss26-video-16-9.mp4?1784637245', hold: 12000, eyebrow: 'Нова колекция', title: 'CHOPARD\nEYEWEAR', to: '/collections/slanchevi-ochila?vendor=chopard'},
-  {img: 'https://cdncloudcart.com/74980/files/image/slide3.jpg?1784873484', eyebrow: 'Нова колекция', title: 'Carolina\nHerrera', to: '/search?q=Carolina%20Herrera'},
+  {img: 'https://cdncloudcart.com/74980/files/image/slide-premium.jpg?1785130808', mobileImg: 'https://cdncloudcart.com/74980/files/image/slide-premiumm.jpg?1785132192', eyebrow: 'Нова колекция', title: 'PREMIUM\nСЕЛЕКЦИЯ', to: '/collections'},
 ];
 
 type CatBanner = {img: string; label: string; to: string; video?: string};
 const CAT_BANNERS: CatBanner[] = [
-  {img: 'https://cdncloudcart.com/74980/files/image/cat1b.jpg?1784882218', label: 'Слънчеви очила', to: '/collections/slanchevi-ochila'},
-  {img: 'https://cdncloudcart.com/72223/files/image/diopt.jpg?1781058286', video: 'https://cdncloudcart.com/74980/files/video/0-lobby-decor-1280x720.mp4?1784880571', label: 'Диоптрични рамки', to: '/collections/optical-glasses'},
+  {img: 'https://cdncloudcart.com/74980/files/image/cat2.jpg?1785134922', label: 'Жени', to: '/collections/slanchevi-ochila'},
+  {img: 'https://cdncloudcart.com/74980/files/image/cat3.jpg?1785134923', label: 'Мъже', to: '/collections/optical-glasses'},
 ];
 
 const FEATURE = {
@@ -74,19 +77,20 @@ const onSale = (p: any) => {
   return v?.compareAtPrice && parseFloat(v.compareAtPrice.amount) > parseFloat(v.price.amount);
 };
 
-export default function Homepage() {
-  const {products, collections} = useLoaderData<typeof loader>();
+export default function PremiumPage() {
+  const {products, collections, menProducts, womenProducts} = useLoaderData<typeof loader>();
 
-  const newest = products.slice(0, 15);
+  const womenBest = womenProducts.length >= 4 ? womenProducts : products.slice(5, 9);
+  const menBest = menProducts.length >= 4 ? menProducts : products.slice(5, 9);
 
   return (
     <>
       <Hero />
-      <BrandsMarquee />
       <CategoryBanners />
-      {newest.length > 0 && <ProductShowcase title="Нови продукти" to="/products" products={newest} />}
-      <CartierBanner img="https://cdncloudcart.com/74980/files/image/bg-001.jpg?1784885312" heightClass="h-[900px]" overlay={false} dark raise={30} titleSize="text-[clamp(30px,4vw,70px)]" parallax />
-      {products.length >= 4 && <Bestsellers products={products.slice(5, 9)} />}
+      <BrandsMarquee />
+      {womenBest.length >= 4 && <Bestsellers products={womenBest} to="/selection/premium-kolekciya-jeni" feature={{img: 'https://cdncloudcart.com/74980/files/image/pr-img-02.jpg?1785139948', name: 'DITA AEOVA A - 01', brand: 'Dita', to: '/products/dita-aeova-a-01'}} />}
+      <CartierBanner img="https://cdncloudcart.com/74980/files/image/bg-003b.jpg?1785136812" heightClass="h-[900px]" overlay={false} dark raise={30} titleSize="text-[clamp(30px,4vw,70px)]" parallax eyebrow="Нова колекция" title={'DITA PREMIUM\nCOLLECTION'} to="/search?q=DITA" />
+      {menBest.length >= 4 && <Bestsellers products={menBest} title={'Избрани модели\nза мъже'} to="/selection/premium-kolekciya-maje" feature={{img: 'https://cdncloudcart.com/74980/files/image/pr-img-03.jpg?1785140632', name: 'David Beckham DB 1199', brand: 'David Beckham', to: '/products/david-beckham-db-1199gs-kb73o'}} />}
       <CartierBanner img="https://cdncloudcart.com/74980/files/image/bg-002.jpg?1784896563" heightClass="h-[900px]" overlay={false} dark raise={30} titleSize="text-[clamp(30px,4vw,70px)]" parallax eyebrow="Нова колекция" title={'Диоптрични\nрамки'} to="/collections/optical-glasses" />
       <StickyFeatures />
       <Newsletter />
@@ -103,7 +107,7 @@ function Hero() {
     return () => clearTimeout(id);
   }, [i]);
   return (
-    <section className="relative h-[86vh] min-h-[580px] overflow-hidden bg-hero">
+    <section className="relative aspect-[1200/1067] overflow-hidden bg-hero md:aspect-auto md:h-[800px]">
       {HERO_SLIDES.map((s, idx) => (
         <div key={idx} className={`absolute inset-0 transition-opacity duration-[1100ms] ease-out ${idx === i ? 'opacity-100' : 'pointer-events-none opacity-0'}`}>
           {s.video ? (
@@ -118,7 +122,10 @@ function Hero() {
               preload="metadata"
             />
           ) : (
-            <div className="absolute inset-0 bg-cover bg-center" style={{backgroundImage: `url('${s.img}')`}} />
+            <>
+              <div className="absolute inset-0 bg-cover bg-center md:hidden" style={{backgroundImage: `url('${s.mobileImg || s.img}')`}} />
+              <div className="absolute inset-0 hidden bg-cover bg-center md:block" style={{backgroundImage: `url('${s.img}')`}} />
+            </>
           )}
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
@@ -130,11 +137,13 @@ function Hero() {
         </div>
       ))}
       {/* indicators */}
-      <div className="absolute bottom-7 left-1/2 flex -translate-x-1/2 items-center gap-2.5">
-        {HERO_SLIDES.map((_, idx) => (
-          <button key={idx} type="button" aria-label={`Слайд ${idx + 1}`} onClick={() => setI(idx)} className={`h-[3px] rounded-full transition-all duration-300 ${idx === i ? 'w-8 bg-white' : 'w-4 bg-white/45 hover:bg-white/70'}`} />
-        ))}
-      </div>
+      {HERO_SLIDES.length > 1 && (
+        <div className="absolute bottom-7 left-1/2 flex -translate-x-1/2 items-center gap-2.5">
+          {HERO_SLIDES.map((_, idx) => (
+            <button key={idx} type="button" aria-label={`Слайд ${idx + 1}`} onClick={() => setI(idx)} className={`h-[3px] rounded-full transition-all duration-300 ${idx === i ? 'w-8 bg-white' : 'w-4 bg-white/45 hover:bg-white/70'}`} />
+          ))}
+        </div>
+      )}
     </section>
   );
 }
@@ -160,12 +169,11 @@ function CategoryBanners() {
             <div className="absolute inset-0 bg-cover bg-center transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]" style={{backgroundImage: `url('${b.img}')`}} />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 flex flex-col items-start gap-4 p-9">
-            <span className="font-display text-[34px] sm:text-[48px] lg:text-[60px] font-black uppercase leading-none tracking-[-0.01em] text-white">
-              {b.label.split(' ')[0]}
-              <br />
-              {b.label.split(' ').slice(1).join(' ')}
-            </span>
+          <div className="absolute inset-x-0 bottom-0 flex flex-col items-start gap-5 p-9">
+            <div>
+              <span className="mb-3 block font-sans text-[11px] font-semibold uppercase tracking-[0.24em] text-white/85">Премиум колекция</span>
+              <span className="block font-display text-[34px] sm:text-[48px] lg:text-[60px] font-black uppercase leading-none tracking-[-0.01em] text-white">{b.label}</span>
+            </div>
             <span className={`${PILL_WHITE} pointer-events-none`}>Разгледай {ARROW}</span>
           </div>
         </Link>
@@ -237,7 +245,7 @@ function BrandsMarquee() {
   const row = [...BRAND_LOGOS, ...BRAND_LOGOS];
   return (
     <section className="-mb-0.5 bg-off py-12">
-      <div className="mb-8 text-center font-sans text-[11px] font-semibold uppercase tracking-[0.22em] text-mid">Марки, на които вярвате</div>
+      <div className="mb-8 text-center font-sans text-[11px] font-semibold uppercase tracking-[0.22em] text-mid">Премиум марки, на които вярвате</div>
       <div className="group/marquee relative overflow-hidden">
         {/* edge fades */}
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-off to-transparent" />
@@ -286,31 +294,31 @@ function MosaicCard({product, big = false}: {product: Product; big?: boolean}) {
   );
 }
 
-function Bestsellers({products}: {products: Product[]}) {
+function Bestsellers({products, title = 'Избрани модели\nза жени', to = '/products', feature = FEATURE}: {products: Product[]; title?: string; to?: string; feature?: {img: string; name: string; brand: string; to: string}}) {
   const [a, b, c, d] = products; // a,b = top row · c,d = right column · big = Carolina Lemke feature
   return (
     <section className="bg-off">
-      <div className="grid grid-cols-2 gap-0.5 lg:grid-cols-3 lg:grid-rows-3 lg:[grid-template-rows:repeat(3,minmax(0,17rem))]">
+      <div className="grid grid-cols-2 gap-0.5 [grid-auto-rows:minmax(0,20rem)] lg:grid-cols-3 lg:[grid-auto-rows:minmax(0,30rem)]">
         {/* title cell */}
-        <div className="flex flex-col items-start justify-center gap-5 bg-paper p-8 lg:col-start-1 lg:row-start-1">
-          <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.2em] text-red">Акценти</span>
-          <h2 className="font-display text-[clamp(26px,3.2vw,40px)] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-ink">Избрани<br />модели</h2>
-          <Link to="/products" className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 font-sans text-[13px] font-medium text-white transition-colors hover:bg-red">Разгледай {ARROW}</Link>
+        <div className="flex flex-col items-start justify-center gap-5 bg-paper p-8">
+          <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.2em] text-red">Premium</span>
+          <h2 className="whitespace-pre-line font-display text-[clamp(26px,3.2vw,40px)] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-ink">{title}</h2>
+          <Link to={to} className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 font-sans text-[13px] font-medium text-white transition-colors hover:bg-red">Разгледай {ARROW}</Link>
         </div>
-        {a && <div className="lg:col-start-2 lg:row-start-1"><MosaicCard product={a} /></div>}
-        {b && <div className="lg:col-start-3 lg:row-start-1"><MosaicCard product={b} /></div>}
-        {/* BIG feature — Carolina Lemke, same A&T card style (product on white) */}
-        <Link to={FEATURE.to} prefetch="intent" className="group flex h-full flex-col bg-paper text-inherit lg:col-start-1 lg:row-start-2 lg:col-span-2 lg:row-span-2">
+        {a && <div><MosaicCard product={a} /></div>}
+        {b && <div><MosaicCard product={b} /></div>}
+        {c && <div><MosaicCard product={c} /></div>}
+        {d && <div><MosaicCard product={d} /></div>}
+        {/* feature — normal-size cell (bottom-right) */}
+        <Link to={feature.to} prefetch="intent" className="group flex h-full flex-col bg-paper text-inherit">
           <div className="min-h-0 flex-1 overflow-hidden">
-            <img src={FEATURE.img} alt={`${FEATURE.brand} ${FEATURE.name}`} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]" />
+            <img src={feature.img} alt={`${feature.brand} ${feature.name}`} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]" />
           </div>
           <div className="px-5 pb-5">
-            <div className="font-display text-[20px] font-medium tracking-[-0.01em] text-ink">{FEATURE.name}</div>
-            <div className="mt-0.5 font-sans text-[12px] font-light text-mid">{FEATURE.brand}</div>
+            <div className="font-display text-[15px] font-medium tracking-[-0.01em] text-ink">{feature.name}</div>
+            <div className="mt-0.5 font-sans text-[12px] font-light text-mid">{feature.brand}</div>
           </div>
         </Link>
-        {c && <div className="lg:col-start-3 lg:row-start-2"><MosaicCard product={c} /></div>}
-        {d && <div className="lg:col-start-3 lg:row-start-3"><MosaicCard product={d} /></div>}
       </div>
     </section>
   );
@@ -369,7 +377,7 @@ function CartierBanner({img = CARTIER, heightClass = 'h-[64vh] min-h-[440px]', o
     const onScroll = () => {
       const rect = el.getBoundingClientRect();
       const offset = rect.top + rect.height / 2 - window.innerHeight / 2;
-      const posY = Math.max(0, Math.min(100, 50 + offset * 0.11));
+      const posY = Math.max(0, Math.min(100, 50 + offset * 0.15));
       bg.style.backgroundPosition = `50% ${posY}%`;
     };
     onScroll();

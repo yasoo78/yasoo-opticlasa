@@ -12,9 +12,12 @@ interface HeaderProps {
   overHero?: boolean;
   /** Headroom scroll-reveal (hide on scroll-down, show on scroll-up). Disabled on PDP. */
   reveal?: boolean;
+  /** Inverted dark header (black bg, light text, white logo) — used on the Premium page. */
+  dark?: boolean;
 }
 
 const LOGO = 'https://js4nc.cloudcart.net/cdn/img/logo/1/logo-2.svg?v=1781011008';
+const LOGO_WHITE = 'https://cdncloudcart.com/74980/files/image/logo-w.svg?1785129715';
 
 const FALLBACK_MENU = [
   {title: 'Слънчеви очила', url: '/collections/slanchevi-ochila'},
@@ -22,7 +25,7 @@ const FALLBACK_MENU = [
   {title: 'Нови', url: '/collections'},
 ];
 
-export function Header({shop, menu, cart, overHero = false}: HeaderProps) {
+export function Header({shop, menu, cart, overHero = false, dark = false}: HeaderProps) {
   const items = (menu?.items?.length ? menu.items : FALLBACK_MENU).slice(0, 4);
   const {open} = useAside();
   // Sticky header: stays pinned to the top and shrinks once the page is scrolled.
@@ -44,13 +47,15 @@ export function Header({shop, menu, cart, overHero = false}: HeaderProps) {
 
   // Solid (white) when scrolled, or on any non-hero page.
   const solid = scrolled || !overHero;
+  // Light text/icons when the header is dark (Premium) or floating over a hero.
+  const lightText = dark || !solid;
 
   return (
     <header
       data-site-header
       className={[
         'fixed left-0 right-0 z-[200] transition-[background-color,border-color] duration-300',
-        solid ? 'bg-paper border-b border-[#e8e5e0]' : 'border-b border-transparent',
+        dark ? 'bg-ink border-b border-white/10' : solid ? 'bg-paper border-b border-[#e8e5e0]' : 'border-b border-transparent',
       ].join(' ')}
       style={{top: `${topGap}px`, transitionTimingFunction: 'var(--ease-snap)'}}
     >
@@ -67,13 +72,13 @@ export function Header({shop, menu, cart, overHero = false}: HeaderProps) {
               prefetch="intent"
               className={[
                 'group relative flex h-full items-center whitespace-nowrap px-4 font-sans text-[14px] font-medium tracking-[0.01em] transition-colors',
-                solid ? 'text-[#333333] hover:text-ink' : 'text-white/80 hover:text-white',
+                lightText ? 'text-white/80 hover:text-white' : 'text-[#333333] hover:text-ink',
               ].join(' ')}
             >
               <span
                 className={[
                   'relative after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-0.5 after:origin-left after:scale-x-0 after:transition-transform after:duration-200 group-hover:after:scale-x-100',
-                  solid ? 'after:bg-ink' : 'after:bg-white',
+                  lightText ? 'after:bg-white' : 'after:bg-ink',
                 ].join(' ')}
               >
                 {item.title}
@@ -85,7 +90,7 @@ export function Header({shop, menu, cart, overHero = false}: HeaderProps) {
         {/* Center — logo (absolutely centered on the page) */}
         <Link to="/" aria-label={shop.name || 'Opticlasa'} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           <img
-            src={LOGO}
+            src={dark ? LOGO_WHITE : LOGO}
             alt={shop.name || 'Opticlasa'}
             className={`w-auto transition-[height] duration-300 ${scrolled ? 'h-[32px]' : 'h-[50px]'}`}
             style={{transitionTimingFunction: 'var(--ease-snap)'}}
@@ -105,17 +110,17 @@ export function Header({shop, menu, cart, overHero = false}: HeaderProps) {
             Outlet
           </Link>
           <Link
-            to="/collections"
+            to="/premium"
             className="mr-4 hidden rounded-full border border-[#c9a24a]/70 px-4 py-2 font-display text-[12px] font-extrabold uppercase leading-none tracking-[0.16em] transition-colors hover:bg-[#e7c97f]/15 lg:inline-block"
           >
             <span className="bg-gradient-to-r from-[#b8893d] via-[#e7c97f] to-[#b8893d] bg-clip-text text-transparent">
               Premium
             </span>
           </Link>
-          <IconLink to="/search" label="Search" solid={solid}>
+          <IconLink to="/search" label="Search" light={lightText}>
             <MagnifyingGlassIcon className="size-[20px]" />
           </IconLink>
-          <IconLink to="/account/wishlist" label="Wishlist" solid={solid}>
+          <IconLink to="/account/wishlist" label="Wishlist" light={lightText}>
             <HeartIcon className="size-[20px]" />
           </IconLink>
           <button
@@ -123,7 +128,7 @@ export function Header({shop, menu, cart, overHero = false}: HeaderProps) {
             onClick={() => open('cart')}
             aria-label="Open cart"
             className={`relative flex size-9 items-center justify-center transition-colors ${
-              solid ? 'text-mid hover:text-ink' : 'text-white/70 hover:text-white'
+              lightText ? 'text-white/70 hover:text-white' : 'text-mid hover:text-ink'
             }`}
           >
             <ShoppingBagIcon className="size-[20px]" />
@@ -148,12 +153,12 @@ export function Header({shop, menu, cart, overHero = false}: HeaderProps) {
 function IconLink({
   to,
   label,
-  solid,
+  light,
   children,
 }: {
   to: string;
   label: string;
-  solid: boolean;
+  light: boolean;
   children: React.ReactNode;
 }) {
   return (
@@ -161,7 +166,7 @@ function IconLink({
       to={to}
       aria-label={label}
       className={`flex size-9 items-center justify-center transition-colors ${
-        solid ? 'text-mid hover:text-ink' : 'text-white/70 hover:text-white'
+        light ? 'text-white/70 hover:text-white' : 'text-mid hover:text-ink'
       }`}
     >
       {children}

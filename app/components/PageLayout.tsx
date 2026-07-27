@@ -15,15 +15,16 @@ interface PageLayoutProps {
 
 export function PageLayout({shop, headerMenu, footerMenu, cart, children}: PageLayoutProps) {
   const {pathname} = useLocation();
-  const isHome = pathname === '/';
+  const isHome = pathname === '/' || pathname === '/premium';
   const isProduct = pathname.startsWith('/products/');
-  // Category/PLP pages are full-bleed — ProductListing supplies its own 40px gutter.
-  const isCollection = pathname.startsWith('/collections/');
+  // Category/PLP & selection pages are full-bleed — ProductListing supplies its own 40px gutter.
+  const isCollection = pathname.startsWith('/collections/') || pathname.startsWith('/selection/');
+  const isPremium = pathname === '/premium';
 
   return (
     <div className="flex min-h-screen flex-col">
-      <AnnouncementBar />
-      <Header shop={shop} menu={headerMenu} cart={cart} overHero={false} reveal={!isProduct} />
+      <AnnouncementBar gold={isPremium} />
+      <Header shop={shop} menu={headerMenu} cart={cart} overHero={false} reveal={!isProduct} dark={isPremium} />
       {isHome ? (
         // Editorial canvas — full-bleed, sections self-stack with a 2px gap; offset to clear the solid header.
         <main className="flex w-full flex-1 flex-col gap-0.5 pt-[82px]">{children}</main>
