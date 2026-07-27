@@ -4,6 +4,24 @@
  * selections change in the admin.
  */
 export const SELECTIONS: Record<string, {title: string; products: string[]}> = {
+  'premium-kolekciya': {
+    title: 'Premium колекция',
+    products: [
+      'bottega-venetta-bv1386s-001', // Bottega Venetta BV1386S 001
+      'cartier-ct0357s-004', // Cartier CT0357S 004
+      'cartier-ct0362s-001', // Cartier CT0362S 001
+      'dita-aeova-a-01', // Dita AEOVA A - 01
+      'bottega-venetta-bv1273s-003', // Bottega Venetta BV1273S 003
+      'cartier-ct0012s-004', // Cartier CT0012S 004
+      'dita-aegeus-02', // Dita Aegeus 02
+      'bottega-venetta-bv1273s-005', // Bottega Venetta BV1273S 005
+      'cartier-ct0012s-006', // Cartier CT0012S 006
+      'dita-amorly-03', // Dita Amorly 03
+      'bottega-venetta-bv1273s-007', // Bottega Venetta BV1273S 007
+      'cartier-ct0031rs-002', // Cartier CT0031RS 002
+      'dita-ash-b', // Dita Ash B
+    ],
+  },
   'premium-kolekciya-jeni': {
     title: 'Premium колекция жени',
     products: [

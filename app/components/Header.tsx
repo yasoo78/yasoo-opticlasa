@@ -100,7 +100,7 @@ export function Header({shop, menu, cart, overHero = false, dark = false}: Heade
         {/* Right — special links + CTA + icons */}
         <div className="flex items-center gap-1">
           <Link
-            to="/collections"
+            to="/outlet"
             className={`mr-1.5 hidden rounded-full border px-4 py-2 font-display text-[12px] font-extrabold uppercase leading-none tracking-[0.14em] transition-colors lg:inline-block ${
               solid
                 ? 'border-red text-red hover:bg-red hover:text-white'

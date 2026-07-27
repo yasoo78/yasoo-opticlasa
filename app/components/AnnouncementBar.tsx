@@ -7,7 +7,7 @@ const MESSAGES: Array<{text: string; link?: {label: string; to: string}}> = [
   {text: 'Изплащане с TBI Bank · от 50 лв/мес'},
 ];
 
-export function AnnouncementBar({gold = false}: {gold?: boolean}) {
+export function AnnouncementBar({gold = false, red = false}: {gold?: boolean; red?: boolean}) {
   const [i, setI] = useState(0);
   const [show, setShow] = useState(true);
 
@@ -30,7 +30,7 @@ export function AnnouncementBar({gold = false}: {gold?: boolean}) {
   const m = MESSAGES[i];
 
   return (
-    <div className={`relative z-[300] flex h-9 items-center justify-center overflow-hidden ${gold ? 'bg-gradient-to-r from-[#8a6224] via-[#c19842] to-[#8a6224] text-white' : 'bg-ink text-paper'}`}>
+    <div className={`relative z-[300] flex h-9 items-center justify-center overflow-hidden ${red ? 'bg-red text-white' : gold ? 'bg-gradient-to-r from-[#8a6224] via-[#c19842] to-[#8a6224] text-white' : 'bg-ink text-paper'}`}>
       <span
         className={`flex items-center text-xs tracking-[0.03em] whitespace-nowrap transition-opacity duration-[450ms] ${
           show ? 'opacity-100' : 'opacity-0'
@@ -40,7 +40,7 @@ export function AnnouncementBar({gold = false}: {gold?: boolean}) {
         {m.link && (
           <>
             {' · '}
-            <Link to={m.link.to} className={`ml-1 border-b ${gold ? 'border-white/40 hover:border-white' : 'border-white/30 hover:border-white'}`}>
+            <Link to={m.link.to} className={`ml-1 border-b ${gold || red ? 'border-white/40 hover:border-white' : 'border-white/30 hover:border-white'}`}>
               {m.link.label}
             </Link>
           </>
