@@ -18,7 +18,7 @@ export function PageLayout({shop, headerMenu, footerMenu, cart, children}: PageL
   const isHome = pathname === '/' || pathname === '/premium' || pathname === '/outlet';
   const isProduct = pathname.startsWith('/products/');
   // Category/PLP & selection pages are full-bleed — ProductListing supplies its own 40px gutter.
-  const isCollection = pathname.startsWith('/collections/') || pathname.startsWith('/selection/');
+  const isCollection = pathname.startsWith('/collections/') || pathname.startsWith('/selection/') || pathname.startsWith('/search');
   const isPremium = pathname === '/premium';
   const isOutlet = pathname === '/outlet';
 

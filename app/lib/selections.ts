@@ -3,9 +3,10 @@
  * collections, so we list their products by handle here. Refresh these lists if the
  * selections change in the admin.
  */
-export const SELECTIONS: Record<string, {title: string; products: string[]}> = {
+export const SELECTIONS: Record<string, {title: string; products: string[]; promoImg?: string}> = {
   'premium-kolekciya': {
     title: 'Premium колекция',
+    promoImg: 'https://cdncloudcart.com/74980/files/image/pr-img-01b.jpg?1784888193',
     products: [
       'bottega-venetta-bv1386s-001', // Bottega Venetta BV1386S 001
       'cartier-ct0357s-004', // Cartier CT0357S 004
@@ -24,6 +25,7 @@ export const SELECTIONS: Record<string, {title: string; products: string[]}> = {
   },
   'premium-kolekciya-jeni': {
     title: 'Premium колекция жени',
+    promoImg: 'https://cdncloudcart.com/74980/files/image/pr-img-02.jpg?1785139948',
     products: [
       'etro-etro-0009s-pjpgb', // Etro ETRO 0009/S PJP/GB
       'ralph-lauren-0ra5301u-50018g', // Ralph Lauren 0RA5301U 50018G
@@ -35,6 +37,7 @@ export const SELECTIONS: Record<string, {title: string; products: string[]}> = {
   },
   'premium-kolekciya-maje': {
     title: 'Premium колекция мъже',
+    promoImg: 'https://cdncloudcart.com/74980/files/image/pr-img-03.jpg?1785140632',
     products: [
       'balenciaga-bb0299s-001', // Balenciaga BB0299S 001
       'david-beckham-db-1199gs-kb73o', // David Beckham DB 1199/G/S KB7/3O

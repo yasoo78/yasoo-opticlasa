@@ -4,6 +4,7 @@ import {getContext} from '~/lib/context';
 import {getSeoMeta} from '@cloudcart/nitrogen';
 import {AsideProvider, Aside} from '~/components/Aside';
 import {CartDrawer} from '~/components/CartDrawer';
+import {SearchOverlay} from '~/components/SearchOverlay';
 import {PageLayout} from '~/components/PageLayout';
 import '~/app.css';
 
@@ -63,6 +64,7 @@ export default function App() {
       <Aside type="cart" heading="CART">
         <CartDrawer cart={cart} />
       </Aside>
+      <SearchOverlay />
       <PageLayout
         shop={shop}
         headerMenu={data?.headerMenu ?? null}

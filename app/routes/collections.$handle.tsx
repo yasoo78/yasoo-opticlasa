@@ -37,6 +37,18 @@ export async function loader({params, context, request}: Route.LoaderArgs) {
   };
 }
 
+// Promo image tiles injected at fixed grid positions, per collection handle (test).
+const LISTING_PROMOS: Record<string, Array<{position: number; img: string}>> = {
+  'slanchevi-ochila': [
+    {position: 6, img: 'https://cdncloudcart.com/74980/files/image/cat4.jpg?1785149469'},
+    {position: 10, img: 'https://cdncloudcart.com/74980/files/image/cat5.jpg?1785149480'},
+  ],
+  'optical-glasses': [
+    {position: 6, img: 'https://cdncloudcart.com/74980/files/image/cat2.jpg?1785134922'},
+    {position: 10, img: 'https://cdncloudcart.com/74980/files/image/cat3.jpg?1785134923'},
+  ],
+};
+
 export default function CollectionPage() {
   const {collection, products, children} = useLoaderData<typeof loader>();
   const col = collection as any;
@@ -51,6 +63,7 @@ export default function CollectionPage() {
       breadcrumb={breadcrumb}
       products={products as any}
       subcats={children as any}
+      promos={LISTING_PROMOS[col.handle] ?? []}
     />
   );
 }

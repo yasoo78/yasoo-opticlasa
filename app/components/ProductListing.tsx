@@ -23,16 +23,21 @@ const LABELS: Record<string, string> = {color: 'Цвят', colour: 'Цвят', s
 const clean = (l?: string) => (!l || /widget|listing|filter\.|[a-z]+\.[a-z]+\./i.test(l) || /^[A-Z._]+$/.test(l) ? '' : LABELS[l.toLowerCase().trim()] ?? l);
 const plural = (n: number) => `${n} ${n === 1 ? 'продукт' : 'продукта'}`;
 
+// Override the image (only) of the product at a fixed 1-based grid position.
+type Promo = {position: number; img: string};
+
 export function ProductListing({
   title,
   breadcrumb,
   products,
   subcats = [],
+  promos = [],
 }: {
   title: string;
   breadcrumb: Array<{title: string; to?: string}>;
   products: Conn;
   subcats?: Cat[];
+  promos?: Promo[];
 }) {
   const [sp] = useSearchParams();
   const navigate = useNavigate();
@@ -62,7 +67,7 @@ export function ProductListing({
   const gridCls = dense ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4' : 'grid-cols-2 sm:grid-cols-2 lg:grid-cols-3';
 
   return (
-    <div className="w-full px-10">
+    <div className="w-full px-10 pt-[15px]">
       <Breadcrumbs items={breadcrumb} />
       <h1 className="mt-3.5 font-display text-[23px] font-bold uppercase tracking-[-0.01em] text-ink">{title}</h1>
 
@@ -109,9 +114,9 @@ export function ProductListing({
                 {/* 1px hairlines between cards via the grid's bg showing through the gap;
                     hovering the grid fades the lines away (Salomon look, ref image #24). */}
                 <div className={`grid gap-px bg-line transition-colors duration-300 hover:bg-transparent ${gridCls}`}>
-                  {nodes.map((product) => (
+                  {nodes.map((product, i) => (
                     <div key={product.id} className="bg-paper p-3 sm:p-5">
-                      <PlpCard product={product} />
+                      <PlpCard product={product} imageOverride={promos.find((pr) => pr.position === i + 1)?.img} />
                     </div>
                   ))}
                 </div>
@@ -128,10 +133,10 @@ export function ProductListing({
 }
 
 /* Borderless product card — Salomon look (spec §7), swatch row removed. */
-function PlpCard({product}: {product: Product}) {
+function PlpCard({product, imageOverride}: {product: Product; imageOverride?: string}) {
   const p = product as any;
   const {brand, name} = splitBrandName(product);
-  const display = cdnSize(p.featuredImage?.url, 600);
+  const display = imageOverride ?? cdnSize(p.featuredImage?.url, 600);
   const v0 = p.variants?.nodes?.[0];
   const onSale = v0?.compareAtPrice && parseFloat(v0.compareAtPrice.amount) > parseFloat(v0.price.amount);
 
@@ -139,7 +144,7 @@ function PlpCard({product}: {product: Product}) {
     <Link to={`/products/${product.handle}`} prefetch="intent" className="group flex flex-col text-inherit">
       <div className="relative aspect-square overflow-hidden bg-white">
         {display ? (
-          <img src={display} alt={product.title} loading="eager" onError={onImgErrorToBase} className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.03]" />
+          <img src={display} alt={product.title} loading="eager" onError={imageOverride ? undefined : onImgErrorToBase} className={`h-full w-full ${imageOverride ? 'object-cover' : 'object-contain'} transition-transform duration-500 group-hover:scale-[1.03]`} />
         ) : (
           <img src="/noimage.svg" alt={product.title} className="h-full w-full object-contain p-6" />
         )}

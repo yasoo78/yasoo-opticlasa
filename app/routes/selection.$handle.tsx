@@ -16,11 +16,11 @@ export async function loader({params, context, request}: Route.LoaderArgs) {
   const products = (
     await Promise.all(sel.products.map((h) => ctx.storefront.getProduct(h).catch(() => null)))
   ).filter(Boolean) as Product[];
-  return {title: sel.title, products};
+  return {title: sel.title, products, promoImg: sel.promoImg ?? null};
 }
 
 export default function SelectionPage() {
-  const {title, products} = useLoaderData<typeof loader>();
+  const {title, products, promoImg} = useLoaderData<typeof loader>();
   return (
     <ProductListing
       title={title}
@@ -31,6 +31,7 @@ export default function SelectionPage() {
         filters: [],
         totalCount: products.length,
       }}
+      promos={promoImg ? [{position: 6, img: promoImg}] : []}
     />
   );
 }

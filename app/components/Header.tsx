@@ -117,9 +117,14 @@ export function Header({shop, menu, cart, overHero = false, dark = false}: Heade
               Premium
             </span>
           </Link>
-          <IconLink to="/search" label="Search" light={lightText}>
+          <button
+            type="button"
+            onClick={() => open('search')}
+            aria-label="Search"
+            className={`flex size-9 items-center justify-center transition-colors ${lightText ? 'text-white/70 hover:text-white' : 'text-mid hover:text-ink'}`}
+          >
             <MagnifyingGlassIcon className="size-[20px]" />
-          </IconLink>
+          </button>
           <IconLink to="/account/wishlist" label="Wishlist" light={lightText}>
             <HeartIcon className="size-[20px]" />
           </IconLink>

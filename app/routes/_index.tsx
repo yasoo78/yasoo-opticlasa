@@ -34,10 +34,10 @@ const CAT_BANNERS: CatBanner[] = [
 ];
 
 const FEATURE = {
-  img: 'https://cdncloudcart.com/74980/files/image/pr-img-01b.jpg?1784888193',
-  to: '/products/carolina-lemke-cl1790-16',
-  brand: 'Carolina Lemke',
-  name: 'CL1790 16',
+  img: 'https://cdncloudcart.com/74980/files/image/pr-img-02b.jpg?1785155183',
+  to: '/products/dita-aeova-a-01',
+  brand: 'Dita',
+  name: 'Dita AEOVA A - 01',
 };
 
 const CARTIER = 'https://cdncloudcart.com/72223/files/image/cartier.jpg?1781055838';
@@ -281,6 +281,7 @@ function MosaicCard({product, big = false}: {product: Product; big?: boolean}) {
       <div className="px-5 pb-5">
         <div className={`font-display font-medium tracking-[-0.01em] text-ink ${big ? 'text-[20px]' : 'text-[15px]'}`}>{name}</div>
         <div className="mt-0.5 font-sans text-[12px] font-light text-mid">{[brand, colour].filter(Boolean).join(' · ')}</div>
+        <div className="mt-1.5 text-[14px] font-medium text-ink">{formatMoney((product as any).priceRange?.minVariantPrice)}</div>
       </div>
     </Link>
   );
