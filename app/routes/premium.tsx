@@ -27,7 +27,7 @@ export async function loader({context, request}: Route.LoaderArgs) {
 /* ─────────────────────── assets ─────────────────────── */
 type HeroSlide = {img: string; mobileImg?: string; eyebrow: string; title: string; to: string; video?: string; hold?: number};
 const HERO_SLIDES: HeroSlide[] = [
-  {img: 'https://cdncloudcart.com/74980/files/image/slide-premium.jpg?1785130808', mobileImg: 'https://cdncloudcart.com/74980/files/image/slide-premiumm.jpg?1785132192', eyebrow: 'Нова колекция', title: 'PREMIUM\nСЕЛЕКЦИЯ', to: '/selection/premium-kolekciya'},
+  {img: 'https://cdncloudcart.com/74980/files/image/slide-premium.jpg?1785130808', mobileImg: 'https://cdncloudcart.com/74980/files/image/slide-premiumm2.jpg?1785221177', eyebrow: 'Нова колекция', title: 'PREMIUM\nСЕЛЕКЦИЯ', to: '/selection/premium-kolekciya'},
 ];
 
 type CatBanner = {img: string; label: string; to: string; video?: string};
@@ -89,7 +89,7 @@ export default function PremiumPage() {
       <CategoryBanners />
       <BrandsMarquee />
       {womenBest.length >= 4 && <Bestsellers products={womenBest} to="/selection/premium-kolekciya-jeni" feature={{img: 'https://cdncloudcart.com/74980/files/image/pr-img-02.jpg?1785139948', name: 'DITA AEOVA A - 01', brand: 'Dita', to: '/products/dita-aeova-a-01', price: '894.76 €'}} />}
-      <CartierBanner img="https://cdncloudcart.com/74980/files/image/bg-003b.jpg?1785136812" heightClass="h-[900px]" overlay={false} dark raise={30} titleSize="text-[clamp(30px,4vw,70px)]" parallax eyebrow="Нова колекция" title={'DITA PREMIUM\nCOLLECTION'} to="/search?q=DITA" />
+      <CartierBanner img="https://cdncloudcart.com/74980/files/image/bg-003b.jpg?1785136812" heightClass="h-[900px]" overlay={false} dark raise={30} titleSize="text-[clamp(30px,4vw,70px)]" parallax mobileLight eyebrow="Нова колекция" title={'DITA PREMIUM\nCOLLECTION'} to="/search?q=DITA" />
       {menBest.length >= 4 && <Bestsellers products={menBest} title={'Избрани модели\nза мъже'} to="/selection/premium-kolekciya-maje" feature={{img: 'https://cdncloudcart.com/74980/files/image/pr-img-03.jpg?1785140632', name: 'David Beckham DB 1199', brand: 'David Beckham', to: '/products/david-beckham-db-1199gs-kb73o', price: '276.10 €'}} />}
       <StickyFeatures />
       <Newsletter />
@@ -106,7 +106,7 @@ function Hero() {
     return () => clearTimeout(id);
   }, [i]);
   return (
-    <section className="relative aspect-[1200/1067] overflow-hidden bg-hero md:aspect-auto md:h-[800px]">
+    <section className="relative h-[420px] overflow-hidden bg-hero md:h-[800px]">
       {HERO_SLIDES.map((s, idx) => (
         <div key={idx} className={`absolute inset-0 transition-opacity duration-[1100ms] ease-out ${idx === i ? 'opacity-100' : 'pointer-events-none opacity-0'}`}>
           {s.video ? (
@@ -128,10 +128,9 @@ function Hero() {
           )}
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-          <div className="absolute bottom-[12vh] left-[6vw] max-w-[640px]">
+          <div className="absolute bottom-6 left-[6vw] max-w-[640px] md:bottom-[12vh]">
             <span className="mb-4 block font-sans text-[11px] font-semibold uppercase tracking-[0.24em] text-white/85">{s.eyebrow}</span>
-            <h1 className="mb-8 whitespace-pre-line font-display text-[clamp(40px,6.5vw,82px)] font-extrabold uppercase leading-[0.98] tracking-[-0.02em] text-white">{s.title}</h1>
-            <Link to={s.to} className={PILL_WHITE}>Разгледай {ARROW}</Link>
+            <h1 className="whitespace-pre-line font-display text-[clamp(40px,6.5vw,82px)] font-extrabold uppercase leading-[0.98] tracking-[-0.02em] text-white">{s.title}</h1>
           </div>
         </div>
       ))}
@@ -300,7 +299,7 @@ function Bestsellers({products, title = 'Избрани модели\nза же�
     <section className="bg-off">
       <div className="grid grid-cols-2 gap-0.5 [grid-auto-rows:minmax(0,20rem)] lg:grid-cols-3 lg:[grid-auto-rows:minmax(0,30rem)]">
         {/* title cell */}
-        <div className="flex flex-col items-start justify-center gap-5 bg-paper p-8">
+        <div className="flex flex-col items-start justify-center gap-5 bg-paper px-5 py-8 md:p-8">
           <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.2em] text-red">Premium</span>
           <h2 className="whitespace-pre-line font-display text-[clamp(26px,3.2vw,40px)] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-ink">{title}</h2>
           <Link to={to} className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 font-sans text-[13px] font-medium text-white transition-colors hover:bg-red">Разгледай {ARROW}</Link>
@@ -343,7 +342,7 @@ const FEATURE_ICONS = [
 function StickyFeatures() {
   return (
     <section className="bg-[#f5f5f5]">
-      <div className="grid grid-cols-2 gap-x-6 gap-y-12 px-10 py-20 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-x-6 gap-y-10 px-10 py-20 sm:grid-cols-3 lg:grid-cols-5">
         {FEATURES.map((f, i) => (
           <div key={f.title} className="flex flex-col items-center gap-3 text-center">
             <div className="text-ink">{FEATURE_ICONS[i]}</div>
@@ -357,7 +356,7 @@ function StickyFeatures() {
 }
 
 /* ─────────────── CARTIER — premium editorial banner ─────────────── */
-function CartierBanner({img = CARTIER, heightClass = 'h-[64vh] min-h-[440px]', overlay = true, dark = false, raise = 0, titleSize = 'text-[clamp(30px,4vw,56px)]', parallax = false, eyebrow = 'Premium · Cartier', title = 'Cartier\nCollection', to = '/search?q=Cartier'}: {img?: string; heightClass?: string; overlay?: boolean; dark?: boolean; raise?: number; titleSize?: string; parallax?: boolean; eyebrow?: string; title?: string; to?: string}) {
+function CartierBanner({img = CARTIER, heightClass = 'h-[64vh] min-h-[440px]', overlay = true, dark = false, raise = 0, titleSize = 'text-[clamp(30px,4vw,56px)]', parallax = false, eyebrow = 'Premium · Cartier', title = 'Cartier\nCollection', to = '/search?q=Cartier', mobileLight = false}: {img?: string; heightClass?: string; overlay?: boolean; dark?: boolean; raise?: number; titleSize?: string; parallax?: boolean; eyebrow?: string; title?: string; to?: string; mobileLight?: boolean}) {
   const bgRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!parallax) return;
@@ -395,8 +394,8 @@ function CartierBanner({img = CARTIER, heightClass = 'h-[64vh] min-h-[440px]', o
       )}
       <div className="absolute inset-x-0 flex flex-col items-start gap-4 p-10" style={{bottom: `${raise}px`}}>
         <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.2em] text-red">{eyebrow}</span>
-        <h2 className={`whitespace-pre-line font-display ${titleSize} font-extrabold uppercase leading-[1.0] tracking-[-0.02em] ${dark ? 'text-ink' : 'text-white'}`}>{title}</h2>
-        <span className={`${dark ? PILL_DARK : PILL_WHITE} pointer-events-none`}>Виж колекцията {ARROW}</span>
+        <h2 className={`whitespace-pre-line font-display ${titleSize} font-extrabold uppercase leading-[1.0] tracking-[-0.02em] ${mobileLight ? (dark ? 'text-white md:text-ink' : 'text-white') : dark ? 'text-ink' : 'text-white'}`}>{title}</h2>
+        <span className={`pointer-events-none inline-flex items-center gap-2 rounded-full px-6 py-3 font-sans text-[13px] font-medium ${mobileLight ? (dark ? 'bg-white text-ink md:bg-ink md:text-white' : 'bg-white text-ink') : dark ? 'bg-ink text-white' : 'bg-white text-ink'}`}>Виж колекцията {ARROW}</span>
       </div>
     </Link>
   );

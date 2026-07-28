@@ -81,7 +81,7 @@ export default function OutletPage() {
 
   return (
     <>
-      <CartierBanner img="https://cdncloudcart.com/74980/files/image/bg-004b.jpg?1785147043" heightClass="h-[400px]" overlay={false} dark raise={30} titleSize="text-[clamp(30px,4vw,70px)]" parallax eyebrow="Актуални предложения" title="OUTLET" button={false} />
+      <CartierBanner img="https://cdncloudcart.com/74980/files/image/bg-004b.jpg?1785147043" mobileImg="https://cdncloudcart.com/74980/files/image/bg-004m.jpg?1785220536" heightClass="h-[400px]" overlay={false} dark raise={30} titleSize="text-[clamp(30px,4vw,70px)]" parallax eyebrow="Актуални предложения" title="OUTLET" button={false} />
       {newest.length > 0 && <ProductShowcase title="Топ оферти" to="/products" products={newest} />}
       <CategoryBanners />
       {products.length > 0 && <ProductShowcase title="Намалени продукти" to="/collections/slanchevi-ochila" products={products.slice(0, 20)} grid moreButton="Виж всички намалени продукти" />}
@@ -183,7 +183,7 @@ function ProductShowcase({title, to, products, grid = false, moreButton = ''}: {
   return (
     <section className={`bg-paper pt-20 ${moreButton ? 'pb-8' : 'pb-20'}`}>
       {/* header */}
-      <div className="mb-10 flex flex-wrap items-end justify-between gap-x-8 gap-y-5 px-10">
+      <div className="mb-10 flex flex-wrap items-end justify-between gap-x-8 gap-y-5 px-5 md:px-10">
         <h2 className="font-display text-[clamp(20px,2.6vw,30px)] font-extrabold uppercase tracking-[-0.015em] text-ink">{title}</h2>
         <div className="flex items-center gap-5">
           <Link to={to} className="hidden items-center gap-1.5 border-b border-ink/30 pb-0.5 font-sans text-[13px] font-medium text-ink transition-colors hover:border-ink sm:inline-flex">
@@ -199,14 +199,14 @@ function ProductShowcase({title, to, products, grid = false, moreButton = ''}: {
       </div>
       {grid ? (
         /* static 5-col grid */
-        <div className="grid grid-cols-2 gap-4 px-10 sm:grid-cols-3 lg:grid-cols-5">
+        <div className="grid grid-cols-2 gap-4 px-5 sm:grid-cols-3 md:px-10 lg:grid-cols-5">
           {products.map((p) => (
             <ShowcaseCard key={p.id} product={p} />
           ))}
         </div>
       ) : (
         /* card rail */
-        <div ref={rail} className="scrollbar-none flex gap-4 overflow-x-auto scroll-smooth px-10">
+        <div ref={rail} className="scrollbar-none flex gap-4 overflow-x-auto scroll-smooth px-5 md:px-10">
           {products.map((p) => (
             <div key={p.id} className="w-[76%] shrink-0 sm:w-[44%] md:w-[30%] lg:w-[calc((100%-4*1rem)/5)]">
               <ShowcaseCard product={p} />
@@ -215,7 +215,7 @@ function ProductShowcase({title, to, products, grid = false, moreButton = ''}: {
         </div>
       )}
       {moreButton && (
-        <div className="mt-14 flex justify-center px-10">
+        <div className="mt-14 flex justify-center px-5 md:px-10">
           <Link to={to} className="inline-flex items-center gap-2 rounded-full bg-red px-8 py-3.5 font-sans text-[14px] font-medium text-white transition-colors hover:bg-red-dark">{moreButton} {ARROW}</Link>
         </div>
       )}
@@ -363,7 +363,7 @@ function StickyFeatures() {
 }
 
 /* ─────────────── CARTIER — premium editorial banner ─────────────── */
-function CartierBanner({img = CARTIER, heightClass = 'h-[64vh] min-h-[440px]', overlay = true, dark = false, raise = 0, titleSize = 'text-[clamp(30px,4vw,56px)]', parallax = false, eyebrow = 'Premium · Cartier', title = 'Cartier\nCollection', to = '/search?q=Cartier', button = true, position = '50% 10%'}: {img?: string; heightClass?: string; overlay?: boolean; dark?: boolean; raise?: number; titleSize?: string; parallax?: boolean; eyebrow?: string; title?: string; to?: string; button?: boolean; position?: string}) {
+function CartierBanner({img = CARTIER, heightClass = 'h-[64vh] min-h-[440px]', overlay = true, dark = false, raise = 0, titleSize = 'text-[clamp(30px,4vw,56px)]', parallax = false, eyebrow = 'Premium · Cartier', title = 'Cartier\nCollection', to = '/search?q=Cartier', button = true, position = '50% 10%', mobileImg = ''}: {img?: string; heightClass?: string; overlay?: boolean; dark?: boolean; raise?: number; titleSize?: string; parallax?: boolean; eyebrow?: string; title?: string; to?: string; button?: boolean; position?: string; mobileImg?: string}) {
   const bgRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!parallax) return;
@@ -386,11 +386,14 @@ function CartierBanner({img = CARTIER, heightClass = 'h-[64vh] min-h-[440px]', o
   }, [parallax]);
   return (
     <div className={`group relative mt-0.5 block overflow-hidden bg-panel ${heightClass}`}>
+      {mobileImg && (
+        <div className="pointer-events-none absolute inset-0 bg-cover bg-center md:hidden" style={{backgroundImage: `url('${mobileImg}')`}} />
+      )}
       <div
         ref={bgRef}
-        className={parallax
+        className={`${mobileImg ? 'hidden md:block ' : ''}${parallax
           ? 'pointer-events-none absolute inset-0 bg-cover will-change-[background-position]'
-          : 'absolute inset-0 bg-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]'}
+          : 'absolute inset-0 bg-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]'}`}
         style={{backgroundImage: `url('${img}')`, backgroundPosition: position}}
       />
       {overlay && (
@@ -400,7 +403,7 @@ function CartierBanner({img = CARTIER, heightClass = 'h-[64vh] min-h-[440px]', o
         </>
       )}
       <div className="absolute inset-x-0 flex flex-col items-start gap-4 p-10" style={{bottom: `${raise}px`}}>
-        <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.2em] text-ink">{eyebrow}</span>
+        <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.2em] text-white md:text-ink">{eyebrow}</span>
         <h2 className={`whitespace-pre-line font-display ${titleSize} font-extrabold uppercase leading-[1.0] tracking-[-0.02em] text-red`}>{title}</h2>
         {button && <span className={`${dark ? PILL_DARK : PILL_WHITE} pointer-events-none`}>Виж колекцията {ARROW}</span>}
       </div>
