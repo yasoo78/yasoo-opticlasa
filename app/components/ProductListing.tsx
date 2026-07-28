@@ -67,9 +67,9 @@ export function ProductListing({
   const gridCls = dense ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4' : 'grid-cols-2 sm:grid-cols-2 lg:grid-cols-3';
 
   return (
-    <div className="w-full px-10 pt-[15px]">
+    <div className="w-full px-5 pt-[15px]">
       <Breadcrumbs items={breadcrumb} />
-      <h1 className="mt-3.5 font-display text-[30px] font-bold uppercase tracking-[-0.01em] text-ink md:text-[46px] md:font-extrabold">{title}</h1>
+      <h1 className="mt-3.5 font-display text-[26px] font-extrabold uppercase tracking-[-0.01em] text-ink md:text-[46px]">{title}</h1>
 
       {subcats.length > 0 && <CatRow cats={subcats} />}
 
@@ -101,9 +101,9 @@ export function ProductListing({
         </div>
       </div>
 
-      {/* sidebar + grid */}
+      {/* Desktop: inline sidebar (as before). Mobile: filters open in the overlay below. */}
       <div className="flex items-start">
-        <aside className={`overflow-hidden transition-[width,margin,opacity] duration-500 ${showFilters ? 'mr-9 w-[260px] opacity-100' : 'mr-0 w-0 opacity-0'} sticky top-6 shrink-0 self-start`}>
+        <aside className={`hidden overflow-hidden transition-[width,margin,opacity] duration-500 md:block ${showFilters ? 'mr-9 w-[260px] opacity-100' : 'mr-0 w-0 opacity-0'} sticky top-6 shrink-0 self-start`}>
           <div className="w-[260px]"><ProductFiltersPlp filters={filters} /></div>
         </aside>
 
@@ -113,7 +113,7 @@ export function ProductListing({
               <div>
                 {/* 1px hairlines between cards via the grid's bg showing through the gap;
                     hovering the grid fades the lines away (Salomon look, ref image #24). */}
-                <div className={`grid gap-px bg-line transition-colors duration-300 hover:bg-transparent ${gridCls}`}>
+                <div className={`-mx-5 grid gap-px bg-line transition-colors duration-300 hover:bg-transparent ${gridCls}`}>
                   {nodes.map((product, i) => (
                     <div key={product.id} className="bg-paper p-3 sm:p-5">
                       <PlpCard product={product} imageOverride={promos.find((pr) => pr.position === i + 1)?.img} />
@@ -128,7 +128,43 @@ export function ProductListing({
           </Pagination>
         </div>
       </div>
+
+      {/* Mobile only — filters as a full-screen overlay */}
+      <div className="md:hidden">
+        <FilterOverlay open={showFilters} onClose={() => setShowFilters(false)} filters={filters} total={total} />
+      </div>
     </div>
+  );
+}
+
+/* Full-screen filter overlay — slides in from the left over everything (incl. header),
+   so opening it never reflows the page (fixes the header shift from the old inline sidebar). */
+function FilterOverlay({open, onClose, filters, total}: {open: boolean; onClose: () => void; filters: Filter[]; total: number}) {
+  return (
+    <>
+      <div
+        onClick={onClose}
+        className={`fixed inset-0 z-[540] bg-black/50 transition-opacity duration-300 ${open ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+      />
+      <div
+        className={`fixed inset-y-0 left-0 z-[550] flex w-full flex-col bg-paper transition-transform duration-300 sm:w-[440px] ${open ? 'translate-x-0' : '-translate-x-full'}`}
+      >
+        <div className="flex items-center justify-between border-b border-line px-6 py-[18px]">
+          <span className="font-display text-[15px] font-bold uppercase tracking-[0.04em] text-ink">Филтри</span>
+          <button type="button" onClick={onClose} aria-label="Затвори" className="text-mid transition-colors hover:text-ink">
+            <svg className="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto px-6 py-1">
+          <ProductFiltersPlp filters={filters} />
+        </div>
+        <div className="border-t border-line px-6 py-4">
+          <button type="button" onClick={onClose} className="flex w-full items-center justify-center rounded-full bg-ink px-6 py-3.5 font-display text-[12px] font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:bg-red">
+            Виж резултатите ({total})
+          </button>
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -192,14 +228,14 @@ function CatRow({cats}: {cats: Cat[]}) {
                 alt={c.title}
                 loading="eager"
                 onError={(e) => {(e.currentTarget as HTMLImageElement).style.visibility = 'hidden';}}
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]"
               />
             ) : (
               <span className="absolute inset-0 flex items-center justify-center font-display text-[15px] font-bold uppercase tracking-[0.04em] text-mid">{c.title}</span>
             )}
-            <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/5 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 flex flex-col items-start gap-2 p-3 md:gap-4 md:p-7">
-              <span className="font-display text-[15px] font-black uppercase leading-none tracking-[-0.01em] text-white sm:text-[26px] lg:text-[40px]">{c.title}</span>
+            <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 flex flex-col items-start gap-4 p-9 md:gap-3 md:p-6">
+              <span className="font-display text-[34px] font-black uppercase leading-none tracking-[-0.01em] text-white sm:text-[48px] md:text-[30px] lg:text-[38px]">{c.title}</span>
               <span className="hidden items-center gap-2 rounded-full bg-white px-6 py-3 font-sans text-[13px] font-medium text-ink transition-colors group-hover:bg-ink group-hover:text-white md:inline-flex">
                 Разгледай
                 <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>

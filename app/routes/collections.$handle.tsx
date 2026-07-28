@@ -37,12 +37,12 @@ export async function loader({params, context, request}: Route.LoaderArgs) {
   };
 }
 
-// Custom banner images for the top subcategory tiles, by position (left→right), per collection handle.
-const SUBCAT_IMAGE_OVERRIDES: Record<string, string[]> = {
+// Top subcategory banners: display order (left→right) + custom image, per collection handle.
+const SUBCAT_BANNERS: Record<string, Array<{handle: string; img: string}>> = {
   'slanchevi-ochila': [
-    'https://cdncloudcart.com/74980/files/image/cat6.jpg',
-    'https://cdncloudcart.com/74980/files/image/cat7.jpg',
-    'https://cdncloudcart.com/74980/files/image/cat8.jpg',
+    {handle: 'zheni', img: 'https://cdncloudcart.com/74980/files/image/cat6.jpg'}, // Жени
+    {handle: 'mazhe', img: 'https://cdncloudcart.com/74980/files/image/cat7.jpg'}, // Мъже
+    {handle: 'detsa', img: 'https://cdncloudcart.com/74980/files/image/cat8.jpg'}, // Деца
   ],
 };
 
@@ -61,9 +61,14 @@ const LISTING_PROMOS: Record<string, Array<{position: number; img: string}>> = {
 export default function CollectionPage() {
   const {collection, products, children} = useLoaderData<typeof loader>();
   const col = collection as any;
-  const overrides = SUBCAT_IMAGE_OVERRIDES[col.handle];
-  const subcats = overrides
-    ? (children as any[]).map((c, i) => (overrides[i] ? {...c, image: {url: overrides[i]}} : c))
+  const cfg = SUBCAT_BANNERS[col.handle];
+  const subcats = cfg
+    ? cfg
+        .map(({handle, img}) => {
+          const c = (children as any[]).find((x) => x.handle === handle);
+          return c ? {...c, image: {url: img}} : null;
+        })
+        .filter(Boolean)
     : children;
   const breadcrumb = [
     ...((col.breadcrumb ?? []).filter((b: any) => b.handle !== col.handle).map((b: any) => ({title: b.title, to: `/collections/${b.handle}`}))),

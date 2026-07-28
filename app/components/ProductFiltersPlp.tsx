@@ -91,8 +91,14 @@ export function ProductFiltersPlp({filters = []}: {filters?: Filter[]}) {
     navigate(`?${p.toString()}`, {preventScrollReset: true});
   }
 
+  // "Форма" filter — pulled to the very top, open by default, rendered as icon tiles.
+  const shape = filters.find((f) => cleanLabel(f.label, '') === 'Форма' || /форма/i.test(f.label ?? ''));
+  const rest = filters.filter((f) => f !== shape);
+
   return (
     <div>
+      {shape && <ShapeFilter filter={shape} sp={sp} toggle={toggle} />}
+
       <Accordion title="Сортирай по" current={SORTS.find((s) => s.value === currentSort)?.label}>
         <ul>
           {SORTS.map((s) => (
@@ -105,15 +111,93 @@ export function ProductFiltersPlp({filters = []}: {filters?: Filter[]}) {
         </ul>
       </Accordion>
 
-      {filters.map((f) => (
+      {rest.map((f) => (
         <FilterBox key={f.id} filter={f} sp={sp} toggle={toggle} setParam={setParam} />
       ))}
     </div>
   );
 }
 
-function Accordion({title, current, children}: {title: string; current?: string; children: ReactNode}) {
-  const [open, setOpen] = useState(false);
+/* "Форма" facet rendered as icon + text tiles (open by default, always first). */
+function ShapeFilter({filter, sp, toggle}: {filter: Filter; sp: URLSearchParams; toggle: (i: string) => void}) {
+  return (
+    <Accordion title="Форма" defaultOpen>
+      <div className="flex flex-wrap gap-2 pt-1">
+        {filter.values.map((v) => {
+          const on = isFilterActive(sp, v.input);
+          return (
+            <button
+              key={v.id}
+              type="button"
+              onClick={() => toggle(v.input)}
+              title={`${v.label} (${v.count})`}
+              className={`flex items-center gap-2 rounded-[10px] border px-2.5 py-2 text-[12px] font-medium transition-colors ${on ? 'border-ink bg-ink text-white' : 'border-[#dcdcdc] text-ink hover:border-ink'}`}
+            >
+              <ShapeIcon label={v.label} className="h-[17px] w-9 shrink-0" />
+              <span>{v.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </Accordion>
+  );
+}
+
+/* Line-art glasses icons per shape, matched from the Bulgarian value label. */
+function ShapeIcon({label, className}: {label: string; className?: string}) {
+  const n = (label ?? '').toLowerCase();
+  const key =
+    n.includes('авиатор') ? 'aviator'
+    : n.includes('квадрат') ? 'square'
+    : (n.includes('котеш') || n.includes('пеперуд')) ? 'cateye'
+    : n.includes('кръгл') ? 'round'
+    : n.includes('маск') ? 'mask'
+    : n.includes('правоъгъл') ? 'rect'
+    : n.includes('спорт') ? 'sport'
+    : n.includes('овал') ? 'oval'
+    : 'round';
+  const P: Record<string, ReactNode> = {
+    round: (<>
+      <circle cx="13" cy="11" r="7.5" /><circle cx="35" cy="11" r="7.5" /><path d="M20.5 11h7" />
+      <path d="M4 8 2.5 8.6M44 8l1.5 .6" />
+    </>),
+    oval: (<>
+      <ellipse cx="13" cy="11" rx="8.5" ry="5.8" /><ellipse cx="35" cy="11" rx="8.5" ry="5.8" /><path d="M21.5 11h5" />
+    </>),
+    square: (<>
+      <rect x="4.5" y="4.5" width="15" height="14" rx="2.5" /><rect x="28.5" y="4.5" width="15" height="14" rx="2.5" /><path d="M19.5 9h9" />
+    </>),
+    rect: (<>
+      <rect x="3" y="6.5" width="17.5" height="9.5" rx="2" /><rect x="27.5" y="6.5" width="17.5" height="9.5" rx="2" /><path d="M20.5 11h7" />
+    </>),
+    aviator: (<>
+      <path d="M4.5 7C4 6 12 6 12 6c8 0 7.5 3 7.5 3-1.5 9-8 9-8 9-6 0-7-10-7-10Z" />
+      <path d="M43.5 7c.5-1-7.5-1-7.5-1-8 0-7.5 3-7.5 3 1.5 9 8 9 8 9 6 0 7-10 7-10Z" />
+      <path d="M19.5 8C24 6 28.5 8 28.5 8" />
+    </>),
+    cateye: (<>
+      <path d="M3 7.5C4 6.5 12 7.5 12 7.5c8 1 7 4.5 7 4.5-2 3.5-8 3-8 3-6.5-.5-8-5.5-8-5.5C2.8 8.2 3 7.5 3 7.5Z" />
+      <path d="M45 7.5C44 6.5 36 7.5 36 7.5c-8 1-7 4.5-7 4.5 2 3.5 8 3 8 3 6.5-.5 8-5.5 8-5.5.2-1.3 0-2 0-2Z" />
+      <path d="M19 9.5C24 8 29 9.5 29 9.5" />
+    </>),
+    mask: (<>
+      <path d="M4 7C24 4 44 7 44 7c-1 7-4 9.5-4 9.5C24 19 8 16.5 8 16.5 5 14 4 7 4 7Z" />
+      <path d="M24 4.8V7" />
+    </>),
+    sport: (<>
+      <path d="M3 8 20 6.5c2.5 0 2.5 2.5 2.5 2.5l-1 4.5C13 15.5 4 13 4 13 2 10.5 3 8 3 8Z" />
+      <path d="M45 8 28 6.5c-2.5 0-2.5 2.5-2.5 2.5l1 4.5C36 15.5 44 13 44 13c2-2.5 1-5 1-5Z" />
+    </>),
+  };
+  return (
+    <svg viewBox="0 0 48 22" fill="none" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      {P[key]}
+    </svg>
+  );
+}
+
+function Accordion({title, current, defaultOpen = false, children}: {title: string; current?: string; defaultOpen?: boolean; children: ReactNode}) {
+  const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="border-b border-[#e7e7e7]">
       <button type="button" onClick={() => setOpen((o) => !o)} className="relative flex w-full items-center py-4 pl-0.5 pr-6 text-left font-display text-[12px] font-semibold uppercase tracking-[0.03em] text-ink">
