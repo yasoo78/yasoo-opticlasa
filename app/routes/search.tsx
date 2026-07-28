@@ -44,7 +44,7 @@ export default function SearchPage() {
   return (
     <ProductListing
       title={`Резултати за „${query}“`}
-      breadcrumb={[{title: 'Начало', to: '/'}, {title: 'Търсене'}]}
+      breadcrumb={[{title: 'Търсене'}]}
       products={products as any}
     />
   );

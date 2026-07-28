@@ -53,7 +53,7 @@ export default function SelectionPage() {
   return (
     <ProductListing
       title={title}
-      breadcrumb={[{title: 'Начало', to: '/'}, {title}]}
+      breadcrumb={[{title}]}
       products={products as any}
       subcats={subcats as any}
       promos={promoImg ? [{position: 6, img: promoImg}] : []}

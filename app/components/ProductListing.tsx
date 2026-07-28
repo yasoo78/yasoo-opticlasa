@@ -67,11 +67,18 @@ export function ProductListing({
   const gridCls = dense ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4' : 'grid-cols-2 sm:grid-cols-2 lg:grid-cols-3';
 
   return (
-    <div className="w-full px-5 pt-[15px]">
-      <Breadcrumbs items={breadcrumb} />
-      <h1 className="mt-3.5 font-display text-[26px] font-extrabold uppercase tracking-[-0.01em] text-ink md:text-[46px]">{title}</h1>
+    <div className="w-full">
+      {/* page header — 40px top; title 20px below the breadcrumb */}
+      <div className="px-5 pt-10">
+        <Breadcrumbs items={breadcrumb} />
+        <h1 className="mt-3 font-display text-[26px] font-extrabold uppercase leading-none tracking-[-0.01em] text-ink md:text-[46px]">{title}</h1>
+      </div>
+      {/* light-gray divider, 40px below the title — hidden on pages that show top banners
+          (there the banners themselves sit at the divider line's height). */}
+      {subcats.length === 0 && <div className="mt-10 h-px bg-[#e6e6e6]" />}
 
-      {subcats.length > 0 && <CatRow cats={subcats} />}
+      <div className="px-5 pt-5">
+        {subcats.length > 0 && <CatRow cats={subcats} />}
 
       {/* toolbar */}
       <div className="my-[18px] mb-[22px] flex flex-wrap items-center gap-4">
@@ -129,9 +136,10 @@ export function ProductListing({
         </div>
       </div>
 
-      {/* Mobile only — filters as a full-screen overlay */}
-      <div className="md:hidden">
-        <FilterOverlay open={showFilters} onClose={() => setShowFilters(false)} filters={filters} total={total} />
+        {/* Mobile only — filters as a full-screen overlay */}
+        <div className="md:hidden">
+          <FilterOverlay open={showFilters} onClose={() => setShowFilters(false)} filters={filters} total={total} />
+        </div>
       </div>
     </div>
   );
@@ -211,7 +219,7 @@ function PlpCard({product, imageOverride}: {product: Product; imageOverride?: st
 /* Subcategory banners — tall editorial tiles (home-hero style), 3 per row. */
 function CatRow({cats}: {cats: Cat[]}) {
   return (
-    <div className="mt-5 grid grid-cols-1 gap-2 md:grid-cols-3">
+    <div className="scrollbar-none -mx-5 mt-5 flex snap-x snap-mandatory gap-2 overflow-x-auto px-5 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0">
       {cats.map((c) => {
         // request a ~4:3 landscape crop — also busts any old cached square/portrait crop
         const img = c.image?.url ? `${baseUrl(c.image.url)}?width=820&height=616` : undefined;
@@ -220,7 +228,7 @@ function CatRow({cats}: {cats: Cat[]}) {
             key={c.id}
             to={`/collections/${c.handle}`}
             prefetch="intent"
-            className="group relative block aspect-[4/3] overflow-hidden bg-panel"
+            className="group relative block aspect-[4/3] w-[76%] shrink-0 snap-start overflow-hidden bg-panel md:w-auto md:shrink"
           >
             {img ? (
               <img
@@ -234,8 +242,8 @@ function CatRow({cats}: {cats: Cat[]}) {
               <span className="absolute inset-0 flex items-center justify-center font-display text-[15px] font-bold uppercase tracking-[0.04em] text-mid">{c.title}</span>
             )}
             <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 flex flex-col items-start gap-4 p-9 md:gap-3 md:p-6">
-              <span className="font-display text-[34px] font-black uppercase leading-none tracking-[-0.01em] text-white sm:text-[48px] md:text-[30px] lg:text-[38px]">{c.title}</span>
+            <div className="absolute inset-x-0 bottom-0 flex flex-col items-start gap-4 p-5 md:gap-3 md:p-6">
+              <span className="font-display text-[24px] font-black uppercase leading-none tracking-[-0.01em] text-white sm:text-[28px] lg:text-[38px]">{c.title}</span>
               <span className="hidden items-center gap-2 rounded-full bg-white px-6 py-3 font-sans text-[13px] font-medium text-ink transition-colors group-hover:bg-ink group-hover:text-white md:inline-flex">
                 Разгледай
                 <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
