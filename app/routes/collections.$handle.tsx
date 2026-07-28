@@ -55,11 +55,11 @@ const SUBCAT_BANNERS: Record<string, Array<{handle: string; img: string}>> = {
 const LISTING_PROMOS: Record<string, Array<{position: number; img: string}>> = {
   'slanchevi-ochila': [
     {position: 6, img: 'https://cdncloudcart.com/74980/files/image/cat3.jpg?1785134923'},
-    {position: 10, img: 'https://cdncloudcart.com/74980/files/image/cat2.jpg?1785134922'},
+    {position: 11, img: 'https://cdncloudcart.com/74980/files/image/cat2.jpg?1785134922'},
   ],
   'optical-glasses': [
     {position: 6, img: 'https://cdncloudcart.com/74980/files/image/pr-img-05.jpg?1785236850'},
-    {position: 10, img: 'https://cdncloudcart.com/74980/files/image/pr-img-04.jpg?1785236850'},
+    {position: 11, img: 'https://cdncloudcart.com/74980/files/image/pr-img-04.jpg?1785236850'},
   ],
 };
 

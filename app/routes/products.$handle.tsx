@@ -83,7 +83,7 @@ function StickyBar({brand, name, variant}: {brand: string; name: string; variant
   useEffect(() => {
     const stage = document.getElementById('pdp-stage');
     if (!stage) return;
-    const obs = new IntersectionObserver(([e]) => setVisible(!e.isIntersecting), {rootMargin: '-60px 0px 0px 0px'});
+    const obs = new IntersectionObserver(([e]) => setVisible(!e.isIntersecting), {rootMargin: '-50% 0px 0px 0px'});
     obs.observe(stage);
     return () => obs.disconnect();
   }, []);

@@ -12,7 +12,7 @@ import {buildFiltersFromParams, buildSortFromParams} from '~/lib/filters';
 // Promo image tiles injected at fixed grid positions on the "Нови" page.
 const NOVI_PROMOS = [
   {position: 4, img: 'https://cdncloudcart.com/74980/files/image/cat2.jpg?1785134922'},
-  {position: 12, img: 'https://cdncloudcart.com/74980/files/image/pr-img-05.jpg?1785236850'},
+  {position: 11, img: 'https://cdncloudcart.com/74980/files/image/pr-img-05.jpg?1785236850'},
 ];
 
 export const meta: Route.MetaFunction = ({data: d}) =>
