@@ -130,7 +130,11 @@ function Hero() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
           <div className="absolute bottom-6 left-[6vw] max-w-[640px] md:bottom-[12vh]">
             <span className="mb-4 block font-sans text-[11px] font-semibold uppercase tracking-[0.24em] text-white/85">{s.eyebrow}</span>
-            <h1 className="whitespace-pre-line font-display text-[clamp(40px,6.5vw,82px)] font-extrabold uppercase leading-[0.98] tracking-[-0.02em] text-white">{s.title}</h1>
+            <h1 className="mb-0 whitespace-pre-line font-display text-[clamp(40px,6.5vw,82px)] font-extrabold uppercase leading-[0.98] tracking-[-0.02em] text-white md:mb-8">{s.title}</h1>
+            {/* CTA — desktop only (hidden on mobile) */}
+            <div className="hidden md:block">
+              <Link to={s.to} className={PILL_WHITE}>Разгледай {ARROW}</Link>
+            </div>
           </div>
         </div>
       ))}

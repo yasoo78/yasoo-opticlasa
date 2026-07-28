@@ -37,6 +37,15 @@ export async function loader({params, context, request}: Route.LoaderArgs) {
   };
 }
 
+// Custom banner images for the top subcategory tiles, by position (left→right), per collection handle.
+const SUBCAT_IMAGE_OVERRIDES: Record<string, string[]> = {
+  'slanchevi-ochila': [
+    'https://cdncloudcart.com/74980/files/image/cat6.jpg',
+    'https://cdncloudcart.com/74980/files/image/cat7.jpg',
+    'https://cdncloudcart.com/74980/files/image/cat8.jpg',
+  ],
+};
+
 // Promo image tiles injected at fixed grid positions, per collection handle (test).
 const LISTING_PROMOS: Record<string, Array<{position: number; img: string}>> = {
   'slanchevi-ochila': [
@@ -52,6 +61,10 @@ const LISTING_PROMOS: Record<string, Array<{position: number; img: string}>> = {
 export default function CollectionPage() {
   const {collection, products, children} = useLoaderData<typeof loader>();
   const col = collection as any;
+  const overrides = SUBCAT_IMAGE_OVERRIDES[col.handle];
+  const subcats = overrides
+    ? (children as any[]).map((c, i) => (overrides[i] ? {...c, image: {url: overrides[i]}} : c))
+    : children;
   const breadcrumb = [
     ...((col.breadcrumb ?? []).filter((b: any) => b.handle !== col.handle).map((b: any) => ({title: b.title, to: `/collections/${b.handle}`}))),
     {title: col.title},
@@ -62,7 +75,7 @@ export default function CollectionPage() {
       title={col.title}
       breadcrumb={breadcrumb}
       products={products as any}
-      subcats={children as any}
+      subcats={subcats as any}
       promos={LISTING_PROMOS[col.handle] ?? []}
     />
   );

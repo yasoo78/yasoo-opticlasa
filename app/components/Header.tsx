@@ -22,7 +22,7 @@ const LOGO_WHITE = 'https://cdncloudcart.com/74980/files/image/logo-w.svg?178512
 const FALLBACK_MENU = [
   {title: 'Слънчеви очила', url: '/collections/slanchevi-ochila'},
   {title: 'Диоптрични рамки', url: '/collections/optical-glasses'},
-  {title: 'Нови', url: '/collections'},
+  {title: 'Нови', url: '/selection/novi'},
 ];
 
 export function Header({shop, menu, cart, overHero = false, dark = false}: HeaderProps) {

@@ -69,7 +69,7 @@ export function ProductListing({
   return (
     <div className="w-full px-10 pt-[15px]">
       <Breadcrumbs items={breadcrumb} />
-      <h1 className="mt-3.5 font-display text-[23px] font-bold uppercase tracking-[-0.01em] text-ink">{title}</h1>
+      <h1 className="mt-3.5 font-display text-[30px] font-bold uppercase tracking-[-0.01em] text-ink md:text-[46px] md:font-extrabold">{title}</h1>
 
       {subcats.length > 0 && <CatRow cats={subcats} />}
 
@@ -172,19 +172,19 @@ function PlpCard({product, imageOverride}: {product: Product; imageOverride?: st
   );
 }
 
-/* Subcategory cards — horizontal editorial tiles (landscape, short) with gradient + label. */
+/* Subcategory banners — tall editorial tiles (home-hero style), 3 per row. */
 function CatRow({cats}: {cats: Cat[]}) {
   return (
-    <div className="mt-5 grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
+    <div className="mt-5 grid grid-cols-1 gap-2 md:grid-cols-3">
       {cats.map((c) => {
-        // request a 16:9 landscape size — also busts the old cached square crop
-        const img = c.image?.url ? `${baseUrl(c.image.url)}?width=760&height=428` : undefined;
+        // request a ~4:3 landscape crop — also busts any old cached square/portrait crop
+        const img = c.image?.url ? `${baseUrl(c.image.url)}?width=820&height=616` : undefined;
         return (
           <Link
             key={c.id}
             to={`/collections/${c.handle}`}
             prefetch="intent"
-            className="group relative flex aspect-[2/1] overflow-hidden rounded-xl bg-sand"
+            className="group relative block aspect-[4/3] overflow-hidden bg-panel"
           >
             {img ? (
               <img
@@ -192,16 +192,17 @@ function CatRow({cats}: {cats: Cat[]}) {
                 alt={c.title}
                 loading="eager"
                 onError={(e) => {(e.currentTarget as HTMLImageElement).style.visibility = 'hidden';}}
-                className="h-full w-full object-cover transition-transform duration-[700ms] ease-out group-hover:scale-[1.06]"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]"
               />
             ) : (
-              <span className="m-auto font-display text-[15px] font-bold uppercase tracking-[0.04em] text-mid">{c.title}</span>
+              <span className="absolute inset-0 flex items-center justify-center font-display text-[15px] font-bold uppercase tracking-[0.04em] text-mid">{c.title}</span>
             )}
-            <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 px-5 pb-4 pt-8">
-              <span className="font-display text-[16px] font-bold uppercase leading-none tracking-[0.03em] text-white">{c.title}</span>
-              <span className="flex size-7 shrink-0 translate-x-1 items-center justify-center rounded-full text-white opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:bg-white group-hover:text-ink group-hover:opacity-100">
-                <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+            <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/5 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 flex flex-col items-start gap-2 p-3 md:gap-4 md:p-7">
+              <span className="font-display text-[15px] font-black uppercase leading-none tracking-[-0.01em] text-white sm:text-[26px] lg:text-[40px]">{c.title}</span>
+              <span className="hidden items-center gap-2 rounded-full bg-white px-6 py-3 font-sans text-[13px] font-medium text-ink transition-colors group-hover:bg-ink group-hover:text-white md:inline-flex">
+                Разгледай
+                <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
               </span>
             </div>
           </Link>
