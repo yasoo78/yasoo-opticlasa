@@ -9,6 +9,12 @@ import {buildFiltersFromParams, buildSortFromParams} from '~/lib/filters';
 
 // "Нови" — dynamic newest-first listing (the smart collection has 200+ products,
 // so we don't load them one-by-one; we page the full catalogue sorted by newest).
+// Promo image tiles injected at fixed grid positions on the "Нови" page.
+const NOVI_PROMOS = [
+  {position: 4, img: 'https://cdncloudcart.com/74980/files/image/cat2.jpg?1785134922'},
+  {position: 12, img: 'https://cdncloudcart.com/74980/files/image/pr-img-05.jpg?1785236850'},
+];
+
 export const meta: Route.MetaFunction = ({data: d}) =>
   getSeoMeta({title: `${(d as any)?.title ?? 'Селекция'} — Opticlasa`});
 
@@ -27,7 +33,7 @@ export async function loader({params, context, request}: Route.LoaderArgs) {
       reverse: sort.sortKey ? sort.reverse : true,
       filters,
     });
-    return {title: 'Нови', products, subcats: [] as any[], promoImg: null};
+    return {title: 'Нови', products, subcats: [] as any[], promos: NOVI_PROMOS};
   }
 
   const sel = SELECTIONS[params.handle];
@@ -44,19 +50,19 @@ export async function loader({params, context, request}: Route.LoaderArgs) {
       totalCount: products.length,
     },
     subcats: [] as any[],
-    promoImg: sel.promoImg ?? null,
+    promos: sel.promoImg ? [{position: 6, img: sel.promoImg}] : [],
   };
 }
 
 export default function SelectionPage() {
-  const {title, products, subcats, promoImg} = useLoaderData<typeof loader>();
+  const {title, products, subcats, promos} = useLoaderData<typeof loader>();
   return (
     <ProductListing
       title={title}
       breadcrumb={[{title}]}
       products={products as any}
       subcats={subcats as any}
-      promos={promoImg ? [{position: 6, img: promoImg}] : []}
+      promos={promos}
     />
   );
 }

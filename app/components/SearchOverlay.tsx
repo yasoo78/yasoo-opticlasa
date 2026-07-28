@@ -3,7 +3,7 @@ import {useEffect, useRef} from 'react';
 import {XMarkIcon, MagnifyingGlassIcon} from '@heroicons/react/24/outline';
 import {useAside} from './Aside';
 
-const POPULAR = ['Слънчеви очила', 'Диоптрични рамки', 'Ray-Ban', 'Cartier', 'Dita'];
+const POPULAR = ['Ray-Ban', 'Cartier', 'Gucci', 'Prada', 'Tom Ford'];
 
 /** Full-width search panel that drops down from the top (opened from the header search icon). */
 export function SearchOverlay() {

@@ -44,17 +44,22 @@ const SUBCAT_BANNERS: Record<string, Array<{handle: string; img: string}>> = {
     {handle: 'mazhe', img: 'https://cdncloudcart.com/74980/files/image/cat7.jpg'}, // Мъже
     {handle: 'detsa', img: 'https://cdncloudcart.com/74980/files/image/cat8.jpg'}, // Деца
   ],
+  'optical-glasses': [
+    {handle: 'optical-glasses-jeni', img: 'https://cdncloudcart.com/74980/files/image/cat9.jpg'}, // Жени
+    {handle: 'optical-glasses-maje', img: 'https://cdncloudcart.com/74980/files/image/cat10.jpg'}, // Мъже
+    {handle: 'optical-glasses-deca', img: 'https://cdncloudcart.com/74980/files/image/cat11.jpg'}, // Деца
+  ],
 };
 
 // Promo image tiles injected at fixed grid positions, per collection handle (test).
 const LISTING_PROMOS: Record<string, Array<{position: number; img: string}>> = {
   'slanchevi-ochila': [
-    {position: 6, img: 'https://cdncloudcart.com/74980/files/image/cat4.jpg?1785149469'},
-    {position: 10, img: 'https://cdncloudcart.com/74980/files/image/cat5.jpg?1785149480'},
+    {position: 6, img: 'https://cdncloudcart.com/74980/files/image/cat3.jpg?1785134923'},
+    {position: 10, img: 'https://cdncloudcart.com/74980/files/image/cat2.jpg?1785134922'},
   ],
   'optical-glasses': [
-    {position: 6, img: 'https://cdncloudcart.com/74980/files/image/cat2.jpg?1785134922'},
-    {position: 10, img: 'https://cdncloudcart.com/74980/files/image/cat3.jpg?1785134923'},
+    {position: 6, img: 'https://cdncloudcart.com/74980/files/image/pr-img-05.jpg?1785236850'},
+    {position: 10, img: 'https://cdncloudcart.com/74980/files/image/pr-img-04.jpg?1785236850'},
   ],
 };
 
