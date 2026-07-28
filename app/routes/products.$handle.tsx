@@ -7,7 +7,7 @@ import type {Product} from '@cloudcart/nitrogen';
 import {Image, Money, VariantSelector, useOptimisticVariant} from '@cloudcart/nitrogen-react';
 import {AddToCartButton} from '~/components/AddToCartButton';
 import {WishlistButton} from '~/components/WishlistButton';
-import {Eye, ChevronDown, ChevronRight, ChevronLeft, Truck, Glasses, BadgeCheck, MapPin, ArrowLeft, ArrowRight, X, FileText, Info} from 'lucide-react';
+import {Eye, ChevronDown, ChevronRight, ChevronLeft, Truck, Glasses, BadgeCheck, MapPin, ArrowLeft, ArrowRight, X, FileText, Info, ShoppingCart} from 'lucide-react';
 import {LensEffectModal} from '~/components/LensEffectModal';
 import {topChromeBottom} from '~/lib/chrome';
 
@@ -90,21 +90,22 @@ function StickyBar({brand, name, variant}: {brand: string; name: string; variant
   return (
     <div
       data-sticky-bar
-      className={`fixed left-0 right-0 top-[68px] z-[190] flex h-14 items-center justify-between gap-6 border-b border-white/[0.08] bg-ink px-[52px] transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-[150%]'}`}
+      className={`fixed bottom-0 left-0 right-0 z-[190] flex h-14 items-center justify-between gap-3 border-t border-white/[0.08] bg-ink px-5 transition-transform duration-300 md:gap-6 md:px-[52px] ${visible ? 'translate-y-0' : 'translate-y-[150%]'}`}
       style={{transitionTimingFunction: 'var(--ease-snap)'}}
     >
-      <div className="flex items-center gap-3.5">
-        <span className="font-display text-[13px] font-bold uppercase tracking-[0.02em] text-white">{brand}</span>
-        <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-white/50">{name}</span>
-        {variant && <span className="font-display text-[13px] font-bold text-red">{fmtEUR(variant.price.amount)}</span>}
+      <div className="flex min-w-0 items-center gap-2 md:gap-3.5">
+        <span className="shrink-0 font-display text-[13px] font-bold uppercase tracking-[0.02em] text-white">{brand}</span>
+        <span className="min-w-0 truncate text-[10px] font-medium uppercase tracking-[0.16em] text-white/50">{name}</span>
+        {variant && <span className="shrink-0 font-display text-[13px] font-bold text-red">{fmtEUR(variant.price.amount)}</span>}
       </div>
       {variant && (
         <AddToCartButton
           merchandiseId={variant.id}
           disabled={!variant.availableForSale}
-          className="bg-red px-5 py-2.5 font-display text-[10px] font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-red-dark disabled:opacity-50"
+          className="flex shrink-0 items-center justify-center gap-2.5 bg-red px-3.5 py-2.5 font-display text-[10px] font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-red-dark disabled:opacity-50 md:px-5"
         >
-          Добавете в количката
+          <ShoppingCart className="h-[18px] w-[18px] md:hidden" strokeWidth={2} />
+          <span className="sr-only md:not-sr-only">Добавете в количката</span>
         </AddToCartButton>
       )}
     </div>
@@ -132,7 +133,7 @@ function Gallery({images, name}: {images: string[]; name: string}) {
         ) : (
           <img src="/noimage.svg" alt={name} className="h-full w-full object-contain p-16 opacity-40" />
         )}
-        <button type="button" className="sheen absolute left-1/2 top-5 z-10 flex -translate-x-1/2 items-center gap-2.5 rounded-full bg-white px-6 py-3 font-display text-[12px] font-bold uppercase tracking-[0.1em] text-ink shadow-[0_3px_16px_rgba(0,0,0,0.16)] transition-transform hover:scale-105 [&>*]:relative [&>*]:z-[2]">
+        <button type="button" className="sheen absolute left-1/2 top-5 z-10 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-white px-5 py-3 font-display text-[11px] font-bold uppercase tracking-[0.06em] text-ink shadow-[0_3px_16px_rgba(0,0,0,0.16)] transition-transform hover:scale-105 md:gap-2.5 md:px-6 md:text-[12px] md:tracking-[0.1em] [&>*]:relative [&>*]:z-[2]">
           <Glasses className="h-[18px] w-[18px]" strokeWidth={1.6} />
           <span className="relative z-[2]">Пробвай виртуално</span>
         </button>
@@ -175,7 +176,7 @@ function BuyPanel({product, variant, brand, name, collections}: {product: Produc
   const colorMap = colorImageMap(product);
 
   return (
-    <div className="flex flex-col px-10 pb-12 pt-8 lg:sticky lg:top-[84px] lg:self-start">
+    <div className="flex flex-col px-5 pb-12 pt-8 md:px-10 lg:sticky lg:top-[84px] lg:self-start">
       {/* breadcrumb — sits just above the title */}
       <nav className="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-mid" aria-label="Breadcrumb">
         <Link to="/" className="transition-colors hover:text-ink">Начало</Link>
@@ -353,8 +354,8 @@ function ProductDetails({product, brand, name}: {product: Product; brand: string
   if (!groups.length && !paragraphs.length) return null;
 
   return (
-    <section className="px-[52px] py-12">
-      <h2 className="font-display text-[26px] font-extrabold uppercase tracking-[-0.01em] text-ink sm:text-[30px]">Детайли за продукта</h2>
+    <section className="px-5 py-12 md:px-[52px]">
+      <h2 className="font-display text-[24px] font-extrabold uppercase tracking-[-0.01em] text-ink sm:text-[30px]">Детайли за продукта</h2>
       <div className="mt-2 text-[12px] font-medium uppercase tracking-[0.08em] text-mid">Модел · {brand} {name}</div>
 
       <div className="mt-9 grid gap-x-16 gap-y-12 lg:grid-cols-[34%_1fr]">
@@ -401,15 +402,71 @@ function ProductDetails({product, brand, name}: {product: Product; brand: string
 /* ───────────────────── CAMPAIGN BANNER ───────────────────── */
 const BANNER_WOMEN = 'https://cdncloudcart.com/72223/files/image/women-banner.jpg?1781050863';
 const BANNER_MEN = 'https://cdncloudcart.com/72223/files/image/man-banner-1.jpg?1781051516';
+
+// Short brand blurbs shown under the collection title. Keys are normalised
+// (lowercase, no spaces/punctuation). Unknown brands fall back to a generic line.
+const BRAND_BLURB: Record<string, string> = {
+  rayban: 'Ray-Ban е най-разпознаваемата марка слънчеви очила в света, създадена през 1937 г. за пилотите на американските военновъздушни сили. Емблематичните модели Aviator и Wayfarer се превърнаха в символ на стил, носен от поколения икони на киното и музиката. Всеки чифт съчетава безкомпромисно качество на стъклата с надеждна защита и вечен дизайн. Избор за онези, които ценят класиката, преминала проверката на времето.',
+  cartier: 'Cartier е синоним на френски лукс и бижутерска прецизност вече повече от век и половина. Очилата на марката се изработват с внимание към най-малкия детайл, често с елементи от благородни метали. Те съчетават безвременна елегантност с усещане за изключителност и статус. Изборът на онези, които не правят компромис с качеството и престижа.',
+  gucci: 'Gucci олицетворява смелия дух на съвременната италианска мода и обича да провокира. Очилата на марката се отличават с разпознаваеми детайли, богати цветове и характерния уеб-мотив. Те са изявление за стил, създадено за хора, които искат да се открояват. Лукс с чувство за хумор и безкрайно самочувствие.',
+  prada: 'Prada е символ на изчистена италианска елегантност и интелигентен подход към модата. Очилата на марката залагат на модерен минимализъм, качествени материали и характерен, разпознаваем почерк. Дизайнът е сдържан, но винаги с фина, отличаваща детайлност. За ценителите на тихия, изискан лукс.',
+  tomford: 'Tom Ford носи името на един от най-влиятелните съвременни дизайнери и излъчва безкомпромисен лукс. Очилата се отличават с изразителни форми, плътни линии и характерния метален детайл „Т". Всеки модел е изработен с внимание към качеството и излъчва увереност и чувственост. Създадени за хора с изявен вкус към модерната елегантност.',
+  dita: 'Dita е калифорнийска марка, посветена на луксозните очила от най-висок клас. Всеки модел се изработва почти изцяло на ръка в Япония, с фокус върху съвършенството на детайла. Материалите включват титан, ацетат и авангардни решения, рядко срещани при масовите марки. Изборът на ценители, които търсят ексклузивност и безупречна изработка.',
+  persol: 'Persol е италианска марка с богата история, основана през 1917 г. в Торино. Известна е с изключителния комфорт, характерната стрелка Supreme Arrow и патентованите гъвкави рамки. Очилата съчетават занаятчийска изработка с елегантен, вечно актуален дизайн. Любима марка на артисти и ценители на класическия италиански стил.',
+  oakley: 'Oakley е синоним на спортна прецизност и технологични иновации. Марката разработва собствени решения за стъкла, които осигуряват изключителна яснота, контраст и защита. Издръжливите, аеродинамични рамки са създадени за активен живот и екстремни условия. Изборът на спортисти и всички, които изискват максимална функционалност.',
+  versace: 'Versace е олицетворение на италианския гламур, лукс и смелост. Очилата на марката са ярки, чувствени и украсени с емблематичния мотив Медуза. Всеки модел прави силно впечатление и излъчва богатство и самочувствие. За хора, които обичат да бъдат в центъра на вниманието.',
+  dolcegabbana: 'Dolce & Gabbana е израз на италианската страст, чувственост и любов към барока. Очилата на марката са богато украсени, изразителни и пълни с характер. Дизайнът често черпи вдъхновение от средиземноморския дух и сицилианската естетика. За тези, които обичат разкоша и не се страхуват да го покажат.',
+  emporioarmani: 'Emporio Armani е по-младата, динамична линия на легендарния Giorgio Armani. Очилата съчетават модерна елегантност с изчистени линии и достъпен лукс. Дизайнът е градски, изискан и подходящ за ежедневието. За стилни хора, които ценят италианското качество без излишен блясък.',
+  giorgioarmani: 'Giorgio Armani е еталон за изтънчена италианска елегантност и безупречен вкус. Очилата на марката се отличават със сдържан лукс, чисти линии и превъзходни материали. Всеки детайл е обмислен, за да излъчва спокойна увереност. Избор на хора с изградено чувство за стил.',
+  armaniexchange: 'Armani Exchange е младежката, динамична марка от семейството на Armani. Очилата съчетават градски стил, достъпност и разпознаваем модерен дизайн. Създадени са за активни хора, които следят тенденциите. Стил с италиански почерк и енергия за всеки ден.',
+  burberry: 'Burberry е британска модна къща с над 160-годишна история и силно наследство. Очилата носят емблематичното каре и излъчват класа с нотка модерност. Изработени са с внимание към качеството и детайла. За ценителите на елегантния британски стил с характер.',
+  michaelkors: 'Michael Kors е американска марка, символ на достъпен лукс и нюйоркски усет за мода. Очилата съчетават гламур, модерни форми и разпознаваем блясък. Дизайнът е ефектен, но носим за всеки ден. За хора, които обичат стил с малко бляскавина.',
+  hugoboss: 'Hugo Boss е немска марка, синоним на делова елегантност и прецизност. Очилата залагат на изчистен дизайн, качествени материали и сдържан, уверен стил. Подходящи са както за офиса, така и за официални поводи. За мъже и жени с усет към класическата модерност.',
+  saintlaurent: 'Saint Laurent е парижка модна къща, символ на шик и рок-елегантност. Очилата на марката са дръзки, безвременни и винаги на ръба на модата. Дизайнът съчетава изисканост с бунтарски дух. За хора с изявен, уверен вкус.',
+  tommyhilfiger: 'Tommy Hilfiger е емблема на американския преппи стил. Очилата са свежи, спортно-елегантни и излъчват младежка енергия. Разпознаваемите цветове и качествената изработка ги правят чудесен избор за всеки ден. Класика с американски дух на достъпна цена.',
+  guess: 'Guess е марка с младежки, съблазнителен и разпознаваем гламур. Очилата залагат на смели детайли, лога и ефектни форми. Дизайнът е забавен, модерен и винаги привлича вниманието. За тези, които обичат стил с малко дързост.',
+  polaroid: 'Polaroid е пионерът в поляризационната технология, с десетилетия опит в защитата на очите. Очилата предлагат надеждна защита от отблясъци и чисто, комфортно виждане. Съчетават проверено качество с достъпна цена и съвременен дизайн. Практичен избор за всеки, който цени доброто зрение.',
+  carrera: 'Carrera е легендарна марка със състезателен дух, основана през 1956 г. Очилата се отличават с дързък дизайн, ярки цветове и спортна елегантност. Създадени са за смели, свободолюбиви личности. Икона на стила от миналия век, актуална и днес.',
+  police: 'Police е италианска марка с градски, мъжествен и бунтарски характер. Очилата излъчват независимост и увереност, с изчистен, съвременен дизайн. Носени са от редица известни лица по света. За хора със силна индивидуалност.',
+  chopard: 'Chopard е швейцарска марка, символ на висок часовникарски и бижутерски лукс. Очилата се изработват с изключителна прецизност и често включват благородни материали. Всеки модел излъчва изтънченост и ексклузивност. За истинските ценители на съвършенството.',
+  bvlgari: 'Bvlgari е римска марка с богато бижутерско наследство и разпознаваем гламур. Очилата се превръщат в истинско бижу за лицето, с изящни детайли и смели форми. Дизайнът съчетава италианска чувственост с усещане за лукс. За жени, които обичат да блестят.',
+  bulgari: 'Bvlgari е римска марка с богато бижутерско наследство и разпознаваем гламур. Очилата се превръщат в истинско бижу за лицето, с изящни детайли и смели форми. Дизайнът съчетава италианска чувственост с усещане за лукс. За жени, които обичат да блестят.',
+  miumiu: 'Miu Miu е игривата, женствена линия на модната къща Prada. Очилата предлагат модерен, малко бунтарски прочит на лукса. Дизайнът е свеж, независим и винаги на крачка пред тенденциите. За младите по дух и стил.',
+  marcjacobs: 'Marc Jacobs е нюйоркска марка с чувство за хумор и разпознаваем стил. Очилата съчетават модерен дизайн, забавни детайли и достъпен лукс. Създадени са за креативни, самоуверени личности. Стил с характер и градска енергия.',
+  vogue: 'Vogue Eyewear е марка, вдъхновена от подиума и последните модни тенденции. Очилата предлагат модерен, трендов дизайн на достъпна цена. Всеки сезон носи нови форми и цветове в крак с модата. За младите и следящите тенденциите.',
+  furla: 'Furla е италианска марка с елегантен, женствен почерк. Очилата се отличават с изчистени линии, качествени материали и фини детайли. Дизайнът е изискан, но носим за всеки ден. За жени с усет към италианския стил.',
+  maxmara: 'Max Mara е синоним на изчистена женствена елегантност и качество. Очилата залагат на сдържан дизайн, благородни материали и вечни форми. Всеки модел излъчва спокоен, изискан лукс. За жени с изградено чувство за стил.',
+  carolinaherrera: 'Carolina Herrera е марка, олицетворяваща изискана женственост и елегантен маниер. Очилата съчетават класика с латино темперамент и фини детайли. Дизайнът е грациозен, изтънчен и вечен. За жени, които ценят елегантността.',
+  jimmychoo: 'Jimmy Choo е символ на гламур, блясък и малко пикантност. Очилата често включват искрящи детайли и ефектни форми. Дизайнът излъчва звезден, вечерен чар. За жени, които обичат да блестят на всяка сцена.',
+  montblanc: 'Montblanc е немска марка, символ на дискретен лукс и безупречна изработка. Очилата излъчват сдържана изисканост и внимание към детайла. Материалите и качеството са от най-висок клас. За ценители на тихия, истински лукс.',
+  porschedesign: 'Porsche Design пренася инженерната прецизност на автомобилната икона в света на очилата. Дизайнът е функционален, минималистичен и технологичен. Всеки модел съчетава лека конструкция с висока издръжливост. За мъже, които ценят точността и модерната естетика.',
+  ralphlauren: 'Ralph Lauren е еталон за американска класика и вечна елегантност. Очилата излъчват аристократичен дух, изисканост и качество. Дизайнът е чист, стилен и подходящ за всеки повод. За хора с усет към класическия, изчистен стил.',
+  tiffanyco: 'Tiffany & Co. пренася бижутерската изящност в света на очилата. Моделите често носят емблематичното синьо и фини, женствени детайли. Всеки чифт излъчва изтънченост и лукс. За жени, които ценят елегантността на детайла.',
+  moschino: 'Moschino е италианска марка с ексцентричен, закачлив дух. Очилата се отличават със смели, нестандартни детайли и чувство за хумор. Дизайнът е дързък, забавен и провокативен. За хора, които не се страхуват да експериментират.',
+  givenchy: 'Givenchy е парижка модна къща, символ на изисканост и модерна елегантност. Очилата съчетават чисти линии с фин, разпознаваем характер. Дизайнът е изтънчен, но със съвременен почерк. За ценителите на френския шик.',
+  balenciaga: 'Balenciaga е марка на предела на модата, известна с авангардния си дух. Очилата се отличават със смели, нестандартни форми и силно присъствие. Дизайнът е модерен, градски и провокативен. За смелите, които определят тенденциите.',
+  bottegaveneta: 'Bottega Veneta е синоним на тих лукс и безупречен италиански занаят. Очилата залагат на изчистен дизайн без крещящи лога. Качеството на материалите и изработката говори само за себе си. За ценители на дискретната изисканост.',
+  hugo: 'HUGO е по-младата, дръзка линия на Hugo Boss. Очилата залагат на модерен, независим стил с характер. Дизайнът е свеж и подходящ за уверени личности. За тези, които следват собствения си път.',
+  calvinklein: 'Calvin Klein е символ на американския минимализъм и изчистена естетика. Очилата залагат на чисти линии, семплота и вечна модерност. Дизайнът е сдържан, но винаги стилен. За ценителите на елегантната простота.',
+  davidbeckham: 'David Beckham носи името на модната икона и излъчва класически британски стил. Очилата съчетават мъжествен характер с изчистен, съвременен дизайн. Качествената изработка ги прави чудесен избор за всеки ден. За мъже с усет към елегантността.',
+  pierrecardin: 'Pierre Cardin е френска марка с дълга история и достъпна елегантност. Очилата залагат на класически форми и качествена изработка. Дизайнът е изчистен, изискан и вечен. Стойностен избор с френски почерк.',
+};
+function brandBlurb(brand: string): string {
+  const key = (brand ?? '').toLowerCase().replace(/[^a-zа-я0-9]/gi, '');
+  return BRAND_BLURB[key] ?? `${brand} е марка, която съчетава качествени материали, внимание към детайла и разпознаваем дизайн. Всеки модел е създаден да предложи стил и комфорт при ежедневно носене. Очилата гарантират надеждна защита и дълготрайност. Изборът на онези, които ценят автентичността и доброто качество.`;
+}
+
 function CampaignBanner({brand, gender}: {brand: string; gender?: string}) {
   const img = /мъж|men\b|man\b/i.test(gender ?? '') ? BANNER_MEN : BANNER_WOMEN;
   return (
-    <div className="relative h-[40vh] min-h-[300px] overflow-hidden bg-ink">
+    <div className="relative overflow-hidden bg-ink">
       <div className="absolute inset-0 bg-cover bg-center" style={{backgroundImage: `url('${img}')`}} />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/15 to-transparent" />
-      <div className="absolute bottom-[52px] left-[52px]">
+      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/25" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+      <div className="relative flex min-h-[40vh] flex-col justify-end px-5 py-14 md:px-[52px] md:py-16">
         <span className="mb-2.5 block font-display text-[9px] font-bold uppercase tracking-[0.18em] text-red">{brand} · Колекция</span>
-        <div className="font-display text-[clamp(28px,3.5vw,46px)] font-extrabold leading-none tracking-[-0.02em] text-white">{brand}<br />Collection</div>
+        <div className="font-display text-[clamp(26px,3.5vw,46px)] font-extrabold leading-none tracking-[-0.02em] text-white">{brand}<br />Collection</div>
+        <p className="mt-4 max-w-[640px] text-[13.5px] font-light leading-relaxed text-white/85 md:text-[15px]">{brandBlurb(brand)}</p>
       </div>
     </div>
   );
@@ -517,18 +574,18 @@ function Carousel({title, products, viewAllTo = '/products'}: {title: string; pr
   const hasScroll = bar.w < 99;
 
   return (
-    <section className="px-[52px] pb-8 pt-9">
+    <section className="px-5 pb-8 pt-9 md:px-[52px]">
       <div className="mb-5 flex items-end justify-between gap-4">
         <h2 className="font-display text-[24px] font-extrabold uppercase tracking-[-0.015em] text-ink sm:text-[28px]">{title}</h2>
         <div className="flex items-center gap-4">
-          <Link to={viewAllTo} className="font-display text-[11px] font-bold uppercase tracking-[0.08em] text-mid transition-colors hover:text-ink">Виж всички</Link>
+          <Link to={viewAllTo} className="hidden font-display text-[11px] font-bold uppercase tracking-[0.08em] text-mid transition-colors hover:text-ink md:inline">Виж всички</Link>
           <button type="button" onClick={() => step(-1)} aria-label="Назад" className="flex size-9 items-center justify-center rounded-full border border-line text-ink transition-colors hover:border-ink"><ArrowLeft className="h-4 w-4" /></button>
           <button type="button" onClick={() => step(1)} aria-label="Напред" className="flex size-9 items-center justify-center rounded-full border border-line text-ink transition-colors hover:border-ink"><ArrowRight className="h-4 w-4" /></button>
         </div>
       </div>
-      <div ref={track} onScroll={onScroll} className="scrollbar-none flex gap-6 overflow-x-auto">
+      <div ref={track} onScroll={onScroll} className="scrollbar-none flex snap-x snap-mandatory gap-3 overflow-x-auto md:snap-none md:gap-6">
         {products.map((p) => (
-          <div key={p.id} className="shrink-0" style={{flex: '0 0 calc((100% - 3 * 1.5rem) / 3.5)'}}>
+          <div key={p.id} className="shrink-0 basis-[44%] snap-start sm:basis-[31%] md:basis-[calc((100%_-_3_*_1.5rem)_/_3.5)]">
             <PdpCard product={p} />
           </div>
         ))}
