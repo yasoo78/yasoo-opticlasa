@@ -118,14 +118,17 @@ export function ProductListing({
           <Pagination connection={products}>
             {({nodes, NextLink, isLoading}) => (
               <div>
-                {/* 1px hairlines between cards via the grid's bg showing through the gap;
-                    hovering the grid fades the lines away (Salomon look, ref image #24). */}
-                <div className={`-mx-5 grid gap-px bg-line transition-colors duration-300 hover:bg-transparent ${gridCls}`}>
-                  {nodes.map((product, i) => (
-                    <div key={product.id} className="bg-paper p-3 sm:p-5">
-                      <PlpCard product={product} imageOverride={promos.find((pr) => pr.position === i + 1)?.img} />
-                    </div>
-                  ))}
+                {/* 1px hairlines between cards via the grid's bg showing through the gap — always visible. */}
+                <div className={`-mx-5 grid gap-px bg-line ${gridCls}`}>
+                  {nodes.map((product, i) => {
+                    const promo = promos.find((pr) => pr.position === i + 1)?.img;
+                    // Promo cells: no padding so the image bleeds edge-to-edge (text keeps its own white inset).
+                    return (
+                      <div key={product.id} className={promo ? 'bg-paper' : 'bg-paper p-3 sm:p-5'}>
+                        <PlpCard product={product} imageOverride={promo} />
+                      </div>
+                    );
+                  })}
                 </div>
                 <NextLink className="mx-auto my-12 flex w-fit items-center justify-center gap-2 rounded-full border border-ink px-10 py-3.5 font-display text-[11px] font-semibold uppercase tracking-[0.1em] text-ink transition-colors hover:bg-ink hover:text-white">
                   {isLoading ? 'Зарежда...' : 'Зареди още'}
@@ -184,19 +187,23 @@ function PlpCard({product, imageOverride}: {product: Product; imageOverride?: st
   const v0 = p.variants?.nodes?.[0];
   const onSale = v0?.compareAtPrice && parseFloat(v0.compareAtPrice.amount) > parseFloat(v0.price.amount);
 
+  // Promo tile: image bleeds edge-to-edge (cropped) filling the cell top;
+  // title/price sit below it on a white inset backing.
+  const bleed = !!imageOverride;
+
   return (
-    <Link to={`/products/${product.handle}`} prefetch="intent" className="group flex flex-col text-inherit">
-      <div className="relative aspect-square overflow-hidden bg-white">
+    <Link to={`/products/${product.handle}`} prefetch="intent" className={`group flex flex-col text-inherit ${bleed ? 'h-full' : ''}`}>
+      <div className={`relative overflow-hidden bg-white ${bleed ? 'min-h-0 flex-1' : 'aspect-square'}`}>
         {display ? (
-          <img src={display} alt={product.title} loading="eager" onError={imageOverride ? undefined : onImgErrorToBase} className={`h-full w-full ${imageOverride ? 'object-cover' : 'object-contain'} transition-transform duration-500 group-hover:scale-[1.03]`} />
+          <img src={display} alt={product.title} loading="eager" onError={imageOverride ? undefined : onImgErrorToBase} className={`h-full w-full ${bleed ? 'object-cover' : 'object-contain'} transition-transform duration-500 group-hover:scale-[1.03]`} />
         ) : (
           <img src="/noimage.svg" alt={product.title} className="h-full w-full object-contain p-6" />
         )}
 
-        {p.availableForSale === false && (
+        {!bleed && p.availableForSale === false && (
           <span className="absolute left-3 top-3 rounded-full bg-ink px-3 py-1 text-[10px] font-medium uppercase tracking-wide text-white">Изчерпан</span>
         )}
-        {onSale && p.availableForSale !== false && (
+        {!bleed && onSale && p.availableForSale !== false && (
           <span className="absolute left-3 top-3 rounded-full bg-ink px-3 py-1 text-[10px] font-medium uppercase tracking-wide text-white">Промо</span>
         )}
 
@@ -205,7 +212,7 @@ function PlpCard({product, imageOverride}: {product: Product; imageOverride?: st
         </div>
       </div>
 
-      <div className="mt-[11px]">
+      <div className={bleed ? 'bg-paper px-3 pb-3 pt-[11px] sm:px-5 sm:pb-5' : 'mt-[11px]'}>
         <div className="font-display text-[15px] font-semibold uppercase leading-[1.2] tracking-[0.01em] text-ink">{brand || name}</div>
         {brand && name && <div className="mt-1 text-[11px] font-medium uppercase tracking-[0.16em] text-mid">{name}</div>}
         <div className="mt-1.5 text-[14px] font-medium leading-[1.2] text-ink">
