@@ -446,9 +446,9 @@ function Newsletter() {
       <h2 className="max-w-[560px] font-display text-[clamp(24px,3.4vw,42px)] font-bold uppercase leading-[1.1] tracking-[-0.02em] text-ink">
         Абонирай се за новостите
       </h2>
-      <form className="flex w-full max-w-[480px] overflow-hidden rounded-full border border-line bg-white" onSubmit={(e) => e.preventDefault()}>
-        <input type="email" placeholder="Вашият имейл адрес" className="flex-1 bg-transparent px-6 py-3.5 font-sans text-[14px] text-ink outline-none placeholder:text-[#aaa]" />
-        <button type="submit" className="m-1 rounded-full bg-ink px-6 py-2.5 font-sans text-[13px] font-medium text-white transition-colors hover:bg-red">Абонирай се</button>
+      <form className="flex w-full max-w-[480px] flex-col gap-2.5 sm:flex-row sm:gap-0 sm:overflow-hidden sm:rounded-full sm:border sm:border-line sm:bg-white" onSubmit={(e) => e.preventDefault()}>
+        <input type="email" placeholder="Вашият имейл адрес" className="flex-1 rounded-full border border-line bg-white px-6 py-3.5 font-sans text-[14px] text-ink outline-none placeholder:text-[#aaa] sm:rounded-none sm:border-0 sm:bg-transparent" />
+        <button type="submit" className="rounded-full bg-ink px-6 py-3.5 font-sans text-[13px] font-medium text-white transition-colors hover:bg-red sm:m-1 sm:py-2.5">Абонирай се</button>
       </form>
       <p className="max-w-[420px] font-sans text-[12px] font-light leading-relaxed text-mid">
         С абонирането се съгласявате с нашата <Link to="/policies" className="border-b border-mid/40 hover:border-mid">политика за поверителност</Link>.

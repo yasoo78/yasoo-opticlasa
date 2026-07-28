@@ -38,6 +38,7 @@ const FEATURE = {
   to: '/products/dita-aeova-a-01',
   brand: 'Dita',
   name: 'Dita AEOVA A - 01',
+  price: '894.76 €',
 };
 
 const CARTIER = 'https://cdncloudcart.com/72223/files/image/cartier.jpg?1781055838';
@@ -306,8 +307,9 @@ function Bestsellers({products}: {products: Product[]}) {
             <img src={FEATURE.img} alt={`${FEATURE.brand} ${FEATURE.name}`} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]" />
           </div>
           <div className="px-5 pb-5">
-            <div className="font-display text-[20px] font-medium tracking-[-0.01em] text-ink">{FEATURE.name}</div>
+            <div className="font-display text-[15px] font-medium tracking-[-0.01em] text-ink">{FEATURE.name}</div>
             <div className="mt-0.5 font-sans text-[12px] font-light text-mid">{FEATURE.brand}</div>
+            <div className="mt-1.5 text-[14px] font-medium text-ink">{FEATURE.price}</div>
           </div>
         </Link>
         {c && <div className="lg:col-start-3 lg:row-start-2"><MosaicCard product={c} /></div>}
@@ -443,9 +445,9 @@ function Newsletter() {
       <h2 className="max-w-[560px] font-display text-[clamp(24px,3.4vw,42px)] font-bold uppercase leading-[1.1] tracking-[-0.02em] text-ink">
         Абонирай се за новостите
       </h2>
-      <form className="flex w-full max-w-[480px] overflow-hidden rounded-full border border-line bg-white" onSubmit={(e) => e.preventDefault()}>
-        <input type="email" placeholder="Вашият имейл адрес" className="flex-1 bg-transparent px-6 py-3.5 font-sans text-[14px] text-ink outline-none placeholder:text-[#aaa]" />
-        <button type="submit" className="m-1 rounded-full bg-ink px-6 py-2.5 font-sans text-[13px] font-medium text-white transition-colors hover:bg-red">Абонирай се</button>
+      <form className="flex w-full max-w-[480px] flex-col gap-2.5 sm:flex-row sm:gap-0 sm:overflow-hidden sm:rounded-full sm:border sm:border-line sm:bg-white" onSubmit={(e) => e.preventDefault()}>
+        <input type="email" placeholder="Вашият имейл адрес" className="flex-1 rounded-full border border-line bg-white px-6 py-3.5 font-sans text-[14px] text-ink outline-none placeholder:text-[#aaa] sm:rounded-none sm:border-0 sm:bg-transparent" />
+        <button type="submit" className="rounded-full bg-ink px-6 py-3.5 font-sans text-[13px] font-medium text-white transition-colors hover:bg-red sm:m-1 sm:py-2.5">Абонирай се</button>
       </form>
       <p className="max-w-[420px] font-sans text-[12px] font-light leading-relaxed text-mid">
         С абонирането се съгласявате с нашата <Link to="/policies" className="border-b border-mid/40 hover:border-mid">политика за поверителност</Link>.

@@ -88,9 +88,9 @@ export default function PremiumPage() {
       <Hero />
       <CategoryBanners />
       <BrandsMarquee />
-      {womenBest.length >= 4 && <Bestsellers products={womenBest} to="/selection/premium-kolekciya-jeni" feature={{img: 'https://cdncloudcart.com/74980/files/image/pr-img-02.jpg?1785139948', name: 'DITA AEOVA A - 01', brand: 'Dita', to: '/products/dita-aeova-a-01'}} />}
+      {womenBest.length >= 4 && <Bestsellers products={womenBest} to="/selection/premium-kolekciya-jeni" feature={{img: 'https://cdncloudcart.com/74980/files/image/pr-img-02.jpg?1785139948', name: 'DITA AEOVA A - 01', brand: 'Dita', to: '/products/dita-aeova-a-01', price: '894.76 €'}} />}
       <CartierBanner img="https://cdncloudcart.com/74980/files/image/bg-003b.jpg?1785136812" heightClass="h-[900px]" overlay={false} dark raise={30} titleSize="text-[clamp(30px,4vw,70px)]" parallax eyebrow="Нова колекция" title={'DITA PREMIUM\nCOLLECTION'} to="/search?q=DITA" />
-      {menBest.length >= 4 && <Bestsellers products={menBest} title={'Избрани модели\nза мъже'} to="/selection/premium-kolekciya-maje" feature={{img: 'https://cdncloudcart.com/74980/files/image/pr-img-03.jpg?1785140632', name: 'David Beckham DB 1199', brand: 'David Beckham', to: '/products/david-beckham-db-1199gs-kb73o'}} />}
+      {menBest.length >= 4 && <Bestsellers products={menBest} title={'Избрани модели\nза мъже'} to="/selection/premium-kolekciya-maje" feature={{img: 'https://cdncloudcart.com/74980/files/image/pr-img-03.jpg?1785140632', name: 'David Beckham DB 1199', brand: 'David Beckham', to: '/products/david-beckham-db-1199gs-kb73o', price: '276.10 €'}} />}
       <StickyFeatures />
       <Newsletter />
     </>
@@ -294,7 +294,7 @@ function MosaicCard({product, big = false}: {product: Product; big?: boolean}) {
   );
 }
 
-function Bestsellers({products, title = 'Избрани модели\nза жени', to = '/products', feature = FEATURE}: {products: Product[]; title?: string; to?: string; feature?: {img: string; name: string; brand: string; to: string}}) {
+function Bestsellers({products, title = 'Избрани модели\nза жени', to = '/products', feature = FEATURE}: {products: Product[]; title?: string; to?: string; feature?: {img: string; name: string; brand: string; to: string; price?: string}}) {
   const [a, b, c, d] = products; // a,b = top row · c,d = right column · big = Carolina Lemke feature
   return (
     <section className="bg-off">
@@ -317,6 +317,7 @@ function Bestsellers({products, title = 'Избрани модели\nза же�
           <div className="px-5 pb-5">
             <div className="font-display text-[15px] font-medium tracking-[-0.01em] text-ink">{feature.name}</div>
             <div className="mt-0.5 font-sans text-[12px] font-light text-mid">{feature.brand}</div>
+            <div className="mt-1.5 text-[14px] font-medium text-ink">{feature.price}</div>
           </div>
         </Link>
       </div>
@@ -439,9 +440,9 @@ function Newsletter() {
       <h2 className="max-w-[560px] font-display text-[clamp(24px,3.4vw,42px)] font-bold uppercase leading-[1.1] tracking-[-0.02em] text-ink">
         Абонирай се за новостите
       </h2>
-      <form className="flex w-full max-w-[480px] overflow-hidden rounded-full border border-line bg-white" onSubmit={(e) => e.preventDefault()}>
-        <input type="email" placeholder="Вашият имейл адрес" className="flex-1 bg-transparent px-6 py-3.5 font-sans text-[14px] text-ink outline-none placeholder:text-[#aaa]" />
-        <button type="submit" className="m-1 rounded-full bg-ink px-6 py-2.5 font-sans text-[13px] font-medium text-white transition-colors hover:bg-red">Абонирай се</button>
+      <form className="flex w-full max-w-[480px] flex-col gap-2.5 sm:flex-row sm:gap-0 sm:overflow-hidden sm:rounded-full sm:border sm:border-line sm:bg-white" onSubmit={(e) => e.preventDefault()}>
+        <input type="email" placeholder="Вашият имейл адрес" className="flex-1 rounded-full border border-line bg-white px-6 py-3.5 font-sans text-[14px] text-ink outline-none placeholder:text-[#aaa] sm:rounded-none sm:border-0 sm:bg-transparent" />
+        <button type="submit" className="rounded-full bg-ink px-6 py-3.5 font-sans text-[13px] font-medium text-white transition-colors hover:bg-red sm:m-1 sm:py-2.5">Абонирай се</button>
       </form>
       <p className="max-w-[420px] font-sans text-[12px] font-light leading-relaxed text-mid">
         С абонирането се съгласявате с нашата <Link to="/policies" className="border-b border-mid/40 hover:border-mid">политика за поверителност</Link>.
