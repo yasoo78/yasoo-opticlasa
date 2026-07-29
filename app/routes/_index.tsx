@@ -90,6 +90,7 @@ export default function Homepage() {
       {products.length >= 4 && <Bestsellers products={products.slice(5, 9)} />}
       <CartierBanner img="https://cdncloudcart.com/74980/files/image/bg-002.jpg?1784896563" heightClass="h-[900px]" overlay={false} dark raise={30} titleSize="text-[clamp(30px,4vw,70px)]" parallax eyebrow="Нова колекция" title={'Диоптрични\nрамки'} to="/collections/optical-glasses" />
       <StickyFeatures />
+      <Showreel text="OPTICLASA PREMIUM" label="Виж Premium селекцията" href="/premium" />
       <Newsletter />
     </>
   );
@@ -175,6 +176,87 @@ function CategoryBanners() {
         </Link>
       ))}
     </div>
+  );
+}
+
+/* ─────────────── SHOWREEL — scroll-driven clip-path reveal + marquee ─────────────── */
+const SHOWREEL_VIDEO = 'https://cdncloudcart.com/74980/files/video/0-lobby-decor-1280x720.mp4?1784880571';
+const SHOWREEL_POSTER = 'https://cdncloudcart.com/72223/files/image/diopt.jpg?1781058286';
+const PLUS = (
+  <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M19 11h-6V5a1 1 0 1 0-2 0v6H5a1 1 0 1 0 0 2h6v6a1 1 0 1 0 2 0v-6h6a1 1 0 1 0 0-2Z" /></svg>
+);
+
+function Showreel({text = 'Showreel', href = 'https://www.youtube.com/@OPTICLASA-m8z', label = 'Гледай сега'}: {text?: string; href?: string; label?: string}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [p, setP] = useState(0); // 0..1 scroll progress while the section is pinned
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const rect = el.getBoundingClientRect();
+      const dist = el.offsetHeight - window.innerHeight;
+      setP(dist > 0 ? Math.min(Math.max(-rect.top / dist, 0), 1) : 0);
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+    update();
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  // Reveal finishes in the first ~55% of the scroll, then holds full-bleed.
+  const r = Math.min(p / 0.55, 1);
+  const eased = 1 - Math.pow(1 - r, 3); // easeOutCubic
+  const inset = 42.5 * (1 - eased); // 42.5% (small centred card) → 0% (full screen)
+  const radius = 1.2 * (1 - eased); // vw
+  const clip = `inset(${inset}% ${inset}% ${inset}% ${inset}% round ${radius}vw)`;
+  const scale = 1.14 - 0.14 * eased; // subtle zoom-out as it opens
+  const marqueeX = -p * 90; // scroll-driven: the headline only moves as you scroll (vw)
+  const words = Array.from({length: 10});
+
+  return (
+    <section ref={ref} className="relative h-[240vh] bg-ink">
+      <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
+        {/* revealing media */}
+        <div className="absolute inset-0" style={{clipPath: clip, WebkitClipPath: clip}}>
+          <video
+            className="h-full w-full object-cover"
+            style={{transform: `scale(${scale})`}}
+            src={SHOWREEL_VIDEO}
+            poster={SHOWREEL_POSTER}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+          />
+          <div className="absolute inset-0 bg-black/45" />
+        </div>
+
+        {/* overlay — marquee headline + button, fading in as the card opens */}
+        <div className="relative z-10 flex w-full flex-col items-center gap-8" style={{opacity: eased}}>
+          <div className="w-full overflow-hidden">
+            <div className="flex w-max whitespace-nowrap will-change-transform" style={{transform: `translate3d(${marqueeX}vw,0,0)`}}>
+              {words.map((_, i) => (
+                <span key={i} className="px-8 font-display text-[clamp(48px,11vw,150px)] font-black uppercase leading-none tracking-[-0.02em] text-white">{text}</span>
+              ))}
+            </div>
+          </div>
+          {href.startsWith('/') ? (
+            <Link to={href} prefetch="intent" className={PILL_WHITE}>{label} {PLUS}</Link>
+          ) : (
+            <a href={href} target="_blank" rel="noreferrer" className={PILL_WHITE}>{label} {PLUS}</a>
+          )}
+        </div>
+      </div>
+    </section>
   );
 }
 
