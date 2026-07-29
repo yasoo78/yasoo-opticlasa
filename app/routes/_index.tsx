@@ -180,8 +180,7 @@ function CategoryBanners() {
 }
 
 /* ─────────────── SHOWREEL — scroll-driven clip-path reveal + marquee ─────────────── */
-const SHOWREEL_VIDEO = 'https://cdncloudcart.com/74980/files/video/0-lobby-decor-1280x720.mp4?1784880571';
-const SHOWREEL_POSTER = 'https://cdncloudcart.com/72223/files/image/diopt.jpg?1781058286';
+const SHOWREEL_IMAGE = 'https://cdncloudcart.com/74980/files/image/img-sunglasses-01.jpg?1785308663';
 const PLUS = (
   <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M19 11h-6V5a1 1 0 1 0-2 0v6H5a1 1 0 1 0 0 2h6v6a1 1 0 1 0 2 0v-6h6a1 1 0 1 0 0-2Z" /></svg>
 );
@@ -226,18 +225,14 @@ function Showreel({text = 'Showreel', href = 'https://www.youtube.com/@OPTICLASA
       <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
         {/* revealing media */}
         <div className="absolute inset-0" style={{clipPath: clip, WebkitClipPath: clip}}>
-          <video
+          <img
             className="h-full w-full object-cover"
             style={{transform: `scale(${scale})`}}
-            src={SHOWREEL_VIDEO}
-            poster={SHOWREEL_POSTER}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
+            src={SHOWREEL_IMAGE}
+            alt=""
+            loading="lazy"
           />
-          <div className="absolute inset-0 bg-black/45" />
+          <div className="absolute inset-0 bg-black/25" />
         </div>
 
         {/* overlay — marquee headline + button, fading in as the card opens */}
