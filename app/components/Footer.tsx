@@ -7,22 +7,25 @@ interface FooterProps {
 }
 
 const SHOP_LINKS = [
-  {title: 'Слънчеви очила', url: '/collections'},
-  {title: 'Диоптрични рамки', url: '/collections'},
-  {title: 'Работни очила', url: '/collections'},
-  {title: 'Контактни лещи', url: '/collections'},
-  {title: 'Premium', url: '/collections'},
-  {title: 'Outlet', url: '/collections'},
+  {title: 'Слънчеви очила', url: '/collections/slanchevi-ochila'},
+  {title: 'Диоптрични рамки', url: '/collections/optical-glasses'},
+  {title: 'Контактни лещи', url: '/pages/kontaktni-leshti'},
+  {title: 'Premium', url: '/premium'},
+  {title: 'Outlet', url: '/outlet'},
+  {title: 'Пробвай преди да купиш', url: '/pages/probvaj-predi-da-kupish'},
+  {title: 'Нови продукти', url: '/selection/novi'},
 ];
 
 const HELP_LINKS = [
-  {title: 'Доставка и връщане', url: '/policies'},
-  {title: 'Гаранция', url: '/policies'},
-  {title: 'Пробвай преди да купиш', url: '/pages/contact'},
-  {title: 'Изплащане с TBI', url: '/pages/contact'},
-  {title: 'Магазини', url: '/pages/contact'},
-  {title: 'За нас', url: '/pages/about'},
-  {title: 'ЧЗВ', url: '/pages/faq'},
+  {title: 'Работа в Opticlasa', url: '/pages/rabota-v-opticlasa'},
+  {title: 'Често задавани въпроси', url: '/pages/chesto-zadavani-vaprosi'},
+  {title: 'Доставка и връщане', url: '/pages/dostavka-i-vrashtane'},
+  {title: 'Гаранция', url: '/pages/garantsiya'},
+  {title: 'Изплащане с TBI', url: '/pages/izplashtane-tbi'},
+  {title: 'Корпоративни клиенти', url: '/pages/korporativni-klienti'},
+  {title: 'За нас', url: '/pages/za-nas'},
+  {title: 'Магазини', url: '/pages/magazini'},
+  {title: 'Контакти', url: '/pages/kontakti'},
 ];
 
 const PAYMENTS = ['Visa', 'Mastercard', 'Maestro', 'TBI'];
@@ -39,7 +42,7 @@ export function Footer({shop, menu}: FooterProps) {
           <div className="mb-3.5 font-display text-[9px] font-bold uppercase tracking-[0.18em] text-white/30">
             Свържете се с нас
           </div>
-          <div className="mb-4 font-display text-lg font-bold leading-tight text-white/80">
+          <div className="mb-4 font-display text-[28px] font-extrabold leading-tight text-white/80">
             Тук сме,
             <br />
             за да помогнем
@@ -66,13 +69,13 @@ export function Footer({shop, menu}: FooterProps) {
 
       {/* legal bar */}
       <div className="relative z-[2] flex flex-wrap items-center justify-between gap-2.5 border-t border-white/5 px-12 py-4">
-        <div className="text-[10px] tracking-[0.02em] text-white/[0.17]">
+        <div className="text-[10px] tracking-[0.02em] text-white/30">
           © {new Date().getFullYear()} {shop.name || 'Opticlasa'} / Mega Optic OOD &nbsp;·&nbsp;
-          <Link to="/policies" className="underline underline-offset-2 hover:text-white/40">
+          <Link to="/pages/obshti-usloviya" className="underline underline-offset-2 hover:text-white/60">
             Общи условия
           </Link>
           &nbsp;·&nbsp;
-          <Link to="/policies" className="underline underline-offset-2 hover:text-white/40">
+          <Link to="/pages/poveritelnost" className="underline underline-offset-2 hover:text-white/60">
             Поверителност
           </Link>
         </div>
@@ -110,7 +113,7 @@ function FooterCol({heading, links}: {heading: string; links: Array<{title: stri
             <Link
               to={l.url}
               prefetch="intent"
-              className="text-[13px] text-white/[0.26] transition-colors hover:text-white/75"
+              className="text-[13px] text-white/50 transition-colors hover:text-white/90"
             >
               {l.title}
             </Link>
