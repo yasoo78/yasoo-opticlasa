@@ -19,7 +19,7 @@ export function CartSummary({cart, layout}: CartSummaryProps) {
     }>
       {layout === 'page' && cart.discountCodes && cart.discountCodes.length > 0 && (
         <div className="flex justify-between mb-4">
-          <span>Discounts</span>
+          <span>Отстъпки</span>
           <div>
             {cart.discountCodes.map((discount: any) => (
               <span key={discount.code} className="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">
@@ -34,20 +34,20 @@ export function CartSummary({cart, layout}: CartSummaryProps) {
         ? 'flex justify-between mb-4 text-[0.95rem]'
         : 'text-lg font-bold'
       }>
-        <span>Subtotal</span>
+        <span>Междинна сума</span>
         <strong><Money data={cart.cost.totalAmount} /></strong>
       </div>
 
       {layout === 'aside' ? (
         <Link to="/cart" className="flex items-center justify-center gap-2 py-3 bg-dark text-light rounded-lg font-semibold text-sm no-underline hover:bg-gray-900 hover:no-underline transition-colors duration-150" onClick={close}>
-          Continue to Checkout <ArrowRightIcon className="size-4" />
+          Към количката <ArrowRightIcon className="size-4" />
         </Link>
       ) : cart.checkoutUrl && cart.totalQuantity > 0 ? (
-        <a href={cart.checkoutUrl} className="inline-flex py-3 px-8 bg-brand text-white no-underline rounded-lg font-semibold text-sm hover:bg-brand-dark transition-colors duration-150">
-          Checkout
+        <a href={cart.checkoutUrl} className="inline-flex py-3 px-8 bg-red text-white no-underline rounded-lg font-semibold text-sm hover:bg-red-dark transition-colors duration-150">
+          Завърши поръчката
         </a>
       ) : (
-        <button disabled className="inline-flex py-3 px-8 bg-brand/50 text-white border-none rounded-lg font-semibold text-sm cursor-not-allowed">Checkout</button>
+        <button disabled className="inline-flex py-3 px-8 bg-red/50 text-white border-none rounded-lg font-semibold text-sm cursor-not-allowed">Завърши поръчката</button>
       )}
     </div>
   );

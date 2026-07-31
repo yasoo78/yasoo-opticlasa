@@ -2,7 +2,7 @@ import {NavLink, Link, Await} from 'react-router';
 import {Suspense, useEffect, useState} from 'react';
 import type {Shop, Menu, CartData} from '@cloudcart/nitrogen';
 import {useAside} from './Aside';
-import {MagnifyingGlassIcon, ShoppingBagIcon, HeartIcon, Bars3Icon, XMarkIcon} from '@heroicons/react/24/outline';
+import {MagnifyingGlassIcon, ShoppingBagIcon, HeartIcon, Bars3Icon, XMarkIcon, UserIcon} from '@heroicons/react/24/outline';
 
 interface HeaderProps {
   shop: Shop;
@@ -14,6 +14,8 @@ interface HeaderProps {
   reveal?: boolean;
   /** Inverted dark header (black bg, light text, white logo) — used on the Premium page. */
   dark?: boolean;
+  /** Wishlist icon only shows for signed-in customers. */
+  isLoggedIn?: boolean;
 }
 
 const LOGO = 'https://js4nc.cloudcart.net/cdn/img/logo/1/logo-2.svg?v=1781011008';
@@ -25,7 +27,7 @@ const FALLBACK_MENU = [
   {title: 'Нови', url: '/selection/novi'},
 ];
 
-export function Header({shop, menu, cart, overHero = false, dark = false}: HeaderProps) {
+export function Header({shop, menu, cart, overHero = false, dark = false, isLoggedIn = false}: HeaderProps) {
   const items = (menu?.items?.length ? menu.items : FALLBACK_MENU).slice(0, 4);
   const {open} = useAside();
   // Sticky header: stays pinned to the top and shrinks once the page is scrolled.
@@ -144,9 +146,14 @@ export function Header({shop, menu, cart, overHero = false, dark = false}: Heade
           >
             <MagnifyingGlassIcon className="size-[20px]" />
           </button>
-          <IconLink to="/account/wishlist" label="Wishlist" light={lightText}>
-            <HeartIcon className="size-[20px]" />
+          <IconLink to="/account/login" label="Профил" light={lightText}>
+            <UserIcon className="size-[20px]" />
           </IconLink>
+          {isLoggedIn && (
+            <IconLink to="/account/wishlist" label="Любими" light={lightText}>
+              <HeartIcon className="size-[20px]" />
+            </IconLink>
+          )}
           <button
             type="button"
             onClick={() => open('cart')}

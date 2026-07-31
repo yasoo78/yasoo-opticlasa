@@ -203,7 +203,7 @@ function Showreel({text = 'Showreel', href = 'https://www.youtube.com/@OPTICLASA
   const words = Array.from({length: 10});
 
   return (
-    <section ref={ref} className="relative h-[240vh] bg-ink">
+    <section ref={ref} className="relative h-[240vh] bg-black">
       <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
         {/* revealing media */}
         <div className="absolute inset-0" style={{clipPath: clip, WebkitClipPath: clip}}>

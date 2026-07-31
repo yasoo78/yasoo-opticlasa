@@ -2,6 +2,11 @@ import {Form, Link, redirect, useActionData, useNavigation} from 'react-router';
 import type {Route} from './+types/account_.register';
 import {getContext} from '~/lib/context';
 import {getSeoMeta} from '@cloudcart/nitrogen';
+import {AuthLayout} from './account_.login';
+
+const authInput = 'w-full rounded-lg border-[1.5px] border-line bg-white px-4 py-3 text-[15px] text-ink outline-none transition-colors focus:border-ink';
+const authLabel = 'mb-1.5 block font-display text-[11px] font-semibold uppercase tracking-[0.08em] text-ink';
+const authBtn = 'w-full rounded-full bg-ink px-6 py-3.5 font-display text-[12px] font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-red disabled:opacity-60';
 
 export const meta: Route.MetaFunction = () => getSeoMeta({title: 'Create account | Nitrogen'});
 
@@ -51,72 +56,41 @@ export default function AccountRegister() {
   const v = actionData?.values ?? {};
 
   return (
-    <div className="mx-auto max-w-md py-12">
-      <h1 className="text-2xl font-bold tracking-tight mb-2">Create your account</h1>
-      <p className="text-sm text-gray-500 mb-6">
-        After registering, we’ll email you a 6-digit sign-in code.
-      </p>
-
-      <Form method="POST" className="space-y-4">
-        <label className="block">
-          <span className="block text-sm font-medium mb-1">Email</span>
-          <input
-            type="email"
-            name="email"
-            autoComplete="email"
-            required
-            defaultValue={v.email ?? ''}
-            className="form-input w-full py-2.5 px-3 border-[1.5px] border-gray-200 rounded-lg focus:border-brand focus:ring-2 focus:ring-brand/20"
-          />
-        </label>
-
-        <div className="grid grid-cols-2 gap-3">
-          <label className="block">
-            <span className="block text-sm font-medium mb-1">First name</span>
-            <input
-              type="text"
-              name="firstName"
-              autoComplete="given-name"
-              defaultValue={v.firstName ?? ''}
-              className="form-input w-full py-2.5 px-3 border-[1.5px] border-gray-200 rounded-lg focus:border-brand focus:ring-2 focus:ring-brand/20"
-            />
-          </label>
-          <label className="block">
-            <span className="block text-sm font-medium mb-1">Last name</span>
-            <input
-              type="text"
-              name="lastName"
-              autoComplete="family-name"
-              defaultValue={v.lastName ?? ''}
-              className="form-input w-full py-2.5 px-3 border-[1.5px] border-gray-200 rounded-lg focus:border-brand focus:ring-2 focus:ring-brand/20"
-            />
-          </label>
+    <AuthLayout
+      title="Създай профил"
+      below={
+        <p className="text-[14px] text-mid">
+          Вече имаш профил?{' '}
+          <Link to="/account/login" className="font-semibold text-ink underline underline-offset-2 hover:text-red">Влез</Link>
+        </p>
+      }
+    >
+      <Form method="POST" className="mt-7 space-y-4">
+        <div>
+          <label htmlFor="email" className={authLabel}>Имейл</label>
+          <input id="email" type="email" name="email" autoComplete="email" required defaultValue={v.email ?? ''} placeholder="you@example.com" className={authInput} />
         </div>
 
-        <label className="flex items-start gap-2 text-sm text-gray-600">
-          <input type="checkbox" name="acceptsMarketing" className="mt-0.5" />
-          <span>I’d like to receive marketing emails.</span>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label htmlFor="firstName" className={authLabel}>Име</label>
+            <input id="firstName" type="text" name="firstName" autoComplete="given-name" defaultValue={v.firstName ?? ''} className={authInput} />
+          </div>
+          <div>
+            <label htmlFor="lastName" className={authLabel}>Фамилия</label>
+            <input id="lastName" type="text" name="lastName" autoComplete="family-name" defaultValue={v.lastName ?? ''} className={authInput} />
+          </div>
+        </div>
+
+        <label className="flex items-start gap-2.5 text-[13px] leading-relaxed text-mid">
+          <input type="checkbox" name="acceptsMarketing" className="mt-0.5 accent-ink" />
+          <span>Искам да получавам новини и промоции по имейл.</span>
         </label>
 
-        {actionData?.error ? (
-          <p className="text-sm text-red-600">{actionData.error}</p>
-        ) : null}
+        {actionData?.error ? <p className="text-[13px] text-red">{actionData.error}</p> : null}
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full py-2.5 px-4 bg-brand text-white font-medium rounded-lg hover:opacity-90 disabled:opacity-60"
-        >
-          {isSubmitting ? 'Creating…' : 'Create account'}
-        </button>
+        <button type="submit" disabled={isSubmitting} className={authBtn}>{isSubmitting ? 'Създаване…' : 'Създай профил'}</button>
       </Form>
-
-      <p className="mt-6 text-center text-sm text-gray-500">
-        Already have an account?{' '}
-        <Link to="/account/login" className="text-brand hover:underline">
-          Sign in
-        </Link>
-      </p>
-    </div>
+    </AuthLayout>
   );
 }

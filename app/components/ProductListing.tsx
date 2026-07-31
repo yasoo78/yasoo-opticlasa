@@ -142,10 +142,12 @@ export function ProductListing({
                   type="button"
                   onClick={() => toggleVendor(name)}
                   title={name}
-                  className={`group relative flex h-[142px] w-[128px] shrink-0 flex-col items-center rounded-lg bg-[#f5f5f5] px-3 pt-[34px] text-center transition-colors ${active ? 'border-2 border-ink' : 'border border-line hover:border-ink'}`}
+                  className={`group relative flex h-[142px] w-[128px] shrink-0 flex-col items-center rounded-lg bg-[#f5f5f5] px-3 pt-[24px] text-center transition-colors ${active ? 'border-2 border-ink' : 'border border-line hover:border-ink'}`}
                 >
                   {logo && (
-                    <img src={logo} alt={name} loading="lazy" className="max-h-9 max-w-[88px] object-contain" onError={(e) => {(e.currentTarget as HTMLImageElement).style.display = 'none';}} />
+                    <div className="flex h-9 w-full items-center justify-center">
+                      <img src={logo} alt={name} loading="lazy" className="max-h-9 max-w-[88px] object-contain" onError={(e) => {(e.currentTarget as HTMLImageElement).style.display = 'none';}} />
+                    </div>
                   )}
                   <span className="absolute inset-x-0 bottom-[30px] line-clamp-2 px-2 text-center font-display text-[11px] font-semibold uppercase leading-[1.2] tracking-[0.03em] text-ink">{name}</span>
                 </button>
@@ -301,15 +303,18 @@ function PlpCard({product, imageOverride}: {product: Product; imageOverride?: st
 function CatRow({cats}: {cats: Cat[]}) {
   return (
     <div className="scrollbar-none -mx-5 mt-5 flex snap-x snap-mandatory gap-2 overflow-x-auto px-5 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0">
-      {cats.map((c) => {
+      {cats.map((c, i) => {
         // request a ~4:3 landscape crop — also busts any old cached square/portrait crop
         const img = c.image?.url ? `${baseUrl(c.image.url)}?width=820&height=616` : undefined;
+        // Mobile carousel: round all, but square off the first banner's left (outer) edge.
+        // Desktop grid: fully rounded on every tile.
+        const round = `rounded-[11px] ${i === 0 ? 'rounded-l-none md:rounded-l-[11px]' : ''}`;
         return (
           <Link
             key={c.id}
             to={`/collections/${c.handle}`}
             prefetch="intent"
-            className="group relative block aspect-[4/3] w-[76%] shrink-0 snap-start overflow-hidden bg-panel md:w-auto md:shrink"
+            className={`group relative block aspect-[4/3] w-[76%] shrink-0 snap-start overflow-hidden bg-panel md:w-auto md:shrink ${round}`}
           >
             {img ? (
               <img
@@ -340,7 +345,7 @@ function CatRow({cats}: {cats: Cat[]}) {
 function GridBtn({active, onClick, cols}: {active: boolean; onClick: () => void; cols: 3 | 4}) {
   return (
     <button type="button" onClick={onClick} aria-label={`${cols} колони`} className={`flex size-8 items-center justify-center rounded-[7px] border ${active ? 'border-ink bg-ink text-white' : 'border-line3 bg-white text-ink'}`}>
-      <div className="flex gap-px">{Array.from({length: cols}).map((_, i) => <span key={i} className="block h-3.5 w-px bg-current" />)}</div>
+      <div className="flex gap-0.5">{Array.from({length: cols}).map((_, i) => <span key={i} className="block h-3.5 w-0.5 bg-current" />)}</div>
     </button>
   );
 }

@@ -19,11 +19,11 @@ export function CartMain({cart, layout}: CartMainProps) {
         : 'text-center py-16 text-gray-500'
       }>
         <ShoppingBagIcon className="size-12 text-gray-300 mx-auto mb-4" />
-        <p className="mb-4">Your cart is empty</p>
+        <p className="mb-4">Количката е празна</p>
         {layout === 'aside' ? (
-          <button onClick={close} className="mt-2 bg-transparent border border-gray-200 py-2 px-6 rounded-lg text-[0.85rem] cursor-pointer font-sans hover:border-dark transition-[border-color] duration-150">Continue Shopping</button>
+          <button onClick={close} className="mt-2 bg-transparent border border-gray-200 py-2 px-6 rounded-lg text-[0.85rem] cursor-pointer font-sans hover:border-dark transition-[border-color] duration-150">Продължи пазаруването</button>
         ) : (
-          <a href="/products" className="text-brand font-semibold">Continue Shopping</a>
+          <a href="/products" className="text-brand font-semibold">Продължи пазаруването</a>
         )}
       </div>
     );

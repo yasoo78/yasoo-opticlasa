@@ -70,7 +70,7 @@ export default function CartPage() {
     .flatMap((f) => f.data.errors as Array<{message: string}>);
 
   return (
-    <div className="max-w-3xl">
+    <div className="mx-auto max-w-3xl">
       <h1 className="mb-6 border-b border-line pb-5 font-display text-[clamp(26px,3.2vw,40px)] font-black tracking-[-0.02em] text-ink">Количка</h1>
       {cartErrors.length > 0 && <CartErrors errors={cartErrors} />}
       <CartMain cart={cart} layout="page" />

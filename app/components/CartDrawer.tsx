@@ -6,7 +6,7 @@ import {CartSummary} from './CartSummary';
 
 export function CartDrawer({cart}: {cart: Promise<CartData | null>}) {
   return (
-    <Suspense fallback={<p className="p-5">Loading cart...</p>}>
+    <Suspense fallback={<p className="p-5">Зарежда количката...</p>}>
       <Await resolve={cart}>
         {(resolvedCart) => <CartDrawerInner cart={resolvedCart} />}
       </Await>

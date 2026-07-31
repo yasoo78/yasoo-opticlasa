@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 
 const MESSAGES: Array<{text: string; link?: {label: string; to: string}}> = [
   {text: 'Безплатна доставка при поръчка над 100 лв'},
-  {text: '–40% на втора рамка', link: {label: 'Виж промоцията', to: '/collections'}},
+  {text: '–40% на втора рамка', link: {label: 'Виж промоцията', to: '/outlet'}},
   {text: 'Изплащане с TBI Bank · от 50 лв/мес'},
 ];
 

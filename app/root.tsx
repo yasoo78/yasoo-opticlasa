@@ -27,7 +27,7 @@ export async function loader({context, request}: Route.LoaderArgs) {
       : Promise.resolve([]),
   ]);
 
-  return {shop, headerMenu, footerMenu, cart: ctx.cart.get(), wishlistIds};
+  return {shop, headerMenu, footerMenu, cart: ctx.cart.get(), wishlistIds, isLoggedIn: ctx.customerAccount.isLoggedIn()};
 }
 
 export function Layout({children}: {children: React.ReactNode}) {
@@ -61,7 +61,7 @@ export default function App() {
 
   return (
     <AsideProvider>
-      <Aside type="cart" heading="CART">
+      <Aside type="cart" heading="Количка">
         <CartDrawer cart={cart} />
       </Aside>
       <SearchOverlay />
@@ -70,6 +70,7 @@ export default function App() {
         headerMenu={data?.headerMenu ?? null}
         footerMenu={data?.footerMenu ?? null}
         cart={cart}
+        isLoggedIn={data?.isLoggedIn ?? false}
       >
         <Outlet />
       </PageLayout>

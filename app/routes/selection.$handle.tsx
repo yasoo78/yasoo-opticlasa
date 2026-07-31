@@ -39,9 +39,17 @@ export async function loader({params, context, request}: Route.LoaderArgs) {
 
   const sel = SELECTIONS[params.handle];
   if (!sel) throw data('Not found', {status: 404});
-  const products = (
+  const url = new URL(request.url);
+  const vendors = url.searchParams.getAll('vendor');
+
+  const loaded = (
     await Promise.all(sel.products.map((h) => ctx.storefront.getProduct(h).catch(() => null)))
   ).filter(Boolean) as Product[];
+
+  // Brand tiles = all vendors in the selection; the grid is filtered by the ?vendor param.
+  const brands = [...new Set(loaded.map((p) => (p as any).vendor).filter(Boolean))].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+  const products = vendors.length ? loaded.filter((p) => vendors.includes((p as any).vendor)) : loaded;
+
   return {
     title: sel.title,
     products: {
@@ -52,7 +60,7 @@ export async function loader({params, context, request}: Route.LoaderArgs) {
     },
     subcats: [] as any[],
     promos: sel.promoImg ? [{position: 6, img: sel.promoImg}] : [],
-    brands: [] as string[],
+    brands,
   };
 }
 

@@ -73,7 +73,7 @@ function CartLineQuantity({line, quantity, layout}: {line: CartLine; quantity: n
           <input type="hidden" name="action" value="UPDATE_CART" />
           <input type="hidden" name="lineId" value={line.id} />
           <input type="hidden" name="quantity" value={Math.max(0, quantity - 1)} />
-          <button type="submit" aria-label="Decrease quantity" className={btnClass}>
+          <button type="submit" aria-label="Намали количеството" className={btnClass}>
             <MinusIcon className="size-3.5" />
           </button>
         </updateFetcher.Form>
@@ -82,7 +82,7 @@ function CartLineQuantity({line, quantity, layout}: {line: CartLine; quantity: n
           <input type="hidden" name="action" value="UPDATE_CART" />
           <input type="hidden" name="lineId" value={line.id} />
           <input type="hidden" name="quantity" value={quantity + 1} />
-          <button type="submit" aria-label="Increase quantity" className={btnClass}>
+          <button type="submit" aria-label="Увеличи количеството" className={btnClass}>
             <PlusIcon className="size-3.5" />
           </button>
         </updateFetcher.Form>
@@ -92,7 +92,7 @@ function CartLineQuantity({line, quantity, layout}: {line: CartLine; quantity: n
         <input type="hidden" name="lineId" value={line.id} />
         <button
           type="submit"
-          aria-label="Remove item"
+          aria-label="Премахни продукта"
           className="text-gray-400 hover:text-red-500 transition-colors duration-150 p-0.5"
         >
           <TrashIcon className="size-4" />

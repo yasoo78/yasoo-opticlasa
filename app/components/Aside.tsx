@@ -59,7 +59,7 @@ export function Aside({
   return (
     <div
       aria-modal
-      className={`fixed inset-0 bg-black/30 z-[100] transition-[opacity,visibility] duration-300 ${expanded ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}
+      className={`fixed inset-0 bg-black/30 z-[600] transition-[opacity,visibility] duration-300 ${expanded ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}
       role="dialog"
     >
       <button className="absolute inset-0 bg-transparent border-none w-[calc(100%-400px)] cursor-default" onClick={close} />
@@ -70,7 +70,7 @@ export function Aside({
             type="button"
             onClick={close}
             className="rounded-md p-1 text-gray-400 hover:text-dark transition-colors duration-150"
-            aria-label="Close"
+            aria-label="Затвори"
           >
             <XMarkIcon className="size-6" />
           </button>
