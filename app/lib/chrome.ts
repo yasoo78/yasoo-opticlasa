@@ -12,7 +12,9 @@ export function topChromeBottom(): number {
   const bar = document.querySelector('[data-sticky-bar]');
   if (bar) {
     const r = bar.getBoundingClientRect();
-    if (r.top >= 0 && r.bottom > r.top) max = Math.max(max, r.bottom);
+    // Only count the sticky ATC bar when it sits at the TOP (it now lives at the
+    // bottom of the viewport, which must not push drawers off-screen).
+    if (r.top >= 0 && r.top <= 120 && r.bottom > r.top) max = Math.max(max, r.bottom);
   }
   return Math.max(0, Math.round(max));
 }

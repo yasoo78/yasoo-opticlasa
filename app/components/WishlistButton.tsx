@@ -1,4 +1,4 @@
-import {useFetcher, useRouteLoaderData} from 'react-router';
+import {useFetcher, useNavigate, useRouteLoaderData} from 'react-router';
 import {useEffect, useState} from 'react';
 import {HeartIcon} from '@heroicons/react/24/outline';
 import {HeartIcon as HeartSolid} from '@heroicons/react/24/solid';
@@ -12,10 +12,12 @@ export function WishlistButton({
   className?: string;
   size?: 'sm' | 'md' | 'lg';
 }) {
-  const rootData = useRouteLoaderData('root') as {wishlistIds?: string[]} | undefined;
+  const rootData = useRouteLoaderData('root') as {wishlistIds?: string[]; isLoggedIn?: boolean} | undefined;
   const wishlistIds = rootData?.wishlistIds ?? [];
+  const isLoggedIn = rootData?.isLoggedIn ?? false;
   const initiallyInWishlist = wishlistIds.includes(productId);
 
+  const navigate = useNavigate();
   const fetcher = useFetcher();
   // Optimistic state: toggles immediately on click, reconciles on server response.
   const [optimisticIn, setOptimisticIn] = useState(initiallyInWishlist);
@@ -33,6 +35,11 @@ export function WishlistButton({
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    // Guests must sign in before using the wishlist.
+    if (!isLoggedIn) {
+      navigate('/account/login');
+      return;
+    }
     const next = !inWishlist;
     setOptimisticIn(next);
     fetcher.submit(

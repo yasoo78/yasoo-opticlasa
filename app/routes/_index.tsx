@@ -10,13 +10,20 @@ import {VENDORS_BASE, BRAND_LOGOS} from '~/lib/brands';
 export const meta: Route.MetaFunction = () =>
   getSeoMeta({title: 'Opticlasa — Очила от водещи марки', description: 'Слънчеви очила и диоптрични рамки от Cartier, Gucci, Tom Ford, Ray-Ban и още 50+ марки.'});
 
+// Products pinned to the front of the "Нови продукти" showcase (in this order).
+const FEATURED_NEW = ['polaroid-pld2155s-hgcuc', 'carrera-1067s-i46yl', 'arnette-0an4358-275922'];
+
 export async function loader({context, request}: Route.LoaderArgs) {
   const ctx = await getContext(context, request);
-  const [products, collections] = await Promise.all([
+  const [products, collections, featured] = await Promise.all([
     ctx.storefront.getProducts(30).catch(() => [] as Product[]),
     ctx.storefront.getCollections(8).catch(() => [] as Collection[]),
+    Promise.all(FEATURED_NEW.map((h) => ctx.storefront.getProduct(h).catch(() => null))),
   ]);
-  return {products, collections};
+  const feat = featured.filter(Boolean) as Product[];
+  const featHandles = new Set(feat.map((p) => p.handle));
+  const newest = [...feat, ...products.filter((p) => !featHandles.has(p.handle))].slice(0, 15);
+  return {products, collections, newest};
 }
 
 /* ─────────────────────── assets ─────────────────────── */
@@ -58,9 +65,7 @@ const onSale = (p: any) => {
 };
 
 export default function Homepage() {
-  const {products, collections} = useLoaderData<typeof loader>();
-
-  const newest = products.slice(0, 15);
+  const {products, collections, newest} = useLoaderData<typeof loader>();
 
   return (
     <>

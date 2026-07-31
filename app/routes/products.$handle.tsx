@@ -173,6 +173,7 @@ function BuyPanel({product, variant, brand, name, collections}: {product: Produc
   const isPolarized = /поляризиран|polarized|^\s*да|с\s*поляр/i.test(polar) && !/без|неполяр|non[\s-]?polar|^\s*не\b/i.test(polar);
   const [lensOpen, setLensOpen] = useState(false);
   const [tbiOpen, setTbiOpen] = useState(false);
+  const [storesOpen, setStoresOpen] = useState(false);
   const colorMap = colorImageMap(product);
 
   return (
@@ -204,7 +205,7 @@ function BuyPanel({product, variant, brand, name, collections}: {product: Produc
       {variant && (
         <div className="mt-1 flex items-center gap-1.5 text-[11px] text-mid">
           <span className="h-[5px] w-[5px] flex-shrink-0 rounded-full bg-red" />
-          От {fmtEUR(parseFloat(variant.price.amount) / 12)}/мес с <button type="button" onClick={() => setTbiOpen(true)} className="border-b border-red/30 text-red transition-opacity hover:opacity-70">TBI Bank</button> · 12 вноски
+          От {fmtEUR(parseFloat(variant.price.amount) / 12)}/мес с <button type="button" onClick={() => setTbiOpen(true)} className="border-b border-red/30 font-medium text-red transition-opacity hover:opacity-70">TBI Bank</button> · 12 вноски
         </div>
       )}
 
@@ -269,9 +270,9 @@ function BuyPanel({product, variant, brand, name, collections}: {product: Produc
           <span className="text-[14px] text-[#444]">{isPolarized ? 'Поляризирани' : 'Неполяризирани'}</span>
         </div>
         {isPolarized && (
-          <button type="button" onClick={() => setLensOpen(true)} className="mt-0.5 flex w-fit items-center gap-1.5 font-display text-[12px] font-bold uppercase tracking-[0.04em] text-red transition-opacity hover:opacity-70">
-            Виж ефекта
-            <ChevronRight className="h-4 w-4" strokeWidth={2} />
+          <button type="button" onClick={() => setLensOpen(true)} className="mt-0.5 flex w-fit items-center gap-1.5 whitespace-nowrap font-display text-[12px] font-bold uppercase tracking-[0.04em] text-red transition-opacity hover:opacity-70">
+            Виж ефекта на поляризация
+            <ChevronRight className="h-4 w-4 shrink-0" strokeWidth={2} />
           </button>
         )}
       </div>
@@ -307,11 +308,12 @@ function BuyPanel({product, variant, brand, name, collections}: {product: Produc
       {/* store availability */}
       <div className="mt-6 flex items-center gap-2 text-[13px] text-mid">
         <MapPin className="h-4 w-4 flex-shrink-0 text-red" strokeWidth={1.7} />
-        Наличен в магазин — <Link to="/pages/contact" className="border-b border-red/30 text-red">Намери близо до теб</Link>
+        Наличен в магазин — <button type="button" onClick={() => setStoresOpen(true)} className="border-b border-red/30 text-red transition-opacity hover:opacity-70">Намери близо до теб</button>
       </div>
 
       <LensEffectModal open={lensOpen} onClose={() => setLensOpen(false)} lensName={lens} />
       <TbiModal open={tbiOpen} onClose={() => setTbiOpen(false)} variant={variant} />
+      <StoresModal open={storesOpen} onClose={() => setStoresOpen(false)} title={`${brand} ${name}`} />
     </div>
   );
 }
@@ -518,6 +520,69 @@ function TbiModal({open, onClose, variant}: {open: boolean; onClose: () => void;
               ))}
             </tbody>
           </table>
+        </div>
+      </aside>
+    </div>
+  );
+}
+
+/* ───────────────────── STORE AVAILABILITY MODAL ───────────────────── */
+// Example data only — the store network doesn't feed real per-model stock yet.
+const STORES: Array<{city: string; mall: string; status: 'in' | 'limited'}> = [
+  {city: 'София', mall: 'Garitage Park', status: 'in'},
+  {city: 'София', mall: 'The Mall', status: 'in'},
+  {city: 'София', mall: 'Sky City Mall', status: 'limited'},
+  {city: 'Пловдив', mall: 'Plovdiv Plaza Mall', status: 'in'},
+  {city: 'Хасково', mall: 'Holiday Park Haskovo', status: 'in'},
+];
+
+function StoresModal({open, onClose, title}: {open: boolean; onClose: () => void; title: string}) {
+  const [topOffset, setTopOffset] = useState(68);
+  useEffect(() => {
+    if (!open) return;
+    setTopOffset(topChromeBottom());
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    document.addEventListener('keydown', onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [open, onClose]);
+  if (!open) return null;
+  return (
+    <div className="fixed inset-x-0 bottom-0 z-[400]" style={{top: topOffset}} role="dialog" aria-modal="true">
+      <div className="animate-fade-in absolute inset-0 bg-black/15 backdrop-blur-[2px]" onClick={onClose} />
+      <aside className="animate-slide-in-right absolute inset-y-0 right-0 flex w-full max-w-[560px] flex-col overflow-hidden rounded-l-2xl bg-white shadow-[-16px_0_48px_rgba(0,0,0,0.16)]">
+        <div className="flex items-center px-6 py-5">
+          <button onClick={onClose} className="flex items-center gap-2.5 font-display text-[14px] font-bold uppercase tracking-[0.06em] text-ink transition-colors hover:text-red">
+            <ChevronLeft className="h-5 w-5" /> Наличност в магазините
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto px-6 pb-8">
+          <div className="mb-2 font-display text-[10px] font-bold uppercase tracking-[0.16em] text-red">Наличност</div>
+          <h4 className="mb-1 font-display text-[24px] font-extrabold leading-[1.05] tracking-[-0.02em] text-ink">Този модел в магазин</h4>
+          <p className="text-[13px] font-light text-mid">{title}</p>
+          <ul className="mt-6 flex flex-col divide-y divide-line border-y border-line">
+            {STORES.map((s, i) => (
+              <li key={i} className="flex items-center justify-between gap-3 py-4">
+                <div className="flex items-start gap-2.5">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-red" strokeWidth={1.7} />
+                  <div>
+                    <div className="text-[14px] font-medium text-ink">Магазин {s.city}</div>
+                    <div className="text-[13px] text-mid">{s.mall}</div>
+                  </div>
+                </div>
+                {s.status === 'limited' ? (
+                  <span className="shrink-0 whitespace-nowrap rounded-full bg-[#f7efe0] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.03em] text-[#a9791f]">Ограничена наличност</span>
+                ) : (
+                  <span className="shrink-0 whitespace-nowrap rounded-full bg-[#e9f4ec] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.03em] text-[#2f8a4e]">Наличен</span>
+                )}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-5 text-[12px] font-light leading-relaxed text-mid">Наличността е примерна. Обади се на магазина, за да потвърдиш преди посещение.</p>
         </div>
       </aside>
     </div>
