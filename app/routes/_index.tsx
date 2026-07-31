@@ -6,7 +6,7 @@ import {getSeoMeta} from '@cloudcart/nitrogen';
 import type {Collection, Product} from '@cloudcart/nitrogen';
 import {splitBrandName, formatMoney, getColor} from '~/lib/product';
 import {cdnSize, onImgErrorToBase} from '~/lib/img';
-
+import {VENDORS_BASE, BRAND_LOGOS} from '~/lib/brands';
 export const meta: Route.MetaFunction = () =>
   getSeoMeta({title: 'Opticlasa — Очила от водещи марки', description: 'Слънчеви очила и диоптрични рамки от Cartier, Gucci, Tom Ford, Ray-Ban и още 50+ марки.'});
 
@@ -44,24 +44,6 @@ const FEATURE = {
 const CARTIER = 'https://cdncloudcart.com/72223/files/image/cartier.jpg?1781055838';
 const SHOPS = 'https://cdncloudcart.com/72223/files/image/shops.jpg?1781055742';
 const CONTACTS = 'https://cdncloudcart.com/72223/files/image/contacts-1.jpg?1781056147';
-
-// Brand logos — ONLY vendors that have an uploaded logo in the store.
-// Sourced from the store's vendor data; add new entries here as more logos go up.
-const VENDORS_BASE = 'https://yasoo-opticlasa.cloudcart.net/cdn/img/vendors';
-const BRAND_LOGOS = [
-  {name: 'Ray-Ban', handle: 'ray-ban-1', img: '123/123.png'},
-  {name: 'Cartier', handle: 'cartier', img: '41/41.png'},
-  {name: 'Prada', handle: 'prada', img: '80/80.png'},
-  {name: 'Gucci', handle: 'gucci', img: '56/56.png'},
-  {name: 'Tom Ford', handle: 'tom-ford', img: '88/88.png'},
-  {name: 'Saint Laurent', handle: 'saint-laurent', img: '87/87.png'},
-  {name: 'Chopard', handle: 'chopard', img: '42/42.webp'},
-  {name: 'Carolina Herrera', handle: 'carolina-herrera', img: '36/36.png'},
-  {name: 'Dita', handle: 'dita', img: '100/100.png'},
-  {name: 'Etro', handle: 'etro', img: '53/53.png'},
-  {name: 'Carrera', handle: 'carrera', img: '39/39.png'},
-  {name: 'Police', handle: 'police', img: '114/114.png'},
-];
 
 /* ── shared bits ── */
 const ARROW = (

@@ -4,6 +4,7 @@ import {getContext} from '~/lib/context';
 import {getSeoMeta, getPaginationVariables} from '@cloudcart/nitrogen';
 import {ProductListing} from '~/components/ProductListing';
 import {buildFiltersFromParams, buildSortFromParams} from '~/lib/filters';
+import {CATEGORY_BRANDS} from '~/lib/brands';
 
 export const meta: Route.MetaFunction = ({data: d}) => {
   const col = (d as any)?.collection;
@@ -87,6 +88,7 @@ export default function CollectionPage() {
       products={products as any}
       subcats={subcats as any}
       promos={LISTING_PROMOS[col.handle] ?? []}
+      brands={CATEGORY_BRANDS[col.handle] ?? []}
     />
   );
 }

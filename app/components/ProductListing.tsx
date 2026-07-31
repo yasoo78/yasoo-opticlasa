@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useRef} from 'react';
 import {Link, useSearchParams, useNavigate, useLocation} from 'react-router';
 import type {Filter, Product} from '@cloudcart/nitrogen';
 import {ProductFiltersPlp} from './ProductFiltersPlp';
@@ -8,6 +8,7 @@ import {WishlistButton} from './WishlistButton';
 import {filterInputToParam, isFilterActive} from '~/lib/filters';
 import {cdnSize, baseUrl, onImgErrorToBase} from '~/lib/img';
 import {splitBrandName, formatMoney} from '~/lib/product';
+import {brandLogo} from '~/lib/brands';
 
 /**
  * Category / product-listing page — adapted from the Salomon Nitrogen mirror (spec §8),
@@ -32,12 +33,14 @@ export function ProductListing({
   products,
   subcats = [],
   promos = [],
+  brands = [],
 }: {
   title: string;
   breadcrumb: Array<{title: string; to?: string}>;
   products: Conn;
   subcats?: Cat[];
   promos?: Promo[];
+  brands?: string[];
 }) {
   const [sp] = useSearchParams();
   const navigate = useNavigate();
@@ -46,6 +49,46 @@ export function ProductListing({
   const [dense, setDense] = useState(false);
 
   const filters = products.filters ?? [];
+
+  // Brand quick-filter tiles (Salomon-style row) — logos first, then the rest.
+  const activeVendors = sp.getAll('vendor');
+  const brandTiles = brands.filter((b) => brandLogo(b));
+
+  // Desktop drag-to-scroll for the brand rail (mobile already scrolls by touch).
+  const brandRail = useRef<HTMLDivElement>(null);
+  const brandDrag = useRef({down: false, moved: false, x: 0, left: 0});
+  const onBrandDown = (e: React.MouseEvent) => {
+    const el = brandRail.current;
+    if (!el) return;
+    brandDrag.current = {down: true, moved: false, x: e.clientX, left: el.scrollLeft};
+  };
+  const onBrandMove = (e: React.MouseEvent) => {
+    const el = brandRail.current;
+    if (!el || !brandDrag.current.down) return;
+    const dx = e.clientX - brandDrag.current.x;
+    if (Math.abs(dx) > 4) brandDrag.current.moved = true;
+    el.scrollLeft = brandDrag.current.left - dx;
+  };
+  const endBrandDrag = () => {
+    brandDrag.current.down = false;
+  };
+  const onBrandClickCapture = (e: React.MouseEvent) => {
+    if (brandDrag.current.moved) {
+      e.preventDefault();
+      e.stopPropagation();
+      brandDrag.current.moved = false;
+    }
+  };
+
+  function toggleVendor(name: string) {
+    const p = new URLSearchParams(sp);
+    const rest = p.getAll('vendor').filter((v) => v !== name);
+    p.delete('vendor');
+    rest.forEach((v) => p.append('vendor', v));
+    if (!activeVendors.includes(name)) p.append('vendor', name);
+    ['cursor', 'direction', 'page'].forEach((k) => p.delete(k));
+    navigate(`?${p}`, {preventScrollReset: true});
+  }
   const total = products.totalCount ?? products.nodes.length;
 
   // active-filter chips from facet values + price
@@ -79,6 +122,37 @@ export function ProductListing({
 
       <div className="px-5 pt-5">
         {subcats.length > 0 && <CatRow cats={subcats} />}
+
+        {brandTiles.length > 0 && (
+          <div
+            ref={brandRail}
+            onMouseDown={onBrandDown}
+            onMouseMove={onBrandMove}
+            onMouseUp={endBrandDrag}
+            onMouseLeave={endBrandDrag}
+            onClickCapture={onBrandClickCapture}
+            className="scrollbar-none -mx-5 mt-6 flex select-none gap-2.5 overflow-x-auto px-5 pb-1 md:cursor-grab md:active:cursor-grabbing"
+          >
+            {brandTiles.map((name) => {
+              const active = activeVendors.includes(name);
+              const logo = brandLogo(name);
+              return (
+                <button
+                  key={name}
+                  type="button"
+                  onClick={() => toggleVendor(name)}
+                  title={name}
+                  className={`group relative flex h-[142px] w-[128px] shrink-0 flex-col items-center rounded-lg bg-[#f5f5f5] px-3 pt-[34px] text-center transition-colors ${active ? 'border-2 border-ink' : 'border border-line hover:border-ink'}`}
+                >
+                  {logo && (
+                    <img src={logo} alt={name} loading="lazy" className="max-h-9 max-w-[88px] object-contain" onError={(e) => {(e.currentTarget as HTMLImageElement).style.display = 'none';}} />
+                  )}
+                  <span className="absolute inset-x-0 bottom-[30px] line-clamp-2 px-2 text-center font-display text-[11px] font-semibold uppercase leading-[1.2] tracking-[0.03em] text-ink">{name}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
       {/* toolbar */}
       <div className="my-[18px] mb-[22px] flex flex-wrap items-center gap-4">

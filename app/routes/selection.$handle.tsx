@@ -6,6 +6,7 @@ import type {Product} from '@cloudcart/nitrogen';
 import {ProductListing} from '~/components/ProductListing';
 import {SELECTIONS} from '~/lib/selections';
 import {buildFiltersFromParams, buildSortFromParams} from '~/lib/filters';
+import {ALL_BRANDS} from '~/lib/brands';
 
 // "Нови" — dynamic newest-first listing (the smart collection has 200+ products,
 // so we don't load them one-by-one; we page the full catalogue sorted by newest).
@@ -33,7 +34,7 @@ export async function loader({params, context, request}: Route.LoaderArgs) {
       reverse: sort.sortKey ? sort.reverse : true,
       filters,
     });
-    return {title: 'Нови', products, subcats: [] as any[], promos: NOVI_PROMOS};
+    return {title: 'Нови', products, subcats: [] as any[], promos: NOVI_PROMOS, brands: ALL_BRANDS};
   }
 
   const sel = SELECTIONS[params.handle];
@@ -51,11 +52,12 @@ export async function loader({params, context, request}: Route.LoaderArgs) {
     },
     subcats: [] as any[],
     promos: sel.promoImg ? [{position: 6, img: sel.promoImg}] : [],
+    brands: [] as string[],
   };
 }
 
 export default function SelectionPage() {
-  const {title, products, subcats, promos} = useLoaderData<typeof loader>();
+  const {title, products, subcats, promos, brands} = useLoaderData<typeof loader>();
   return (
     <ProductListing
       title={title}
@@ -63,6 +65,7 @@ export default function SelectionPage() {
       products={products as any}
       subcats={subcats as any}
       promos={promos}
+      brands={brands}
     />
   );
 }
