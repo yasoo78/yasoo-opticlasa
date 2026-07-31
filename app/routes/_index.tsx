@@ -411,7 +411,7 @@ function StickyFeatures() {
             <h2 className="font-display text-[clamp(26px,3.3vw,44px)] font-extrabold uppercase leading-[0.92] tracking-[-0.01em] text-ink">Магазина<br />в България</h2>
           </div>
           <p className="mb-8 max-w-[460px] font-sans text-[15px] leading-relaxed text-mid">С над 20 години на пазара, Opticlasa е до вас в цялата страна. Отбийте се в най-близкия магазин за професионална консултация и грижа за вашето зрение.</p>
-          <Link to="/pages/contact" className="flex w-full items-center justify-center gap-2 rounded-full bg-ink px-6 py-3.5 font-sans text-[13px] font-medium text-white transition-colors hover:bg-red md:inline-flex md:w-auto md:justify-start md:py-3">Намери най-близкия {ARROW}</Link>
+          <Link to="/pages/magazini" className="flex w-full items-center justify-center gap-2 rounded-full bg-ink px-6 py-3.5 font-sans text-[13px] font-medium text-white transition-colors hover:bg-red md:inline-flex md:w-auto md:justify-start md:py-3">Намери най-близкия {ARROW}</Link>
         </div>
         {/* Right — scrolling list */}
         <div className="flex flex-col">
@@ -482,7 +482,7 @@ function StoreAndContacts() {
   return (
     <div className="mt-0.5 grid gap-0.5 md:grid-cols-2">
       {/* shops / find a store */}
-      <Link to="/pages/contact" className="group relative block h-[58vh] min-h-[420px] overflow-hidden bg-panel">
+      <Link to="/pages/magazini" className="group relative block h-[58vh] min-h-[420px] overflow-hidden bg-panel">
         <div className="absolute inset-0 bg-cover bg-center transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]" style={{backgroundImage: `url('${SHOPS}')`}} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/20 to-black/10" />
         <div className="absolute inset-x-0 bottom-0 flex flex-col items-start gap-3 p-10">

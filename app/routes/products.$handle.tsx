@@ -115,6 +115,7 @@ function StickyBar({brand, name, variant}: {brand: string; name: string; variant
 /* ───────────────────── GALLERY ───────────────────── */
 function Gallery({images, name}: {images: string[]; name: string}) {
   const [open, setOpen] = useState(false);
+  const [tryOnOpen, setTryOnOpen] = useState(false);
   const hero = images[0];
   const rest = images.slice(1);
   const shown = open ? rest : rest.slice(0, 4); // 2 rows of 2 by default
@@ -133,7 +134,7 @@ function Gallery({images, name}: {images: string[]; name: string}) {
         ) : (
           <img src="/noimage.svg" alt={name} className="h-full w-full object-contain p-16 opacity-40" />
         )}
-        <button type="button" className="sheen absolute left-1/2 top-5 z-10 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-white px-5 py-3 font-display text-[11px] font-bold uppercase tracking-[0.06em] text-ink shadow-[0_3px_16px_rgba(0,0,0,0.16)] transition-transform hover:scale-105 md:gap-2.5 md:px-6 md:text-[12px] md:tracking-[0.1em] [&>*]:relative [&>*]:z-[2]">
+        <button type="button" onClick={() => setTryOnOpen(true)} className="sheen absolute left-1/2 top-5 z-10 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-white px-5 py-3 font-display text-[11px] font-bold uppercase tracking-[0.06em] text-ink shadow-[0_3px_16px_rgba(0,0,0,0.16)] transition-transform hover:scale-105 md:gap-2.5 md:px-6 md:text-[12px] md:tracking-[0.1em] [&>*]:relative [&>*]:z-[2]">
           <Glasses className="h-[18px] w-[18px]" strokeWidth={1.6} />
           <span className="relative z-[2]">Пробвай виртуално</span>
         </button>
@@ -156,6 +157,49 @@ function Gallery({images, name}: {images: string[]; name: string}) {
           <ChevronDown className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`} />
         </button>
       )}
+
+      <TryOnModal open={tryOnOpen} onClose={() => setTryOnOpen(false)} name={name} />
+    </div>
+  );
+}
+
+/* ───────────────────── VIRTUAL TRY-ON (placeholder — wide drawer, text only for now) ───────────────────── */
+function TryOnModal({open, onClose, name}: {open: boolean; onClose: () => void; name: string}) {
+  const [topOffset, setTopOffset] = useState(68);
+  useEffect(() => {
+    if (!open) return;
+    setTopOffset(topChromeBottom());
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    document.addEventListener('keydown', onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [open, onClose]);
+  if (!open) return null;
+  return (
+    <div className="fixed inset-x-0 bottom-0 z-[400]" style={{top: topOffset}} role="dialog" aria-modal="true">
+      <div className="animate-fade-in absolute inset-0 bg-black/15 backdrop-blur-[2px]" onClick={onClose} />
+      <aside className="animate-slide-in-right absolute inset-y-0 right-0 flex w-full flex-col overflow-hidden bg-white md:w-[50vw]">
+        <div className="flex items-center px-6 py-5">
+          <button onClick={onClose} className="flex items-center gap-2.5 font-display text-[14px] font-bold uppercase tracking-[0.06em] text-ink transition-colors hover:text-red">
+            <ChevronLeft className="h-5 w-5" /> Виртуална проба
+          </button>
+        </div>
+        <div className="flex flex-1 flex-col items-center justify-center px-8 pb-10 text-center md:px-14">
+          <Glasses className="h-12 w-12 text-ink" strokeWidth={1.2} />
+          <div className="mt-5 font-display text-[10px] font-bold uppercase tracking-[0.16em] text-red">Скоро</div>
+          <h4 className="mt-2 font-display text-[26px] font-extrabold leading-[1.05] tracking-[-0.02em] text-ink">Пробвай очилата<br />върху себе си</h4>
+          <p className="mt-4 max-w-[440px] text-[15px] font-light leading-relaxed text-mid">
+            Съвсем скоро ще можеш да пробваш <span className="text-ink">{name}</span> виртуално — директно през камерата на телефона или компютъра, за да видиш как ти стоят, преди да поръчаш.
+          </p>
+          <p className="mt-3 max-w-[440px] text-[13px] font-light leading-relaxed text-mid">
+            Функцията е в разработка. Междувременно можеш да пробваш модела на живо в някой от нашите магазини.
+          </p>
+        </div>
+      </aside>
     </div>
   );
 }
@@ -402,8 +446,9 @@ function ProductDetails({product, brand, name}: {product: Product; brand: string
 }
 
 /* ───────────────────── CAMPAIGN BANNER ───────────────────── */
-const BANNER_WOMEN = 'https://cdncloudcart.com/72223/files/image/women-banner.jpg?1781050863';
-const BANNER_MEN = 'https://cdncloudcart.com/72223/files/image/man-banner-1.jpg?1781051516';
+const BANNER_WOMEN = 'https://cdncloudcart.com/74980/files/image/bg-brands-woman.jpg?1785497989';
+const BANNER_MEN = 'https://cdncloudcart.com/74980/files/image/bg-brands-man.jpg?1785497989';
+const BANNER_KIDS = 'https://cdncloudcart.com/74980/files/image/bg-brands-kids.jpg?1785497988';
 
 // Short brand blurbs shown under the collection title. Keys are normalised
 // (lowercase, no spaces/punctuation). Unknown brands fall back to a generic line.
@@ -459,7 +504,8 @@ function brandBlurb(brand: string): string {
 }
 
 function CampaignBanner({brand, gender}: {brand: string; gender?: string}) {
-  const img = /мъж|men\b|man\b/i.test(gender ?? '') ? BANNER_MEN : BANNER_WOMEN;
+  const g = gender ?? '';
+  const img = /дет|деца|kid|child|junior/i.test(g) ? BANNER_KIDS : /мъж|men\b|man\b/i.test(g) ? BANNER_MEN : BANNER_WOMEN;
   return (
     <div className="relative overflow-hidden bg-ink">
       <div className="absolute inset-0 bg-cover bg-center" style={{backgroundImage: `url('${img}')`}} />
@@ -498,7 +544,7 @@ function TbiModal({open, onClose, variant}: {open: boolean; onClose: () => void;
   return (
     <div className="fixed inset-x-0 bottom-0 z-[400]" style={{top: topOffset}} role="dialog" aria-modal="true">
       <div className="animate-fade-in absolute inset-0 bg-black/15 backdrop-blur-[2px]" onClick={onClose} />
-      <aside className="animate-slide-in-right absolute inset-y-0 right-0 flex w-full max-w-[560px] flex-col overflow-hidden rounded-l-2xl bg-white shadow-[-16px_0_48px_rgba(0,0,0,0.16)]">
+      <aside className="animate-slide-in-right absolute inset-y-0 right-0 flex w-full max-w-[560px] flex-col overflow-hidden bg-white shadow-[-16px_0_48px_rgba(0,0,0,0.16)]">
         <div className="flex items-center px-6 py-5">
           <button onClick={onClose} className="flex items-center gap-2.5 font-display text-[14px] font-bold uppercase tracking-[0.06em] text-ink transition-colors hover:text-red">
             <ChevronLeft className="h-5 w-5" /> TBI Bank
@@ -554,7 +600,7 @@ function StoresModal({open, onClose, title}: {open: boolean; onClose: () => void
   return (
     <div className="fixed inset-x-0 bottom-0 z-[400]" style={{top: topOffset}} role="dialog" aria-modal="true">
       <div className="animate-fade-in absolute inset-0 bg-black/15 backdrop-blur-[2px]" onClick={onClose} />
-      <aside className="animate-slide-in-right absolute inset-y-0 right-0 flex w-full max-w-[560px] flex-col overflow-hidden rounded-l-2xl bg-white shadow-[-16px_0_48px_rgba(0,0,0,0.16)]">
+      <aside className="animate-slide-in-right absolute inset-y-0 right-0 flex w-full max-w-[560px] flex-col overflow-hidden bg-white shadow-[-16px_0_48px_rgba(0,0,0,0.16)]">
         <div className="flex items-center px-6 py-5">
           <button onClick={onClose} className="flex items-center gap-2.5 font-display text-[14px] font-bold uppercase tracking-[0.06em] text-ink transition-colors hover:text-red">
             <ChevronLeft className="h-5 w-5" /> Наличност в магазините

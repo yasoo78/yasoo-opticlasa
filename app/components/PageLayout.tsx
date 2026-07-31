@@ -21,7 +21,7 @@ export function PageLayout({shop, headerMenu, footerMenu, cart, isLoggedIn = fal
   const isHome = pathname === '/' || pathname === '/premium' || pathname === '/outlet';
   const isProduct = pathname.startsWith('/products/');
   // Category/PLP & selection pages are full-bleed — ProductListing supplies its own 40px gutter.
-  const isCollection = pathname.startsWith('/collections/') || pathname.startsWith('/selection/') || pathname.startsWith('/search') || pathname === '/products';
+  const isCollection = pathname.startsWith('/collections/') || pathname.startsWith('/selection/') || pathname.startsWith('/search') || pathname === '/products' || pathname === '/pages/magazini';
   const isPremium = pathname === '/premium';
   const isOutlet = pathname === '/outlet';
   const isAuth = pathname === '/account/login' || pathname === '/account/register';

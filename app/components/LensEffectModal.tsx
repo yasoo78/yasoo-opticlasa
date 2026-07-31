@@ -73,7 +73,7 @@ export function LensEffectModal({
       <div className="animate-fade-in absolute inset-0 bg-black/15 backdrop-blur-[2px]" onClick={onClose} />
 
       {/* right slide-in drawer (sits below the nav, rounded card feel) */}
-      <aside className="animate-slide-in-right absolute inset-y-0 right-0 flex w-full max-w-[560px] flex-col overflow-hidden rounded-l-2xl bg-white shadow-[-16px_0_48px_rgba(0,0,0,0.16)]">
+      <aside className="animate-slide-in-right absolute inset-y-0 right-0 flex w-full max-w-[560px] flex-col overflow-hidden bg-white shadow-[-16px_0_48px_rgba(0,0,0,0.16)]">
         {/* header */}
         <div className="flex items-center px-6 py-5">
           <button onClick={onClose} className="flex items-center gap-2.5 font-display text-[14px] font-bold uppercase tracking-[0.06em] text-ink transition-colors hover:text-red">
